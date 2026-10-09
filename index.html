@@ -230,6 +230,41 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 /* ---------- ゲームHUD ---------- */
 #hud{position:fixed;inset:0;pointer-events:none;touch-action:none}
 #modFx{position:absolute;inset:0;pointer-events:none}
+#sgUI{position:absolute;inset:0;pointer-events:none}
+#sgTop{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 96px);display:flex;flex-direction:column;align-items:center;gap:4px;width:min(64vw,460px)}
+#sgMap{width:100%;height:auto;aspect-ratio:10/1;pointer-events:auto;border-radius:12px;border:2px solid var(--ink);touch-action:none}
+.sgfort{display:flex;align-items:center;gap:8px;width:100%}.sgfort b{font-family:var(--display);font-weight:400;font-size:.85rem;white-space:nowrap;text-shadow:0 2px 0 var(--ink);color:#d0bfff}.sgfort .hp{flex:1;height:14px}.sgfort .hp i{background:linear-gradient(#b38cff,#7048e8)}
+#sgBottom{position:absolute;left:0;right:0;bottom:0;padding:22px 10px calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;gap:10px;align-items:flex-end;background:linear-gradient(transparent,rgba(21,23,51,.8) 38%)}
+.sgleft{display:flex;flex-direction:column;gap:6px;min-width:104px}
+#sgMoney{position:relative;overflow:hidden;border:2px solid var(--ink);border-radius:10px;background:rgba(21,23,51,.9);padding:2px 8px 4px;display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}
+#sgMoney .mlab{font-size:.62rem;font-weight:900;color:#d0bfff}#sgMoney b{font-family:var(--display);font-weight:400;font-size:1.15rem;color:var(--yellow)}#sgMoney small{font-size:.66rem;color:var(--muted)}
+#sgMoneyFill{position:absolute;left:0;bottom:0;height:3px;background:var(--yellow)}
+#sgMoney.shake{animation:mshake .3s}@keyframes mshake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sgbtn{pointer-events:auto;border:3px solid var(--ink);border-radius:10px;background:linear-gradient(#d0bfff,#9775fa);color:var(--ink);font-weight:900;font-size:.78rem;padding:4px 6px;box-shadow:0 3px 0 var(--ink);display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.sgbtn small{font-family:var(--display);font-weight:400;font-size:.72rem}.sgbtn.poor{filter:grayscale(.7) brightness(.8)}
+#sgCards{flex:1;display:flex;gap:7px;overflow-x:auto;padding:6px 2px 4px;scrollbar-width:none;justify-content:center}
+#sgCards::-webkit-scrollbar{display:none}
+.ucard{pointer-events:auto;position:relative;flex:0 0 auto;width:80px;height:96px;border:3px solid var(--ink);border-radius:12px;background:linear-gradient(#fffbf0,#ffe9a8);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 4px 0 var(--ink);overflow:hidden;padding:4px 2px;touch-action:none}
+.ucard svg{width:36px;height:36px}.ucard b{font-size:.64rem;line-height:1.1;font-weight:900;text-align:center;white-space:nowrap}
+.ucard .ucost{font-family:var(--display);font-size:.8rem;background:var(--ink);color:var(--yellow);border-radius:6px;padding:0 7px}
+.ucard .ulv{position:absolute;top:2px;left:5px;font-family:var(--display);font-size:.6rem}
+.ucard kbd{position:absolute;top:2px;right:5px;font-size:.55rem;opacity:.45;font-family:var(--body)}
+.ucard .ucd{position:absolute;left:0;right:0;bottom:0;background:rgba(21,23,51,.62);height:0;pointer-events:none}
+.ucard.poor{filter:grayscale(.85) brightness(.72)}.ucard:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.ucard.evo{background:linear-gradient(#fff3bf,#ffc83a)}
+#sgCards.hint .ucard:first-child{animation:uhint .9s ease-in-out infinite}@keyframes uhint{50%{transform:translateY(-10px)}}
+#sgCan{pointer-events:auto;position:relative;width:96px;height:96px;flex:0 0 auto;border-radius:50%;border:4px solid var(--ink);background:#3b2a6b;overflow:hidden;box-shadow:0 5px 0 var(--ink);color:var(--chalk);touch-action:none}
+#sgCan i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#ffe066,#ff922b);height:0}
+#sgCan span{position:relative;font-family:var(--display);font-size:.82rem;text-shadow:0 2px 0 var(--ink)}
+#sgCan.ready{animation:canpulse .8s ease-in-out infinite}#sgCan.ready span{color:#fff}
+@keyframes canpulse{50%{box-shadow:0 5px 0 var(--ink),0 0 26px 8px rgba(255,200,58,.85)}}
+#sgKbox{pointer-events:auto;position:absolute;left:12px;top:calc(env(safe-area-inset-top,0px) + 178px);animation:uhint 1s ease-in-out infinite}
+#sgKanji{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-family:var(--kyo);font-size:min(40vw,320px);color:#fff3bf;text-shadow:0 0 30px #ffc83a,0 6px 0 var(--ink);pointer-events:none}
+#sgKanji small{display:block;font-family:var(--display);font-size:max(1.4rem,4vmin);text-align:center;color:#ffe066;line-height:1.6}
+body.sg #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
+#sgKanji.go{animation:kgo 1.5s ease-out forwards}@keyframes kgo{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
+@media (min-width:900px){.ucard{width:92px;height:108px}.ucard svg{width:42px;height:42px}.ucard b{font-size:.72rem}#sgCan{width:110px;height:110px}}
+@media (prefers-reduced-motion:reduce){#sgCards.hint .ucard:first-child,#sgCan.ready,#sgKbox{animation:none}}
 #modFx.bloodmoon{background:radial-gradient(ellipse at 50% 55%,rgba(255,40,60,.06) 0 40%,rgba(150,0,25,.5) 100%)}
 #modFx.dark{background:radial-gradient(circle at 50% 55%,transparent 0 16vmin,rgba(6,4,20,.55) 34vmin,rgba(3,2,12,.9) 62vmin)}
 #modFx.starfall{background:radial-gradient(ellipse at 50% 55%,transparent 0 45%,rgba(70,50,190,.4) 100%)}
@@ -453,6 +488,16 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
   <div class="tr"><span class="chip" id="killChip">0 たい</span><span class="chip"><span class="coin"></span><span id="hudCoins">0</span></span><button class="btn sm w" id="pauseBtn" aria-label="ポーズ">II</button></div>
   <div id="combo"><b id="comboN">0</b><span>コンボ</span></div>
   <button id="dashBtn" aria-label="ダッシュ">ダッシュ</button>
+  <div id="sgUI" hidden>
+    <div id="sgTop"><canvas id="sgMap" width="560" height="56" aria-label="せんじょうの ちず"></canvas><div class="sgfort"><b><ruby>魔王城<rt>まおうじょう</rt></ruby></b><div class="hp"><i id="sgFortFill" style="width:100%"></i></div></div></div>
+    <div id="sgBottom">
+      <div class="sgleft"><div id="sgMoney"><span class="mlab"><ruby>魔力<rt>まりょく</rt></ruby></span><b id="sgMoneyN">0</b><small id="sgMoneyCap">/ 450</small><i id="sgMoneyFill"></i></div><button id="sgWal" class="sgbtn">魔力炉</button></div>
+      <div id="sgCards"></div>
+      <button id="sgCan" aria-label="ことだまほう"><i id="sgCanFill"></i><span><ruby>言霊砲<rt>ことだまほう</rt></ruby></span></button>
+    </div>
+    <button id="sgKbox" class="btn y" hidden>漢字ボックス！</button>
+    <div id="sgKanji" hidden></div>
+  </div>
 </div>
 
 <section id="home" class="screen">
@@ -2131,7 +2176,7 @@ function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Ma
 const CH = 12;
 const FACING = new Set(['windmill', 'vending', 'postbox', 'well', 'igloo', 'pyramid', 'bench', 'tomb', 'cross', 'jack', 'lantern', 'car', 'rover', 'obelisk', 'snowman', 'gift', 'pot', 'skullpile', 'dish', 'solar', 'trash', 'hydrant']);
 function updDecor() {
-  const cx = Math.floor(P.x / CH), cz = Math.floor(P.z / CH), key = cx + ',' + cz;
+  const FX = SG.on ? SG.camX : P.x, FZ = SG.on ? 0 : P.z, cx = Math.floor(FX / CH), cz = Math.floor(FZ / CH), key = cx + ',' + cz + (SG.on ? 's' : '');
   if (decorChunk === key) return; decorChunk = key;
   const th = W.theme, cnt = {}; for (const k in DM) cnt[k] = 0;
   const tot = th.decor.reduce((a, b) => a + b[1], 0); let si = 0;
@@ -2143,11 +2188,12 @@ function updDecor() {
       let r = rng() * tot, kind = th.decor[0][0]; for (const [kk, wt] of th.decor) { r -= wt; if (r <= 0) { kind = kk; break; } }
       const x = X * CH + rng() * CH, z = Z * CH + rng() * CH, a0 = rng() * 6.28, s = .8 + rng() * .45;
       if (Math.abs(x) < 3 && Math.abs(z) < 3) continue;
+      if (SG.on && z > -6.5 && z < 20) continue;
       put(kind, x, z, FACING.has(kind) ? (a0 - 3.14) * .12 : a0, s, rng);
     }
     for (let k = 0; k < 2; k++) put('patch', X * CH + rng() * CH, Z * CH + rng() * CH, rng() * 6.28, .8 + rng() * .8, rng);
     for (let k = 0; k < 4; k++) put('tuft', X * CH + rng() * CH, Z * CH + rng() * CH, rng() * 6.28, .8 + rng() * .5, rng);
-    if (Math.abs(i) <= 2 && Math.abs(j) <= 2 && rng() < .3 && si < SIGNS.length && SIGNPOOL.length) {
+    if (!SG.on && Math.abs(i) <= 2 && Math.abs(j) <= 2 && rng() < .3 && si < SIGNS.length && SIGNPOOL.length) {
       const sg = SIGNS[si++], sx = X * CH + 2 + rng() * (CH - 4), sz = Z * CH + 2 + rng() * (CH - 4), d = SIGNPOOL[Math.floor(rng() * 9973) % SIGNPOOL.length];
       sg.g.position.set(sx, 0, sz); sg.g.rotation.y = (rng() - .5) * .4; sg.g.visible = true; sg.key = X + ',' + Z; sg.d = d; if (sg.k !== d.k) { drawSign(sg, d); sg.k = d.k; }
       sg.done = W.signRead && W.signRead.has(sg.key); sg.star.visible = !sg.done;
@@ -2213,9 +2259,9 @@ addEventListener('keyup', e => { keys[e.code] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 const joy = { id: null, ox: 0, oy: 0, x: 0, y: 0 };
 const joyR = () => Math.min(innerWidth, innerHeight) >= 700 ? 72 : 50;
-function joyDown(e) { if (!W.on || W.paused || joy.id !== null) return; joy.id = e.pointerId; joy.ox = e.clientX; joy.oy = e.clientY; joy.x = joy.y = 0; const j = $('#joy'); j.hidden = false; j.style.left = joy.ox + 'px'; j.style.top = joy.oy + 'px'; $('#joyKnob').style.transform = ''; }
-function joyMove(e) { if (e.pointerId !== joy.id) return; let dx = e.clientX - joy.ox, dy = e.clientY - joy.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } joy.x = dx / m; joy.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
-function joyUp(e) { if (e.pointerId !== joy.id) return; joy.id = null; joy.x = joy.y = 0; $('#joy').hidden = true; }
+function joyDown(e) { if (SG.on) { sgPanDown(e); return; } if (!W.on || W.paused || joy.id !== null) return; joy.id = e.pointerId; joy.ox = e.clientX; joy.oy = e.clientY; joy.x = joy.y = 0; const j = $('#joy'); j.hidden = false; j.style.left = joy.ox + 'px'; j.style.top = joy.oy + 'px'; $('#joyKnob').style.transform = ''; }
+function joyMove(e) { if (SG.on) { sgPanMove(e); return; } if (e.pointerId !== joy.id) return; let dx = e.clientX - joy.ox, dy = e.clientY - joy.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } joy.x = dx / m; joy.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
+function joyUp(e) { if (SG.on) { sgPanUp(e); return; } if (e.pointerId !== joy.id) return; joy.id = null; joy.x = joy.y = 0; $('#joy').hidden = true; }
 function moveVec() {
   let mx = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
   let mz = (keys.KeyS || keys.ArrowDown ? 1 : 0) - (keys.KeyW || keys.ArrowUp ? 1 : 0);
@@ -2296,7 +2342,7 @@ function spawnEnemy(role, at, elite) {
   if (W.enemies.length >= 190 && role !== 'boss') return null;
   const mk = role === 'boss' ? 'boss' + areaIdx(W.stage) : role === 'barrel' ? 'barrel' : W.theme.roster[role]; const md = MODELS[mk];
   const p = at || spawnPos();
-  const mul = stageMul(W.stage) * (role === 'barrel' || role === 'boss' ? 1 : (1 + W.t / 80));
+  const mul = stageMul(W.stage) * (role === 'barrel' || role === 'boss' ? 1 : (1 + W.t / (SG.on ? 200 : 80)));
   const MM = role === 'barrel' ? MOD0 : (W.mod || MOD0);
   const e = { role, mk, x: p.x, z: p.z, hp: R0.hp * mul * (elite ? 10 : 1) * MM.eHp, spd: R0.spd * (1 + Math.min(.3, .02 * (W.stage - 1))) * (elite ? .9 : 1) * MM.eSpd, dmg: R0.dmg * (1 + .08 * (W.stage - 1)) * (elite ? 1.5 : 1), r: R0.r * (elite ? 1.6 : 1) * MM.eSize, s: md.s * (elite ? 1.6 : 1) * MM.eSize, xp: R0.xp * (elite ? 10 : 1),
     atk: .5, flash: 0, slowT: 0, burnT: 0, burnD: 0, kx: 0, kz: 0, ph: Math.random() * 6, elite, boss: role === 'boss', still: role === 'barrel', fly: md.fly, hop: md.hop, ghost: md.ghost, shot: md.shot, as: md.as || 9, orbT: -9, ang: Math.random() * 6, rise: (role === 'barrel' || md.fly || md.ghost) ? 0 : .35, shootT: 1.5 + Math.random() * 2 };
@@ -2348,7 +2394,7 @@ function killEnemy(e, quiet) {
   if (quiet) return;
   if (!e.still && !MODELS[e.mk].nodex) { const first = !S.dex[e.mk]; S.dex[e.mk] = (S.dex[e.mk] || 0) + 1; if (first) { toast(`ずかんに とうろく！「${MODELS[e.mk].n}」`); sfx('chest'); } }
   if (e.still) { sphereFx(e.x, .8, e.z, 1.8, 0xffc83a, .3); dropPickup(e.x, e.z); sfx('coin'); return; }
-  W.kills++; S.kills++;
+  W.kills++; S.kills++; if (SG.on) SG.money = Math.min(sgCap(), SG.money + 3 + Math.round((ROLE[e.role] ? ROLE[e.role].xp : 1) * 3) * (e.elite ? 4 : 1));
   W.combo++; W.comboT = 2.2; if (W.combo > W.bestCombo) W.bestCombo = W.combo; comboShow();
   dropGem(e.x, e.z, e.xp);
   if (Math.random() < .06) dropGem(e.x + .5, e.z, Math.ceil(1 + W.stage * .5), true);
@@ -2364,6 +2410,7 @@ function comboShow() {
   for (const [n, t] of CHEERS) if (W.combo === n) { banner(`${n}コンボ ${t}`, 'gold'); confetti(P.x, P.z, 30); sfx('chest'); }
 }
 function bossDown(e) {
+  if (SG.on) { W.boss = null; $('#bossBar').hidden = true; W.shake = 1.2; flashScreen(.7); sfx('evo'); dropChest(e.x, e.z); for (let i = 0; i < 10; i++) dropGem(e.x + (Math.random() - .5) * 4, e.z + (Math.random() - .5) * 3, 8, i % 3 === 0); banner('ボスを たおした！ {魔王城|まおうじょう}に ダメージ！', 'gold'); sgHitFort(SG.fmax * .3 / W.dmgMul); return; }
   W.boss = null; W.clearing = 3.2; $('#bossBar').hidden = true; W.shake = 1.2; flashScreen(.8); sfx('evo');
   for (let i = 0; i < 6; i++) setTimeout(() => { if (!W.on) return; const x = e.x + (Math.random() - .5) * 5, z = e.z + (Math.random() - .5) * 5; sphereFx(x, 1.5, z, 4, pick([0xffd43b, 0xff8b3d, 0xffffff]), .5); emit(x, 1.5, z, 20, 0xffc83a, 12, .4, 1); sfx('boom'); }, i * 160);
   dropChest(e.x, e.z); for (let i = 0; i < 12; i++) dropGem(e.x + (Math.random() - .5) * 4, e.z + (Math.random() - .5) * 4, 8, i % 3 === 0);
@@ -2413,7 +2460,7 @@ function dropChest(x, z) { addPick('chest', x, z); }
 function updPicks(dt) {
   for (let i = W.picks.length - 1; i >= 0; i--) {
     const p = W.picks[i]; p.t += dt; p.g.rotation.y += dt * 2; p.g.position.y = Math.sin(p.t * 4) * .15 + .1;
-    if (W.clearing > 0 || W.vacuum && p.kind === 'chest') { const dx = P.x - p.x, dz = P.z - p.z, d = Math.hypot(dx, dz) || 1; const sp = Math.min(d, dt * 14); p.x += dx / d * sp; p.z += dz / d * sp; p.g.position.x = p.x; p.g.position.z = p.z; }
+    if (W.clearing > 0 || SG.on || W.vacuum && p.kind === 'chest') { const dx = P.x - p.x, dz = P.z - p.z, d = Math.hypot(dx, dz) || 1; const sp = Math.min(d, dt * 14); p.x += dx / d * sp; p.z += dz / d * sp; p.g.position.x = p.x; p.g.position.z = p.z; }
     if (p.t % .4 < dt) emit(p.x, 1, p.z, 1, PICKS[p.kind] || 0xffffff, 1.5, .15, .6, 0, .6);
     if (Math.hypot(P.x - p.x, P.z - p.z) < 1.3) {
       W.picks.splice(i, 1); p.on = false; p.g.visible = false;
@@ -2599,7 +2646,9 @@ function updEnemies(dt) {
     if (e.rise > 0) e.rise -= dt;
     if (e.flash > 0) e.flash -= dt;
     if (e.burnT > 0) { e.burnT -= dt; e.hp -= e.burnD * dt; if (Math.random() < dt * 8) emit(e.x, 1.2, e.z, 1, 0xff922b, 2, .2, .4, 0, .8); if (e.hp <= 0) { killEnemy(e); continue; } }
-    let dx = P.x - e.x, dz = P.z - e.z; const d = Math.hypot(dx, dz) || .001; let moving = false;
+    let moving = false;
+    if (SG.on) moving = sgEnemy(e, dt); else {
+    let dx = P.x - e.x, dz = P.z - e.z; const d = Math.hypot(dx, dz) || .001;
     if (!e.still) {
       if (d > far && !e.boss) { const a = Math.atan2(-dx, -dz) + Math.PI + (Math.random() - .5); e.x = P.x + Math.sin(a) * (viewR() + 3); e.z = P.z + Math.cos(a) * (viewR() + 3); continue; }
       e.slowT -= dt; let sp = e.spd * (e.slowT > 0 ? 1 - (e.slow || .5) : 1);
@@ -2622,6 +2671,7 @@ function updEnemies(dt) {
       let ta = Math.atan2(dx, dz), da = ta - e.ang; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2; e.ang += da * Math.min(1, dt * 10);
       e.atk -= dt; if (d < e.r + .6 && e.atk <= 0 && e.dmg > 0) { hurtPlayer(e.dmg * (W.stage === 1 ? .55 + .45 * Math.min(1, W.t / 120) : 1)); e.atk = .8; }
     }
+    }
     const m = EM[e.mk]; if (!m) continue; const i = cnt[e.mk]; if (i >= m.userData.cap) continue; cnt[e.mk]++;
     const bob = e.fly ? Math.sin(W.t * 8 + e.ph) * .25 : e.hop ? Math.max(0, Math.sin(W.t * 6 + e.ph)) * .7 : e.ghost ? .3 + Math.sin(W.t * 3 + e.ph) * .2 : 0;
     const wob = e.still ? 0 : Math.sin(W.t * 9 + e.ph) * .05;
@@ -2634,6 +2684,7 @@ function updEnemies(dt) {
     if (e.elite && Math.random() < dt * 10) emit(e.x, 1.5 * e.s, e.z, 1, 0xffd43b, 2, .18, .6, 0, .8);
   }
   for (const k in EM) flush(EM[k], cnt[k]);
+  if (SG.on) sh = sgDrawUnits(sh);
   flush(shadowM, sh);
   for (let i = W.enemies.length - 1; i >= 0; i--) if (W.enemies[i].dead) W.enemies.splice(i, 1);
   if (W.boss) $('#bossFill').style.width = Math.max(0, W.boss.hp / W.boss.max * 100) + '%';
@@ -2641,6 +2692,7 @@ function updEnemies(dt) {
 
 /* ---- ダッシュ ---- */
 function dash() {
+  if (SG.on) return;
   if (P.dashCd > 0 || P.dashT > 0) return;
   let { mx, mz } = moveVec(); if (Math.hypot(mx, mz) < .1) { mx = Math.sin(P.face); mz = Math.cos(P.face); }
   const l = Math.hypot(mx, mz); P.dvx = mx / l * 24; P.dvz = mz / l * 24; P.dashT = .22; P.dashCd = 2.2 * W.mod.dashCd; sfx('dash');
@@ -2777,6 +2829,7 @@ function openQuiz() {
 /* ---- 毎フレーム ---- */
 let hudT = 0;
 function update(dtR) {
+  if (SG.on) { updateSiege(dtR); return; }
   const dt = dtR * W.ts;
   if (W.clearing > 0) { W.clearing -= dtR; W.vacuum = true; for (const e of W.enemies) if (!e.dead && !e.boss && Math.random() < dtR * 4) killEnemy(e, true); if (W.clearing <= 0) { stageClear(); return; } }
   W.t += dt;
@@ -2842,7 +2895,7 @@ function resetRun() {
   warnPool.forEach(w => w.visible = false); PT.n = 0; EB.length = 0;
   if (W.qbox) { scene.remove(W.qbox.m); W.qbox = null; }
   if (W.kbox) { scene.remove(W.kbox.m); W.kbox = null; }
-  W.boss = null; $('#bossBar').hidden = true;
+  W.boss = null; $('#bossBar').hidden = true; sgEnd();
 }
 function startStage(fate) {
   ac(); keepAwake(); hideAll(); $('#hud').hidden = false;
@@ -2867,7 +2920,7 @@ function startStage(fate) {
   cam.position.set(0, 32, 30); W.on = true;
   renderSlots(); updHud(); updAuraLook(); $('#combo').style.opacity = 0;
   chapterCard(W.stage, fate);
-  for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; spawnEnemy(i % 2 ? 'swarm' : 'basic', { x: Math.cos(a) * 12, z: Math.sin(a) * 12 }); }
+  if (W.obj === 'siege') sgStart(); else for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; spawnEnemy(i % 2 ? 'swarm' : 'basic', { x: Math.cos(a) * 12, z: Math.sin(a) * 12 }); }
   if (S.deaths > 0) setTimeout(() => toast(`てきが ${Math.round((1 - Math.max(.6, 1 - .12 * S.deaths)) * 100)}% よわくなったよ`), 1200);
 }
 function stageClear() {
@@ -2921,7 +2974,7 @@ $('#dashBtn').addEventListener('pointerdown', e => { e.preventDefault(); dash();
 /* ---- HUD ---- */
 function updHud() {
   $('#hpFill').style.width = (Math.max(0, P.hp) / W.maxHp * 100) + '%';
-  $('#hpText').textContent = `${Math.ceil(Math.max(0, P.hp))} / ${W.maxHp}`;
+  $('#hpText').textContent = `${SG.on ? 'しろ ' : ''}${Math.ceil(Math.max(0, P.hp))} / ${W.maxHp}`;
   $('#hudCoins').textContent = S.coins; $('#killChip').textContent = W.kills + ' たい';
   $('#xpFill').style.width = Math.min(100, W.xp / W.need * 100) + '%'; $('#lvText').textContent = 'Lv ' + W.lv;
   $('#timer').textContent = fmtT(W.t);
@@ -3341,6 +3394,7 @@ const OBJS = {
   survive: { n: '{生存|せいぞん}の{刻|とき}', d: '3ぷん いきのこれ。そのあと ボスが あらわれる' },
   hunt:    { n: '{殲滅|せんめつ}の{誓|ちか}い', d: 'てきを たくさん たおすと ボスが あらわれる' },
   sigil:   { n: '{封印石|ふういんせき}の{探索|たんさく}', d: 'ちらばった ふういんせき 5こを あつめると ボスが あらわれる' },
+  siege:   { n: '{陣地戦|じんちせん}', d: 'カードで なかまを よびだして、てきの まおうじょうを こわせ！' },
 };
 const MODS = [
   { id: 'bloodmoon', n: '{紅|あか}き{月|つき}の{夜|よる}', d: 'てきが はやい。けいけんち 1.5ばい', m: { eSpd: 1.25, xp: 1.5, sky: 0x4a0d18 } },
@@ -3354,20 +3408,22 @@ const MODS = [
 ];
 const MOD0 = { eSpd: 1, eHp: 1, eSize: 1, eRate: 1, xp: 1, coin: 1, pSpd: 1, dashCd: 1, dmg: 1, hp: 1, elite: 1, dark: 0, ghost: 0, meteorRain: 0, sky: 0 };
 const OBJ_ICON = {
+  siege: '<svg viewBox="0 0 40 40"><path d="M6 34V16h6v5h5v-7h6v7h5v-5h6v18z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><path d="M17 34v-7h6v7" fill="none" stroke="currentColor" stroke-width="3"/><path d="M20 14V5l7 3-7 3" fill="currentColor"/></svg>',
   survive: '<svg viewBox="0 0 40 40"><circle cx="20" cy="21" r="14" fill="none" stroke="currentColor" stroke-width="4"/><path d="M20 12v10l7 4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
   hunt: '<svg viewBox="0 0 40 40"><path d="M8 32L30 10M24 8l8 0 0 8M10 22l8 8M6 34l4-4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
   sigil: '<svg viewBox="0 0 40 40"><path d="M20 4l10 16-10 16-10-16z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M20 12v16" stroke="currentColor" stroke-width="3"/></svg>',
 };
-function rollFate(not) {
-  for (let t = 0; t < 20; t++) {
-    const obj = pick(Object.keys(OBJS)), mod = pick(MODS);
+function rollFate(not, mode) {
+  for (let t = 0; t < 30; t++) {
+    const obj = mode === 'siege' ? 'siege' : pick(['survive', 'hunt', 'sigil']);
+    const mod = pick(obj === 'siege' ? MODS.filter(m => SIEGE_MODS.includes(m.id)) : MODS);
     if (!not || not.obj !== obj || not.mod !== mod.id) return { obj, mod: mod.id };
   }
   return { obj: 'survive', mod: 'gale' };
 }
 function openFate() {
   hideAll(); sfx('chest');
-  const a = rollFate(), b = rollFate(a), cards = [a, b];
+  const sgSt = S.stage >= 3 && S.stage % 3 === 0, a = rollFate(null, sgSt ? 'siege' : null), b = rollFate(a, sgSt || (S.stage >= 2 && Math.random() < .3) ? 'siege' : null), cards = [a, b];
   const card = (f, i) => { const o = OBJS[f.obj], m = MODS.find(x => x.id === f.mod); return `<button class="fcard" data-f="${i}">
     <span class="fobj">${OBJ_ICON[f.obj]}</span><b class="fname">${rb(o.n)}</b><span class="fdesc">${esc(o.d)}</span>
     <span class="fdiv"></span><span class="fmod">${rb(m.n)}</span><span class="fdesc">${esc(m.d)}</span></button>`; };
@@ -3435,6 +3491,7 @@ function bossReady() {
   return W.t >= BOSS_T;
 }
 function objText() {
+  if (SG.on) return W.boss ? 'ボスが きた！ なかまで くいとめろ！' : `{魔王城|まおうじょう}を こわせ！ のこり ${Math.ceil(Math.max(0, SG.fhp) / SG.fmax * 100)}%`;
   if (W.bossOut) return W.boss ? 'ボスを たおせ！' : '';
   if (W.obj === 'hunt') return `{討伐|とうばつ} ${Math.min(W.kills, W.huntN)} / ${W.huntN}`;
   if (W.obj === 'sigil') return `{封印石|ふういんせき} ${W.sigils} / 5`;
@@ -3551,8 +3608,329 @@ function renderParentPage() {
   };
 }
 
+/* ============ 陣地戦（なかまを よびだして てきの しろを こわす） ============ */
+const SG = { on: false, cx: -27, fx: 27, units: [], money: 0, wal: 1, fhp: 1, fmax: 1, can: 0, canMax: 30, camX: -16, pan: null, panT: 0, cdT: {}, kbox: false, meshes: null, eMul: 1, fFlash: 0, cHurt: 0, hudT: 0, dist: 28 };
+const SIEGE_MODS = ['bloodmoon', 'giant', 'horde', 'berserk', 'eldorado'];
+const UNITS = {
+  base:    { s: '見習い兵',   n: '{見習|みなら}い{兵|へい}',           cost: 50,  cd: 1.5, hp: 70,  dmg: 9,  rng: 1.3, atk: .9,  spd: 2.7, kind: 'melee' },
+  gun:     { s: 'ガンナー',   n: 'ガンナー',                          cost: 90,  cd: 3,   hp: 55,  dmg: 15, rng: 5.5, atk: 1.0, spd: 2.4, kind: 'shot' },
+  shot:    { s: '鉄壁タンク', n: '{鉄壁|てっぺき}タンク',              cost: 75,  cd: 2.5, hp: 260, dmg: 6,  rng: 1.3, atk: 1.2, spd: 2.0, kind: 'melee' },
+  orbit:   { s: 'ブロック騎士', n: 'ブロック{騎士|きし}',              cost: 120, cd: 4,   hp: 150, dmg: 18, rng: 1.7, atk: 1.1, spd: 2.6, kind: 'melee', area: 1.6 },
+  thunder: { s: '雷の魔導士', n: '{雷|いかずち}の{魔導士|まどうし}',     cost: 220, cd: 9,   hp: 60,  dmg: 46, rng: 9,   atk: 2.4, spd: 2.0, kind: 'bolt', area: 2.2 },
+  aura:    { s: '氷の番人',   n: '{氷|こおり}の{番人|ばんにん}',        cost: 150, cd: 6,   hp: 200, dmg: 9,  rng: 2.6, atk: .8,  spd: 2.0, kind: 'aura', area: 2.6 },
+  boom:    { s: 'ブーメラン兵', n: 'ブーメラン{兵|へい}',              cost: 120, cd: 4,   hp: 75,  dmg: 16, rng: 6,   atk: 1.6, spd: 2.6, kind: 'pierce' },
+  rocket:  { s: 'ロケット砲兵', n: 'ロケット{砲兵|ほうへい}',          cost: 260, cd: 10,  hp: 85,  dmg: 62, rng: 10,  atk: 3,   spd: 1.8, kind: 'blast', area: 2.6 },
+  fire:    { s: '炎の戦士',   n: '{炎|ほのお}の{戦士|せんし}',          cost: 160, cd: 5,   hp: 170, dmg: 6,  rng: 3,   atk: .25, spd: 2.2, kind: 'flame' },
+  laser:   { s: '光の狙撃手', n: '{光|ひかり}の{狙撃手|そげきしゅ}',    cost: 280, cd: 10,  hp: 60,  dmg: 52, rng: 14,  atk: 3,   spd: 2.0, kind: 'beam' },
+  meteor:  { s: '星の巨人',   n: '{星|ほし}の{巨人|きょじん}',          cost: 450, cd: 18,  hp: 950, dmg: 75, rng: 2.6, atk: 2.2, spd: 1.4, kind: 'slam', area: 3, sc: 1.7 },
+};
+const WIDX = Object.fromEntries(WEAPONS.map((w, i) => [w.id, i]));
+const BASE_ICON = '<svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#151733" stroke-width="2.5" stroke-linejoin="round"><path d="M27 6l7 1-1 7-14 14-6-6z" fill="#e9ecef"/><path d="M10 22l8 8-3 3-8-8z" fill="#c9894a"/><path d="M6 30l4 4-3 3-4-4z" fill="#ffc83a"/></g></svg>';
+const unitCol = id => id === 'base' ? 0x8d99ae : WEAPONS[WIDX[id]].col;
+
+/* ---- なかまの かたち ---- */
+function unitBuild(id) {
+  const c = unitCol(id), dk = 0x2a2a3a, sk = 0xffd8b0, pants = 0x3b4a7a;
+  const a = [...LEG(-.2, .8, .34, .8, pants, 1, 0x343a40), ...LEG(.2, .8, .34, .8, pants, 2, 0x343a40),
+    { w: .86, h: .9, d: .5, y: 1.25, c }, { w: .88, h: .12, d: .52, y: .86, c: dk }, { w: .3, h: .3, d: .05, y: 1.3, z: .26, c: 0xfff3bf },
+    ...ARMD(-.58, 1.65, .8, .32, c, sk, 3), ...ARMD(.58, 1.65, .8, .32, c, sk, 4),
+    { w: .7, h: .66, d: .66, y: 2.03, c: sk }, ...EYES(2.08, .34, 0x151733, .15, .12, .14),
+    { w: .76, h: .24, d: .72, y: 2.42, c }, { w: .76, h: .3, d: .12, y: 2.22, z: -.32, c }];
+  const add = (...b) => a.push(...b);
+  switch (id) {
+    case 'base': add({ w: .1, h: .1, d: .9, x: .58, y: .85, z: .4, c: 0xc9894a }, { w: .08, h: .62, d: .52, x: -.7, y: 1.2, z: .1, c: 0x868e96 }); break;
+    case 'gun': add({ w: .16, h: .22, d: .66, x: .58, y: .9, z: .3, c: dk }, { w: .18, h: .08, d: .44, x: .58, y: 1.04, z: .3, c }, { w: .78, h: .12, d: .5, y: 2.56, z: .12, c: dk }); break;
+    case 'shot': add({ w: 1.1, h: 1.35, d: .14, y: 1.2, z: .44, c: 0x868e96 }, { w: .9, h: .2, d: .16, y: 1.5, z: .46, c }, { w: .32, h: .32, d: .16, y: 1.12, z: .47, c: 0xffd43b }); break;
+    case 'orbit': add({ w: .12, h: .12, d: 1.1, x: .58, y: .9, z: .5, c: 0xe9ecef }, { w: .34, h: .34, d: .34, x: .75, y: 2.5, c, p: 10 }, { w: .34, h: .34, d: .34, x: -.75, y: 2.5, c, p: 10 }); break;
+    case 'thunder': add({ w: .95, h: .1, d: .95, y: 2.56, c: 0x343a40 }, { w: .52, h: .5, d: .52, y: 2.85, c: 0x343a40 }, { w: .28, h: .44, d: .28, y: 3.2, c: 0x343a40 }, { w: .1, h: 1.7, d: .1, x: .7, y: 1.25, z: .2, c: 0x8d5524 }, { w: .3, h: .3, d: .3, x: .7, y: 2.15, z: .2, c: 0xfff27a }); break;
+    case 'aura': add({ w: 1, h: .62, d: .6, y: .58, c: 0xe7f5ff }, { w: .14, h: 1.7, d: .14, x: .7, y: 1.25, z: .2, c: 0xe7f5ff }, { w: .34, h: .34, d: .34, x: .7, y: 2.2, z: .2, ry: .78, c: 0x99e9f2 }, { w: .16, h: .3, d: .16, x: -.22, y: 2.66, c: 0x99e9f2 }, { w: .16, h: .38, d: .16, y: 2.7, c: 0x99e9f2 }, { w: .16, h: .3, d: .16, x: .22, y: 2.66, c: 0x99e9f2 }); break;
+    case 'boom': add({ w: .9, h: .12, d: .2, x: .25, y: 1.45, z: -.34, rz: .5, c }, { w: .9, h: .12, d: .2, x: -.25, y: 1.45, z: -.34, rz: -.5, c }); break;
+    case 'rocket': add({ w: .34, h: .34, d: 1.4, x: .5, y: 1.9, z: .1, c: 0x495057 }, { w: .36, h: .36, d: .14, x: .5, y: 1.9, z: .82, c: 0xff6b6b }, { w: .38, h: .38, d: .1, x: .5, y: 1.9, z: -.4, c }); break;
+    case 'fire': add({ w: .26, h: .72, d: .26, x: .17, y: 1.32, z: -.4, c: 0xff922b }, { w: .26, h: .72, d: .26, x: -.17, y: 1.32, z: -.4, c: 0xff922b }, { w: .14, h: .14, d: .62, x: .58, y: .9, z: .3, c: dk }, { w: .18, h: .18, d: .08, x: .58, y: .9, z: .64, c: 0xffd43b }); break;
+    case 'laser': add({ w: .16, h: .2, d: 1.5, x: .58, y: 1.0, z: .5, c: 0xe9ecef }, { w: .06, h: .06, d: 1.3, x: .58, y: 1.13, z: .5, c }, { w: .62, h: .12, d: .05, y: 2.1, z: .35, c }); break;
+    case 'meteor': add({ w: .14, h: .4, d: .14, x: -.26, y: 2.66, rz: .3, c: 0xffd43b }, { w: .14, h: .4, d: .14, x: .26, y: 2.66, rz: -.3, c: 0xffd43b }, { w: .34, h: .34, d: .06, y: 1.32, z: .27, c: 0xffd43b }, { w: 1.2, h: .3, d: .7, y: 1.72, c: 0x5f3dc4 }); break;
+  }
+  return a;
+}
+/* ---- しろ ---- */
+function castleBuild() {
+  const roof = 0x2b3a55, wall = 0xf8f9fa, st = 0x8a8f99;
+  return [{ w: 6.4, h: 1.6, d: 5, y: .8, c: st }, { w: 5.6, h: .9, d: 4.5, y: 2.05, c: 0x9da3ad },
+    { w: 4.6, h: 1.6, d: 3.8, y: 3.3, c: wall }, { w: 5.8, h: .35, d: 4.8, y: 4.25, c: roof }, { w: 4.6, h: .35, d: 3.8, y: 4.55, c: roof },
+    { w: 3.2, h: 1.2, d: 2.6, y: 5.3, c: wall }, { w: 4.4, h: .3, d: 3.5, y: 6.05, c: roof }, { w: 3.2, h: .3, d: 2.5, y: 6.3, c: roof },
+    { w: 1.9, h: .9, d: 1.6, y: 6.9, c: wall }, { w: 2.8, h: .3, d: 2.3, y: 7.5, c: roof }, { w: 1.5, h: .4, d: 1.2, y: 7.8, c: roof },
+    { w: .3, h: .45, d: .2, x: -.8, y: 8.2, c: 0xffd43b }, { w: .3, h: .45, d: .2, x: .8, y: 8.2, c: 0xffd43b },
+    { w: .42, h: .5, d: .05, x: -1.6, y: 3.3, z: 1.92, c: 0x343a40 }, { w: .42, h: .5, d: .05, x: 1.6, y: 3.3, z: 1.92, c: 0x343a40 },
+    { w: .36, h: .42, d: .05, x: -.8, y: 5.3, z: 1.32, c: 0x343a40 }, { w: .36, h: .42, d: .05, x: .8, y: 5.3, z: 1.32, c: 0x343a40 },
+    { w: 1.5, h: 1.4, d: .1, y: .7, z: 2.52, c: 0x5c3d20 }, { w: 1.7, h: .2, d: .14, y: 1.48, z: 2.52, c: 0x343a40 },
+    { w: .12, h: 3.6, d: .12, x: 3.4, y: 1.8, z: 1.6, c: 0x8d5524 }, { w: .9, h: 1.2, d: .05, x: 3.86, y: 2.9, z: 1.6, c: 0xe03131, p: 7, pv: [3.4, 3, 1.6] },
+    { w: .12, h: 3.6, d: .12, x: -3.4, y: 1.8, z: 1.6, c: 0x8d5524 }, { w: .9, h: 1.2, d: .05, x: -2.94, y: 2.9, z: 1.6, c: 0x1c7ed6, p: 7, pv: [-3.4, 3, 1.6] }];
+}
+function fortBuild() {
+  const a = 0x3a2f4a, b = 0x4a3a5e, k = 0x2a2238;
+  const out = [{ w: 6.4, h: 2, d: 5, y: 1, c: a }, { w: 4.2, h: 4.2, d: 3.6, y: 4.1, c: b }, { w: 5.2, h: .5, d: 4.4, y: 6.4, c: k },
+    { w: 1.7, h: 2.4, d: 1.7, y: 7.9, c: b }, { w: .9, h: 1.6, d: .9, y: 9.9, c: k }, { w: .4, h: .4, d: .4, y: 10.9, c: 0xff4d5b },
+    { w: 1.7, h: .95, d: .1, y: 4.5, z: 1.82, c: 0xffd43b }, { w: .5, h: .85, d: .12, y: 4.5, z: 1.86, c: 0xe03131 },
+    { w: .45, h: .6, d: .05, x: -1.3, y: 2.9, z: 1.82, c: 0xff4d5b }, { w: .45, h: .6, d: .05, x: 1.3, y: 2.9, z: 1.82, c: 0xff4d5b },
+    { w: 2.1, h: 1.6, d: .1, y: .8, z: 2.52, c: 0x151020 }, { w: .3, h: .3, d: .12, x: -.6, y: 1.45, z: 2.56, c: 0xf8f9fa }, { w: .3, h: .3, d: .12, x: 0, y: 1.45, z: 2.56, c: 0xf8f9fa }, { w: .3, h: .3, d: .12, x: .6, y: 1.45, z: 2.56, c: 0xf8f9fa },
+    { w: .32, h: 1.4, d: .32, x: -3.2, y: 2.6, rz: .35, c: 0xdee2e6 }, { w: .32, h: 1.4, d: .32, x: 3.2, y: 2.6, rz: -.35, c: 0xdee2e6 },
+    { w: .32, h: 1.2, d: .32, x: -2.1, y: 6.2, rz: .45, c: 0xdee2e6 }, { w: .32, h: 1.2, d: .32, x: 2.1, y: 6.2, rz: -.45, c: 0xdee2e6 }];
+  for (let i = 0; i < 4; i++) out.push({ w: .8, h: .8, d: .8, x: -1.95 + i * 1.3, y: 7.05, z: 1.8, c: k });
+  return out;
+}
+function sgInit() {
+  if (SG.meshes) return; SG.meshes = {};
+  for (const id in UNITS) { const m = instMesh(mergeBoxes(unitBuild(id)), enemyMat, 40); scene.add(m); SG.meshes[id] = m; }
+  const lit = new THREE.MeshLambertMaterial({ vertexColors: true });
+  SG.castle = new THREE.Mesh(mergeBoxes(castleBuild()), lit); SG.fort = new THREE.Mesh(mergeBoxes(fortBuild()), lit);
+  const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d');
+  x.fillStyle = '#e03131'; x.beginPath(); x.arc(64, 64, 60, 0, 7); x.fill(); x.fillStyle = '#fff'; x.font = 'bold 84px serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('漢', 64, 70);
+  const em = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true })); em.position.set(0, 3.3, 1.93); SG.castle.add(em);
+  SG.road = new THREE.Mesh(G(1, 1, 1), new THREE.MeshLambertMaterial({ color: 0x8d5524 }));
+  [SG.castle, SG.fort, SG.road].forEach(m => { m.visible = false; scene.add(m); });
+}
+function sgStart() {
+  sgInit(); SG.on = true; SG.units.length = 0; SG.money = 150; SG.wal = 1; SG.can = 0; SG.cdT = {}; SG.kbox = false; SG.nextWave = 35; SG.pan = null; SG.panT = 0; SG.fFlash = 0;
+  const st = W.stage - 1, sm = 1 + .45 * st + .04 * st * st; SG.sm = sm; SG.eMul = 1.2 * Math.pow(sm, .85) / (1 + .08 * st);
+  SG.fmax = SG.fhp = Math.round(1500 * stageMul(W.stage) * (1 + .05 * (W.lv - 1)));
+  const learned = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0).length; SG.learned = learned;
+  SG.canMax = Math.max(18, 32 - learned / 10); SG.can = SG.canMax * .4;
+  SG.castle.position.set(SG.cx, 0, -1.8); SG.fort.position.set(SG.fx, 0, -1.8);
+  SG.road.scale.set(SG.fx - SG.cx + 6, .04, 6.4); SG.road.position.set((SG.cx + SG.fx) / 2, .02, 0); SG.road.material.color.setHex(W.theme.dirt || 0x8d5524);
+  SG.castle.visible = SG.fort.visible = SG.road.visible = true;
+  P.x = SG.cx + 3; P.z = 2.4; P.face = P.rot = Math.PI / 2; SG.camX = SG.cx + 11; cam.position.set(SG.camX, 10.5, 26);
+  W.nextKbox = 40; W.spawnAcc = 0; W.nextElite = 60;
+  $('#sgUI').hidden = false; $('#dashBtn').hidden = true; document.body.classList.add('sg'); sgCards(); sgHud(true);
+  if (!S.sgTut) { S.sgTut = 1; save(); $('#sgCards').classList.add('hint'); setTimeout(() => { $('#sgCards').classList.remove('hint'); }, 9000); setTimeout(() => toast('したの カードを おすと なかまが でるよ！'), 3600); }
+}
+function sgEnd() {
+  if (!SG.on && !SG.meshes) return; SG.on = false; SG.units.length = 0;
+  if (SG.meshes) { for (const id in SG.meshes) flush(SG.meshes[id], 0); SG.castle.visible = SG.fort.visible = SG.road.visible = false; }
+  $('#sgUI').hidden = true; $('#dashBtn').hidden = false; document.body.classList.remove('sg');
+}
+const sgIds = () => { const ids = ['base']; for (const w of W.weps) { const id = WEAPONS[w.i].id; if (UNITS[id] && !ids.includes(id)) ids.push(id); } return ids; };
+const sgCap = () => 250 + 200 * SG.wal, sgRate = () => 7 + 5 * SG.wal, sgWalCost = () => 40 + 60 * SG.wal;
+function sgStat(id) {
+  const U = UNITS[id], w = id === 'base' ? null : W.weps.find(x => WEAPONS[x.i].id === id);
+  const lv = w ? w.lv : 1 + Math.min(7, Math.floor((W.lv - 1) / 5)), evo = lv >= WMAX, lm = (1 + .22 * (lv - 1)) * (evo ? 1.5 : 1);
+  return { hp: U.hp * SG.sm * lm * (1 + (W.pas.armor || 0) * .1), dmg: U.dmg * SG.sm * lm, lv, evo };
+}
+function sgCards() {
+  const ids = sgIds();
+  $('#sgCards').innerHTML = ids.map((id, k) => { const U = UNITS[id], st = sgStat(id); return `<button class="ucard ${st.evo ? 'evo' : ''}" data-u="${id}" aria-label="${U.s} ${U.cost}"><span class="ulv">${st.evo ? '★' : 'Lv' + st.lv}</span>${id === 'base' ? BASE_ICON : wIcon(WIDX[id])}<b>${esc(U.s)}</b><span class="ucost">${U.cost}</span><i class="ucd"></i><kbd>${k + 1}</kbd></button>`; }).join('');
+  $('#sgCards').querySelectorAll('[data-u]').forEach(b => b.onpointerdown = e => { e.preventDefault(); sgSummon(b.dataset.u); });
+}
+function sgSummon(id) {
+  if (!SG.on || !W.on || W.paused || W.susp || W.clearing > 0) return;
+  const U = UNITS[id]; if (!U) return;
+  if ((SG.cdT[id] || 0) > 0) { sfx('ng'); return; }
+  if (SG.money < U.cost) { sfx('ng'); const b = $(`#sgMoney`); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); return; }
+  if (SG.units.length >= 60) { toast('なかまが いっぱい！'); return; }
+  SG.money -= U.cost; SG.cdT[id] = U.cd; const st = sgStat(id), sc = (U.sc || 1) * (st.evo ? 1.15 : 1), lz = (Math.random() - .5) * 3;
+  const u = { id, x: SG.cx + 3.6, z: lz, lz, hp: st.hp, max: st.hp, dmg: st.dmg, rng: U.rng, atk: U.atk, at: .3, spd: U.spd * (.92 + Math.random() * .16), kind: U.kind, area: U.area || 0, s: sc, r: .45 * sc, col: st.evo ? (EVOCOL[id] || 0xffd43b) : unitCol(id), evo: st.evo, ph: Math.random() * 6, kx: 0, flash: 0, moving: false, dead: false };
+  SG.units.push(u); sfx('click'); ringFx(u.x, u.z, 1.6, u.col, .35); emit(u.x, 1.2, u.z, 10, u.col, 4, .2, .5);
+  sgHud(true);
+}
+function sgWallet() {
+  if (!SG.on || W.paused || SG.wal >= 8) return; const c = sgWalCost(); if (SG.money < c) { sfx('ng'); return; }
+  SG.money -= c; SG.wal++; sfx('evo'); banner(`{魔力炉|まりょくろ} Lv${SG.wal}！`, 'gold'); emit(P.x, 2, P.z, 20, 0xb197fc, 6, .25, .7); sgHud(true);
+}
+function sgCannon() {
+  if (!SG.on || W.paused || W.susp || SG.can < SG.canMax || W.clearing > 0) return;
+  SG.can = 0; const L = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0), k = L.length ? pick(L).k : '漢';
+  const x0 = SG.cx + 2.5, len = 46; beamFx(x0, 0, Math.PI / 2, len, 3.2, 0xffd43b); setTimeout(() => { if (SG.on) beamFx(x0, 0, Math.PI / 2, len, 1.6, 0xffffff); }, 90);
+  const dmg = (60 + SG.learned * 1.5) * SG.sm;
+  for (const e of W.enemies) if (!e.dead && !e.still && e.x < x0 + len) { hitEnemy(e, e.boss ? dmg * .5 : dmg, 2.2, SG.cx, e.z, 0xffd43b); e.slowT = 1.2; e.slow = .6; }
+  flashScreen(.85); W.shake = 1; sfx('evo'); setTimeout(() => sfx('boom'), 120);
+  const el = $('#sgKanji'); el.innerHTML = `<small><ruby>言霊砲<rt>ことだまほう</rt></ruby></small>${esc(k)}`; el.hidden = false; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); clearTimeout(sgCannon.t); sgCannon.t = setTimeout(() => el.hidden = true, 1500);
+  sgHud(true);
+}
+function sgHurtUnit(u, d) { if (u.dead) return; u.hp -= d; u.flash = .12; if (u.hp <= 0) { u.dead = true; emit(u.x, 1.2 * u.s, u.z, 10, u.col, 6, .22, .7, 1); emit(u.x, 1.2, u.z, 3, 0xffffff, 2.5, .35, .4, 0, .6); } }
+function sgHurtCastle(d) {
+  if (W.clearing > 0 || W.dead) return; P.hp -= d; SG.cHurt = .15; W.shake = Math.max(W.shake, .15);
+  if (SG.hurtT === undefined || W.t - SG.hurtT > .5) { SG.hurtT = W.t; sfx('hurt'); const h = $('#hurt'); h.style.opacity = .7; clearTimeout(sgHurtCastle.t); sgHurtCastle.t = setTimeout(() => h.style.opacity = 0, 140); }
+  if (P.hp <= 0) { P.hp = 0; die(); }
+}
+function sgHitFort(d) {
+  if (W.clearing > 0) return; SG.fhp -= d * W.dmgMul; SG.fFlash = .1;
+  if (Math.random() < .5) emit(SG.fx - 2.6, 1 + Math.random() * 4, (Math.random() - .5) * 3, 3, 0xdee2e6, 4, .25, .5);
+  if (SG.fhp <= 0) sgWin();
+}
+function sgWin() {
+  SG.fhp = 0; W.clearing = 3.4; sfx('win'); flashScreen(.9); W.shake = 1.4; banner('{魔王城|まおうじょう} {陥落|かんらく}！', 'gold');
+  if (W.boss) { killEnemy(W.boss, true); W.boss = null; $('#bossBar').hidden = true; }
+  for (let i = 0; i < 8; i++) setTimeout(() => { if (!SG.on) return; const x = SG.fx + (Math.random() - .5) * 5, y = 1 + Math.random() * 7; sphereFx(x, y, 0, 3, pick([0xffd43b, 0xff8b3d, 0xffffff]), .5); emit(x, y, 0, 24, 0xffc83a, 12, .4, 1); sfx('boom'); }, i * 220);
+  confetti(SG.fx - 4, 0, 80);
+}
+function sgArea(x, z, r, d, skip, kb = .3, srcx = x) { for (const e of W.enemies) { if (e.dead || e === skip || e.still) continue; if (Math.abs(e.x - x) < r + e.r) hitEnemy(e, d, kb, srcx, e.z); } }
+function sgLine(x0, x1, z, n, col) { for (let i = 0; i < n; i++) { const t = i / n; emit(x0 + (x1 - x0) * t, 1.1, z, 1, col, .6, .16, .25, 0, .2); } }
+function sgAttack(u, tg) {
+  const D = u.dmg, col = u.col;
+  if (!tg) {
+    sgHitFort(D * (u.kind === 'flame' ? 1.3 : 1));
+    if (u.kind === 'bolt') boltFx(SG.fx - 2.6, u.z, col); else if (u.kind === 'beam') beamFx(u.x, u.z, Math.PI / 2, SG.fx - u.x, .7, col); else if (u.kind === 'blast') { sphereFx(SG.fx - 2.6, 2, u.z, 2.2, col, .3); sfx('boom'); } else emit(SG.fx - 2.8, 1.4, u.z, 4, col, 4, .2, .35);
+    return;
+  }
+  switch (u.kind) {
+    case 'melee': hitEnemy(tg, D, .35, u.x, u.z, col); if (u.area) sgArea(tg.x, tg.z, u.area, D * .7, tg); emit(u.x + .8 * u.s, 1.1 * u.s, u.z, 3, 0xffffff, 3, .16, .2, 0); break;
+    case 'shot': sgLine(u.x + .6, tg.x, u.z, 6, col); hitEnemy(tg, D, .15, u.x, u.z, col); sfx('shoot'); break;
+    case 'pierce': for (const e of W.enemies) if (!e.dead && !e.still && e.x >= u.x - .5 && e.x <= u.x + u.rng + e.r) hitEnemy(e, D, .2, u.x, e.z, col); sgLine(u.x + .6, u.x + u.rng, u.z, 8, col); break;
+    case 'bolt': boltFx(tg.x, tg.z, col); ringFx(tg.x, tg.z, u.area, col, .3); sgArea(tg.x, tg.z, u.area, D); sfx('zap'); W.shake = Math.max(W.shake, .1); break;
+    case 'blast': sgLine(u.x + .6, tg.x, u.z, 10, 0xfff3bf); explode(tg.x, tg.z, u.area, D, col); break;
+    case 'beam': beamFx(u.x + .5, u.z, Math.PI / 2, u.rng, .8, col); for (const e of W.enemies) if (!e.dead && !e.still && e.x >= u.x - .5 && e.x <= u.x + u.rng + e.r) hitEnemy(e, D, .3, u.x, e.z); sfx('zap'); break;
+    case 'flame': for (let k = 0; k < 3; k++) emit(u.x + .8, 1.0, u.z, 1, pick([0xff922b, 0xffd43b, 0xff6b6b]), 7, .3, .35, 0, .4); for (const e of W.enemies) if (!e.dead && !e.still && e.x >= u.x - .5 && e.x <= u.x + u.rng + e.r) hitEnemy(e, D, .05, u.x, e.z); break;
+    case 'aura': ringFx(u.x, u.z, u.area, 0x99e9f2, .3); for (const e of W.enemies) if (!e.dead && !e.still && Math.abs(e.x - u.x) < u.area + e.r) { hitEnemy(e, D, .1, u.x, e.z, 0xe3fafc); e.slowT = 1; e.slow = .55; } break;
+    case 'slam': ringFx(tg.x, tg.z, u.area, col, .4); sphereFx(tg.x, .6, tg.z, u.area * .8, col, .3); sgArea(tg.x, tg.z, u.area, D, null, .8, u.x); sfx('boom'); W.shake = Math.max(W.shake, .3); break;
+  }
+}
+function sgUnits(dt) {
+  for (const u of SG.units) {
+    if (u.dead) continue; u.flash -= dt; u.at -= dt;
+    let tg = null, td = 1e9;
+    for (const e of W.enemies) { if (e.dead || e.still || e.rise > 0) continue; const dx = e.x - u.x; if (dx > -.8 - e.r && dx < u.rng + e.r && dx < td) { td = dx; tg = e; } }
+    const atF = u.x >= SG.fx - 3.4 - u.r;
+    u.moving = !(tg || atF);
+    if (!u.moving) { if (u.at <= 0) { u.at = u.atk; sgAttack(u, tg); } } else u.x += u.spd * dt;
+    u.x += u.kx * dt; u.kx *= Math.pow(.01, dt); if (u.x < SG.cx + 3) u.x = SG.cx + 3;
+    u.z += (u.lz - u.z) * Math.min(1, dt * 2);
+  }
+  for (let i = SG.units.length - 1; i >= 0; i--) if (SG.units[i].dead) SG.units.splice(i, 1);
+}
+function sgDrawUnits(sh) {
+  const cnt = {}; for (const id in SG.meshes) cnt[id] = 0;
+  for (const u of SG.units) {
+    if (u.dead) continue; const m = SG.meshes[u.id], i = cnt[u.id]; if (i >= 40) continue; cnt[u.id]++;
+    const hop = u.moving ? Math.abs(Math.sin(W.t * 9 + u.ph)) * .1 : 0, lunge = u.at > u.atk - .14 ? .28 : 0;
+    setRY(m, i, u.x + lunge, hop, u.z, Math.PI / 2, u.s, u.s, u.s); setAnim(m, i, u.ph, u.moving ? 9 : 0);
+    if (u.flash > 0) setCol(m, i, 3, 1.3, 1.3); else if (u.evo) { const g = 1.2 + Math.sin(W.t * 6 + u.ph) * .15; setCol(m, i, g, g, .85); } else setCol(m, i, 1, 1, 1);
+    if (sh < 500) setRY(shadowM, sh++, u.x, .03, u.z, 0, u.s * .9, 1, u.s * .9);
+    if (u.evo && Math.random() < .08) emit(u.x, 1.6 * u.s, u.z, 1, u.col, 1, .14, .5, 0, .6);
+  }
+  for (const id in SG.meshes) flush(SG.meshes[id], cnt[id]);
+  return sh;
+}
+/* てきの うごき（ひだりへ すすむ。なかまや しろに あたったら こうげき） */
+function sgEnemy(e, dt) {
+  if (e.still) return false;
+  if (e.lz == null) e.lz = e.z;
+  e.slowT -= dt; let sp = e.spd * .72 * (e.slowT > 0 ? 1 - (e.slow || .5) : 1);
+  if (e.hop) sp *= (Math.sin(W.t * 6 + e.ph) > 0 ? 1.6 : .2);
+  const rng = e.boss ? 3.2 : e.role === 'shoot' ? 6 : .8 + e.r;
+  let tg = null, td = 1e9;
+  for (const u of SG.units) { if (u.dead) continue; const dx = e.x - u.x; if (dx > -.6 && dx < rng + u.r && dx < td) { td = dx; tg = u; } }
+  const atC = e.x <= SG.cx + 3.6 + e.r; let moving = false;
+  e.atk -= dt;
+  if (e.boss) {
+    e.sumT = (e.sumT || 8) - dt; if (e.sumT <= 0) { e.sumT = 9; for (let k = 0; k < 3; k++) sgSpawnAt('basic', e.x + 1 + k * .8); }
+    if (e.windup > 0) {
+      e.windup -= dt; if (e.windup <= 0) {
+        const cx = e.x - 2.2; ringFx(cx, e.z, 4, 0xff8b3d, .6); sphereFx(cx, .5, e.z, 3.5, 0xff8b3d, .35); emit(cx, .4, e.z, 26, W.theme.dirt, 9, .35, .8); W.shake = .5; sfx('boom');
+        for (const u of SG.units) if (!u.dead && Math.abs(u.x - cx) < 3.8) { sgHurtUnit(u, e.dmg * SG.eMul * 1.3); u.kx = -6; }
+        if (cx - SG.cx < 6) sgHurtCastle(e.dmg * .5);
+      }
+    }
+  }
+  if (tg || atC) {
+    if (e.atk <= 0 && !(e.windup > 0)) {
+      if (e.boss) { e.windup = .6; e.atk = 2.1; const wr = warnPool.find(x => !x.visible); if (wr) { wr.visible = true; wr.position.set(e.x - 2.2, .08, e.z); wr.scale.set(3.8, 1, 3.8); setTimeout(() => wr.visible = false, 600); } }
+      else {
+        e.atk = e.role === 'shoot' ? 2.2 : 1.0; e.flash = .05;
+        if (tg) { if (e.role === 'shoot') sgLine(e.x - .5, tg.x, e.z, 6, e.shot || 0x7cff6b); sgHurtUnit(tg, e.dmg * SG.eMul); }
+        else sgHurtCastle(e.dmg * .35);
+      }
+    }
+  } else if (!(e.windup > 0)) { e.x -= sp * dt; moving = sp > .3; }
+  e.x += e.kx * dt; const kd = Math.pow(.0015, dt); e.kx *= kd; e.kz *= kd;
+  if (e.x > SG.fx - 2) e.x = SG.fx - 2; if (e.x < SG.cx + 2.5) e.x = SG.cx + 2.5;
+  e.z += (e.lz - e.z) * Math.min(1, dt * 3);
+  let da = -Math.PI / 2 - e.ang; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2; e.ang += da * Math.min(1, dt * 10);
+  return moving;
+}
+function sgSpawnAt(role, x, elite) { const e = spawnEnemy(role, { x, z: (Math.random() - .5) * 3.4 }, elite); if (e) { e.lz = e.z; e.rise = 0; if (!e.boss) { e.hp *= 1.4; e.max = e.hp; } else { e.hp *= .7; e.max = e.hp; } } return e; }
+function sgDirector(dt) {
+  if (W.clearing > 0) return;
+  const st = W.stage, rate = Math.min(2.6, (.7 + W.t / 120) * (1 + .06 * (st - 1)) * W.mod.eRate) * (W.boss ? .6 : 1);
+  W.spawnAcc += rate * dt;
+  while (W.spawnAcc >= 1) { W.spawnAcc--; sgSpawnAt(pickType(), SG.fx - 2.6 - Math.random()); }
+  if (W.t >= SG.nextWave) { SG.nextWave += 40; const n = Math.round((6 + Math.min(10, st)) * Math.min(1.5, W.mod.eRate)); for (let k = 0; k < n; k++) sgSpawnAt(W.t > 90 ? 'fast' : 'swarm', SG.fx - 2.6 - k * .7); banner('{大軍|たいぐん}が せまってくる！', 'red'); }
+  if (W.t >= W.nextElite) { W.nextElite += 55 * W.mod.elite; const pr = pickType(); const e = sgSpawnAt(pr === 'swarm' ? 'basic' : pr, SG.fx - 2.8, true); if (e && !W.bossOut) banner('つよい てきが きた！', 'gold'); }
+  if (!W.bossOut && (SG.fhp < SG.fmax * .6 || W.t >= 150)) { W.bossOut = true; const be = sgSpawnAt('boss', SG.fx - 3); if (be) { be.z = be.lz = 0; bossIntro(be); } }
+  if (W.t >= W.nextKbox && !SG.kbox) { W.nextKbox += 50; SG.kbox = true; $('#sgKbox').hidden = false; banner('漢字ボックスが でた！', 'gold'); sfx('chest'); }
+}
+function sgHalfW() { return SG.dist * Math.tan(19 * Math.PI / 180) * cam.aspect; }
+function sgClampCam(x) { const h = Math.min(sgHalfW(), (SG.fx - SG.cx) / 2 + 2); return Math.max(SG.cx - 4 + h, Math.min(SG.fx + 4 - h, x)); }
+function updateSiege(dtR) {
+  const dt = dtR * W.ts;
+  if (W.clearing > 0) { W.clearing -= dtR; for (const e of W.enemies) if (!e.dead && Math.random() < dtR * 4) killEnemy(e, true); if (Math.random() < dtR * 5) { const x = SG.fx + (Math.random() - .5) * 5, y = 1 + Math.random() * 7; emit(x, y, 0, 10, pick([0xffd43b, 0xff8b3d, 0x868e96]), 8, .35, .8); } if (W.clearing <= 0) { stageClear(); return; } }
+  W.t += dt; P.inv -= dt;
+  SG.money = Math.min(sgCap(), SG.money + sgRate() * dt); SG.can = Math.min(SG.canMax, SG.can + dt);
+  for (const k in SG.cdT) SG.cdT[k] -= dt;
+  const tg = nearest(P.x, P.z, 16);
+  P.face = tg ? Math.atan2(tg.x - P.x, tg.z - P.z) : Math.PI / 2;
+  let d = P.face - P.rot; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2; P.rot += d * (1 - Math.exp(-18 * dt));
+  const pm = P.model; pm.g.position.set(P.x, 0, P.z); pm.g.rotation.y = P.rot; animPlayer(pm, W.t, false, !!tg); animGear(pm, W.t, dt); gearFx(pm, dt, false); pm.inner.visible = true;
+  playerShadow.position.set(P.x, .03, P.z);
+  if (playerAura.visible) { playerAura.position.set(P.x, .05, P.z); const s = W.auraScale * (1 + Math.sin(W.t * 5) * .06); playerAura.scale.set(s, 1, s); playerAura.material.opacity = .55; }
+  groundM.position.set(Math.round(SG.camX / 4) * 4, 0, 0);
+  updDecor(); sgDirector(dt); { const cm = W.cdMul; W.cdMul *= 2; updWeapons(dt); W.cdMul = cm; } updEnemies(dt); sgUnits(dt);
+  updBullets(dt); updMeteors(dt); W.vacuum = true; updGems(dt); updPicks(dt); updEB(dt); updParticles(dt); updFx(dt);
+  if (W.comboT > 0) { W.comboT -= dt; if (W.comboT <= 0) { W.combo = 0; $('#combo').style.opacity = 0; } }
+  // しろの ようす
+  SG.fFlash -= dtR; SG.fort.position.x = SG.fx + (SG.fFlash > 0 ? (Math.random() - .5) * .25 : 0);
+  const fr = SG.fhp / SG.fmax; if (fr < .5 && Math.random() < dtR * (fr < .25 ? 10 : 4)) emit(SG.fx + (Math.random() - .5) * 3, 6 + Math.random() * 3, -1.8, 1, fr < .25 ? pick([0xff922b, 0x495057]) : 0x495057, 1.5, .5, 1.4, -.4, .8);
+  SG.cHurt -= dtR; SG.castle.position.x = SG.cx + (SG.cHurt > 0 ? (Math.random() - .5) * .2 : 0);
+  // カメラ（たたかいの さいぜんせんを おう。ゆびで よこに うごかせる）
+  const { mx } = moveVec(); if (Math.abs(mx) > .1) { SG.camX += mx * 22 * dtR; SG.panT = performance.now() + 3000; }
+  if (!SG.pan && performance.now() > SG.panT) {
+    let front = SG.cx + 6; for (const u of SG.units) if (u.x > front) front = u.x;
+    let ef = SG.fx; for (const e of W.enemies) if (!e.dead && e.x < ef) ef = e.x;
+    SG.camX += (Math.min(front + 2, ef + 4) - SG.camX) * (1 - Math.exp(-1.5 * dtR));
+  }
+  SG.camX = sgClampCam(SG.camX);
+  const portrait = innerHeight > innerWidth * 1.05; SG.dist = portrait ? 44 : 30;
+  V3.set(SG.camX, portrait ? 17 : 11.5, SG.dist - 1); cam.position.lerp(V3, 1 - Math.exp(-6 * dtR));
+  if (W.shake > 0) { W.shake = Math.max(0, W.shake - dtR * 2.2); const s = W.shake * W.shake * 1.4; cam.position.x += (Math.random() - .5) * s; cam.position.y += (Math.random() - .5) * s; }
+  cam.lookAt(cam.position.x, 2.2, -1);
+  dirL.position.set(SG.camX + 10, 20, 8); dirL.target.position.set(SG.camX, 0, 0);
+  hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
+  sgHud();
+}
+function sgHud(force) {
+  SG.hudT = (SG.hudT || 0) + .016; if (!force && SG.hudT < .08) return; SG.hudT = 0;
+  const cap = sgCap(); $('#sgMoneyN').textContent = Math.floor(SG.money); $('#sgMoneyCap').textContent = '/ ' + cap;
+  $('#sgMoneyFill').style.width = (SG.money / cap * 100) + '%';
+  const wb = $('#sgWal'); wb.innerHTML = SG.wal >= 8 ? '<ruby>魔力炉<rt>まりょくろ</rt></ruby> MAX' : `<ruby>魔力炉<rt>まりょくろ</rt></ruby> Lv${SG.wal}<small>▲ ${sgWalCost()}</small>`; wb.classList.toggle('poor', SG.wal >= 8 || SG.money < sgWalCost());
+  $('#sgCards').querySelectorAll('[data-u]').forEach(b => { const id = b.dataset.u, U = UNITS[id], cd = Math.max(0, SG.cdT[id] || 0); b.classList.toggle('poor', SG.money < U.cost); b.querySelector('.ucd').style.height = (cd / U.cd * 100) + '%'; });
+  const cr = SG.can / SG.canMax, cb = $('#sgCan'); $('#sgCanFill').style.height = (cr * 100) + '%'; cb.classList.toggle('ready', cr >= 1);
+  $('#sgFortFill').style.width = Math.max(0, SG.fhp / SG.fmax * 100) + '%';
+  sgMap();
+}
+function sgMap() {
+  const c = $('#sgMap'), g = c.getContext('2d'), Wd = c.width, H = c.height, x0 = SG.cx - 3, x1 = SG.fx + 3, X = x => (x - x0) / (x1 - x0) * Wd;
+  g.clearRect(0, 0, Wd, H); g.fillStyle = 'rgba(21,23,51,.78)'; g.beginPath(); g.roundRect ? g.roundRect(0, 0, Wd, H, 14) : g.rect(0, 0, Wd, H); g.fill();
+  g.fillStyle = 'rgba(255,255,255,.12)'; g.fillRect(X(SG.cx), H / 2 - 3, X(SG.fx) - X(SG.cx), 6);
+  const h = sgHalfW(); g.strokeStyle = 'rgba(255,255,255,.75)'; g.lineWidth = 3; g.strokeRect(X(SG.camX - h), 4, X(SG.camX + h) - X(SG.camX - h), H - 8);
+  g.fillStyle = '#5ec8ff'; g.fillRect(X(SG.cx) - 10, H / 2 - 14, 20, 28); g.fillStyle = '#b38cff'; g.fillRect(X(SG.fx) - 10, H / 2 - 16, 20, 32);
+  g.fillStyle = '#4fd67f'; for (const u of SG.units) { g.beginPath(); g.arc(X(u.x), H / 2 + u.z * 4, 4 * u.s, 0, 7); g.fill(); }
+  for (const e of W.enemies) { if (e.dead || e.still) continue; g.fillStyle = e.boss ? '#ffc83a' : e.elite ? '#ff922b' : '#ff4d5b'; g.beginPath(); g.arc(X(e.x), H / 2 + (e.z || 0) * 4, e.boss ? 9 : e.elite ? 6 : 3.5, 0, 7); g.fill(); }
+}
+function sgPanDown(e) { if (!W.on || W.paused) return; SG.pan = { id: e.pointerId, x: e.clientX, cx: SG.camX }; }
+function sgPanMove(e) { if (!SG.pan || e.pointerId !== SG.pan.id) return; SG.camX = sgClampCam(SG.pan.cx - (e.clientX - SG.pan.x) / innerWidth * sgHalfW() * 2); }
+function sgPanUp(e) { if (!SG.pan || e.pointerId !== SG.pan.id) return; SG.pan = null; SG.panT = performance.now() + 3500; }
+function sgBindUI() {
+  $('#sgWal').onpointerdown = e => { e.preventDefault(); sgWallet(); };
+  $('#sgCan').onpointerdown = e => { e.preventDefault(); sgCannon(); };
+  $('#sgKbox').onclick = () => { if (!SG.kbox || W.paused) return; SG.kbox = false; $('#sgKbox').hidden = true; sfx('chest'); openMission('box'); };
+  $('#sgMap').onpointerdown = e => { const r = e.currentTarget.getBoundingClientRect(), t = (e.clientX - r.left) / r.width; SG.camX = sgClampCam(SG.cx - 3 + t * (SG.fx - SG.cx + 6)); SG.panT = performance.now() + 4000; };
+  addEventListener('keydown', e => {
+    if (!SG.on || !W.on || W.paused || W.susp || !$('#lvup').hidden) return;
+    const n = parseInt(e.key, 10); if (n >= 1 && n <= 9) { const id = sgIds()[n - 1]; if (id) sgSummon(id); }
+    if (e.code === 'KeyC' || e.code === 'Enter') sgCannon(); if (e.code === 'KeyQ') sgWallet();
+  });
+}
+
 /* ============ はじまり ============ */
-initGL(); makeSigils(); initPreview();
+initGL(); makeSigils(); sgBindUI(); initPreview();
 const cv = $('#gl');
 cv.addEventListener('pointerdown', joyDown); addEventListener('pointermove', joyMove); addEventListener('pointerup', joyUp); addEventListener('pointercancel', joyUp);
 requestAnimationFrame(loop);
