@@ -303,7 +303,7 @@ body.sg #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
 .slot.evo{background:linear-gradient(135deg,#ffe066,#ff922b);}
 .slot.pas{width:26px;height:26px;border-radius:7px}
 .slot.pas svg{width:18px;height:18px}
-.chip svg{width:16px;height:16px;flex:0 0 auto}.chip ruby rt{font-size:.5em}
+.chip svg{width:16px;height:16px;flex:0 0 auto}.chip.bio{font-size:.74rem}.chip.bio .stars{margin-left:4px;letter-spacing:-1px;text-shadow:0 1px 0 #151733}.chip ruby rt{font-size:.5em}
 .chip{display:inline-flex;align-items:center;gap:5px;background:rgba(21,23,51,.78);border:2px solid var(--ink);border-radius:99px;padding:3px 9px;font-size:.8rem;font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
 #hud .tr{position:absolute;right:12px;top:calc(env(safe-area-inset-top,0px) + 28px);display:flex;gap:6px;align-items:center;pointer-events:auto}
 #hud .tc{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 26px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:min(40vw,360px)}
@@ -498,7 +498,7 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
     <div class="slots" id="wSlots"></div>
     <div class="slots" id="pSlots"></div>
   </div>
-  <div class="tc"><div id="timer">0:00</div><div id="timerSub">ボスまで 3:00</div>
+  <div class="tc"><div id="timer">0:00</div><div id="timerSub">ボスまで 3:00</div><span class="chip bio" id="bioChip"></span>
     <div class="bossbar" id="bossBar" hidden><b id="bossName">ボス</b><div class="hp" style="width:100%"><i id="bossFill" style="width:100%"></i></div></div></div>
   <div class="tr"><span class="chip tod" id="todChip"></span><span class="chip heat" id="heatChip"></span><span class="chip" id="killChip">0 たい</span><span class="chip"><span class="coin"></span><span id="hudCoins">0</span></span><button class="btn sm w" id="pauseBtn" aria-label="ポーズ">II</button></div>
   <div id="combo"><b id="comboN">0</b><span>コンボ</span></div>
@@ -2166,6 +2166,7 @@ function initGL() {
 function resize() { if (!R) return; const w = innerWidth, h = innerHeight; R.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
 
 function buildEnv(stage) {
+  bioSetup(stage);
   const th = THEMES[areaIdx(stage)];
   scene.background = new THREE.Color(th.sky); scene.fog = new THREE.Fog(th.sky, 40, 80);
   hemi.intensity = .85 * th.li; dirL.intensity = .75 * th.li; hemi.color.setHex(0xffffff); dirL.color.setHex(0xffffff); pLight.intensity = 0;
@@ -2179,14 +2180,15 @@ function buildEnv(stage) {
   groundTex = new THREE.CanvasTexture(c); groundTex.wrapS = groundTex.wrapT = THREE.RepeatWrapping; groundTex.repeat.set(40, 40); groundTex.magFilter = THREE.NearestFilter;
   groundM = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshLambertMaterial({ map: groundTex })); groundM.rotation.x = -Math.PI / 2; scene.add(groundM);
   for (const k in DM) { scene.remove(DM[k].m); DM[k].m.geometry.dispose(); if (DM[k].g) { scene.remove(DM[k].g); DM[k].g.geometry.dispose(); } delete DM[k]; }
-  for (const k of [...new Set([...th.decor.map(d => d[0]), 'patch', 'tuft', 'pond', 'ruin', 'torii'])]) {
-    const list = DECOR[k](th), lit = list.filter(b => !b.glow), gl = list.filter(b => b.glow), cap = k === 'patch' || k === 'tuft' ? 520 : 200;
-    const m = instMesh(mergeBoxes(lit), decorMat, cap); scene.add(m); let g = null; if (gl.length) { g = instMesh(mergeBoxes(gl), glowMat, cap); scene.add(g); } DM[k] = { m, g };
-  }
+  for (const ti of BIO.list) { const t2 = THEMES[ti];
+    for (const k of [...new Set([...t2.decor.map(d => d[0]), 'patch', 'tuft', 'pond', 'ruin', 'torii'])]) {
+      const list = DECOR[k](t2), lit = list.filter(b => !b.glow), gl = list.filter(b => b.glow), cap = k === 'patch' || k === 'tuft' ? 520 : 200;
+      const m = instMesh(mergeBoxes(lit), decorMat, cap); scene.add(m); let g = null; if (gl.length) { g = instMesh(mergeBoxes(gl), glowMat, cap); scene.add(g); } DM[ti + '|' + k] = { m, g };
+    } }
   W.theme = th; decorChunk = null;
   for (const k in EM) { scene.remove(EM[k]); EM[k].geometry.dispose(); delete EM[k]; }
   const addM = (mk, cap) => { if (EM[mk]) return; EM[mk] = instMesh(modelGeo(mk), MODELS[mk].ghost ? ghostMat : enemyMat, cap); scene.add(EM[mk]); };
-  for (const [role, mk] of Object.entries(th.roster)) addM(mk, RCAP[role]);
+  for (const ti of BIO.list) for (const [role, mk] of Object.entries(THEMES[ti].roster)) addM(mk, RCAP[role]);
   addM('barrel', RCAP.barrel); addM('boss' + areaIdx(stage), RCAP.boss);
 }
 function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -2195,22 +2197,22 @@ const FACING = new Set(['windmill', 'vending', 'postbox', 'well', 'igloo', 'pyra
 function updDecor() {
   const FX = SG.on ? SG.camX : P.x, FZ = SG.on ? 0 : P.z, cx = Math.floor(FX / CH), cz = Math.floor(FZ / CH), key = cx + ',' + cz + (SG.on ? 's' : '');
   if (decorChunk === key) return; decorChunk = key;
-  const th = W.theme, cnt = {}; for (const k in DM) cnt[k] = 0;
-  const tot = th.decor.reduce((a, b) => a + b[1], 0); let si = 0;
+  const cnt = {}; for (const k in DM) cnt[k] = 0; let si = 0;
   const put = (k, x, z, a, s, rng, tint) => { const d = DM[k]; if (!d) return; const i = cnt[k]; if (i >= d.m.userData.cap) return; cnt[k]++; setRY(d.m, i, x, 0, z, a, s, s, s); const t = .88 + rng() * .2; if (tint) setCol(d.m, i, t * tint[0], t * tint[1], t * tint[2]); else setCol(d.m, i, t, t, t); setAnim(d.m, i, rng() * 6, 1); if (d.g) setRY(d.g, i, x, 0, z, a, s, s, s); };
   for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) {
     const X = cx + i, Z = cz + j; const rng = mulberry((X * 73856093) ^ (Z * 19349663) ^ (W.stage * 83492791));
+    const bi = biomeAt(X * CH + CH / 2, Z * CH + CH / 2), ti = bioTi(bi), th = THEMES[ti], tot = BIO.tot[bi] || th.decor.reduce((a, b) => a + b[1], 0), putT = (k, ...a) => put(ti + '|' + k, ...a);
     const pickKind = () => { let r = rng() * tot, kind = th.decor[0][0]; for (const [kk, wt] of th.decor) { r -= wt; if (r <= 0) { kind = kk; break; } } return kind; };
-    const RG = decorRegion(X, Z, rng, put, pickKind), n = RG.n;
+    const RG = decorRegion(X, Z, rng, putT, pickKind, th, ti), n = RG.n;
     for (let k = 0; k < n; k++) {
       const kind = RG.kind();
       const x = X * CH + rng() * CH, z = Z * CH + rng() * CH, a0 = rng() * 6.28, s = .8 + rng() * .45;
       if (Math.abs(x) < 3 && Math.abs(z) < 3) continue;
       if (RG.reg === 4 && Math.hypot(x - X * CH - CH / 2, z - Z * CH - CH / 2) < 4.5) continue;
       if (SG.on && z > -6.5 && z < 20) continue;
-      put(kind, x, z, FACING.has(kind) ? (a0 - 3.14) * .12 : a0, s, rng);
+      putT(kind, x, z, FACING.has(kind) ? (a0 - 3.14) * .12 : a0, s, rng);
     }
-    for (let k = 0; k < 4; k++) put('tuft', X * CH + rng() * CH, Z * CH + rng() * CH, rng() * 6.28, .8 + rng() * .5, rng);
+    for (let k = 0; k < 4; k++) putT('tuft', X * CH + rng() * CH, Z * CH + rng() * CH, rng() * 6.28, .8 + rng() * .5, rng);
     if (!SG.on && Math.abs(i) <= 2 && Math.abs(j) <= 2 && rng() < .3 && si < SIGNS.length && SIGNPOOL.length) {
       const sg = SIGNS[si++], sx = X * CH + 2 + rng() * (CH - 4), sz = Z * CH + 2 + rng() * (CH - 4), d = SIGNPOOL[Math.floor(rng() * 9973) % SIGNPOOL.length];
       sg.g.position.set(sx, 0, sz); sg.g.rotation.y = (rng() - .5) * .4; sg.g.visible = true; sg.key = X + ',' + Z; sg.d = d; if (sg.k !== d.k) { drawSign(sg, d); sg.k = d.k; }
@@ -2358,16 +2360,18 @@ function spawnPos(dist) { const a = Math.random() * Math.PI * 2, d = dist || vie
 function spawnEnemy(role, at, elite) {
   const R0 = ROLE[role]; if (!R0) return null;
   if (W.enemies.length >= 190 && role !== 'boss') return null;
-  const mk = role === 'boss' ? 'boss' + areaIdx(W.stage) : role === 'barrel' ? 'barrel' : W.theme.roster[role]; const md = MODELS[mk];
-  const p = at || spawnPos();
+  const p = at || spawnPos(), bth = THEMES[bioTi(biomeAt(p.x, p.z))] || W.theme, dg = role === 'boss' || role === 'barrel' ? 0 : dangerAt(p.x, p.z);
+  if (!elite && dg >= 2 && Math.random() < .002 * dg) elite = true;
+  const mk = role === 'boss' ? 'boss' + areaIdx(W.stage) : role === 'barrel' ? 'barrel' : bth.roster[role]; const md = MODELS[mk];
   const mul = stageMul(W.stage) * (role === 'barrel' || role === 'boss' ? 1 : (1 + W.t / (SG.on ? 200 : 80)));
   const MM = role === 'barrel' ? MOD0 : (W.mod || MOD0);
   const e = { role, mk, x: p.x, z: p.z, hp: R0.hp * mul * (elite ? 10 : 1) * MM.eHp, spd: R0.spd * (1 + Math.min(.3, .02 * (W.stage - 1))) * (elite ? .9 : 1) * MM.eSpd, dmg: R0.dmg * (1 + .08 * (W.stage - 1)) * (elite ? 1.5 : 1), r: R0.r * (elite ? 1.6 : 1) * MM.eSize, s: md.s * (elite ? 1.6 : 1) * MM.eSize, xp: R0.xp * (elite ? 10 : 1),
     atk: .5, flash: 0, slowT: 0, burnT: 0, burnD: 0, kx: 0, kz: 0, ph: Math.random() * 6, elite, boss: role === 'boss', still: role === 'barrel', fly: md.fly, hop: md.hop, ghost: md.ghost, shot: md.shot, as: md.as || 9, orbT: -9, ang: Math.random() * 6, rise: (role === 'barrel' || md.fly || md.ghost) ? 0 : .35, shootT: 1.5 + Math.random() * 2 };
   if (role !== 'barrel') { const hk = heatK(); e.hp *= Math.pow(hk, SG.on ? .5 : e.boss ? .75 : .9); e.dmg *= Math.min(2.5, Math.pow(hk, .3));
     const hl = heatLv(hk); if (!e.boss && hl >= 3 && Math.random() < Math.min(.35, (hl - 2) * .06)) { e.rage = true; e.spd *= 1.25; e.hp *= 1.5; e.xp *= 2; } }
+  if (dg) { e.hp *= 1 + .35 * dg; e.dmg *= 1 + .12 * dg; e.xp = Math.ceil(e.xp * (1 + .3 * dg)); e.s *= 1 + .04 * Math.min(5, dg); e.dg = dg; }
   e.max = e.hp; W.enemies.push(e);
-  if (e.rise > 0 && Math.abs(p.x - P.x) < 22 && Math.abs(p.z - P.z) < 18) emit(p.x, .2, p.z, 5, W.theme.dirt, 3, .22, .5);
+  if (e.rise > 0 && Math.abs(p.x - P.x) < 22 && Math.abs(p.z - P.z) < 18) emit(p.x, .2, p.z, 5, bth.dirt, 3, .22, .5);
   if (e.boss) { e.slamT = 3.5; e.sumT = 6; e.ringT = 5; e.windup = 0; W.boss = e; $('#bossBar').hidden = false; $('#bossName').innerHTML = rb(EPI[areaIdx(W.stage)]) + ' ' + esc(md.n + (W.stage > 21 ? ' +' + Math.floor((W.stage - 1) / 21) : '')); }
   return e;
 }
@@ -2894,7 +2898,7 @@ function update(dtR) {
   dirL.position.set(P.x + 10, 20, P.z + 8); dirL.target.position.set(P.x, 0, P.z);
   hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
   $('#dashBtn').classList.toggle('cd', P.dashCd > 0);
-  heatUpdate(dt); atmUpdate(dt); faceUpdate(pm, W.t);
+  heatUpdate(dt); bioUpdate(dt); updTiles(); atmUpdate(dt); faceUpdate(pm, W.t);
 }
 
 /* ---- ループ ---- */
@@ -3916,7 +3920,7 @@ function updateSiege(dtR) {
   cam.lookAt(cam.position.x, 2.2, -1);
   dirL.position.set(SG.camX + 10, 20, 8); dirL.target.position.set(SG.camX, 0, 0);
   hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
-  sgHud(); atmUpdate(dt); faceUpdate(pm, W.t);
+  sgHud(); updTiles(); atmUpdate(dt); faceUpdate(pm, W.t);
 }
 function sgHud(force) {
   SG.hudT = (SG.hudT || 0) + .016; if (!force && SG.hudT < .08) return; SG.hudT = 0;
@@ -4029,7 +4033,7 @@ function atmStart() {
   ATM.tod = W.stage === 1 ? .1 : pick([.08, .22, .4, .56, .7]);
   ATM.phase = phaseOf(ATM.tod)[1]; ATM.night = !ATM.fixed && ATM.phase === 'yoru';
   ATM.w = null; ATM.wNext = 30 + Math.random() * 25; ATM.dark = ATM.fogK = 1; ATM.ramp = 0; flush(wxM, 0);
-  W.nightSpd = 1; updTodChip(); atmApply(0);
+  W.nightSpd = 1; bioStart(); updTodChip(); atmApply(0);
 }
 function todSample(t) {
   let a = TODK[0], b = TODK[1];
@@ -4045,10 +4049,10 @@ function atmApply(dt) {
   ATM.dark += (tD - ATM.dark) * Math.min(1, dt * 2 + (dt ? 0 : 1)); ATM.fogK += (tF - ATM.fogK) * Math.min(1, dt * 2 + (dt ? 0 : 1));
   let sky = CW, light = CW, sun = 1, amb = 1, night = 0;
   if (!ATM.fixed) { const s = todSample(ATM.tod), A = ATM.amp; sky = C3.copy(CW).lerp(s.sky, A); light = s.light.lerp(CW, 1 - A); sun = 1 + (s.sun - 1) * A; amb = 1 + (s.amb - 1) * A; night = s.night * A; }
-  scene.background.copy(B.bg).multiply(sky).multiplyScalar(ATM.dark); scene.fog.color.copy(scene.background);
+  scene.background.copy(SG.on ? B.bg : BIO.bg).multiply(sky).multiplyScalar(ATM.dark); scene.fog.color.copy(scene.background);
   scene.fog.near = B.near * ATM.fogK; scene.fog.far = B.far * ATM.fogK;
-  hemi.color.copy(B.hemiC).multiply(light); hemi.intensity = B.hemiI * amb * ATM.dark;
-  dirL.color.copy(B.dirC).multiply(light); dirL.intensity = B.dirI * sun * ATM.dark;
+  hemi.color.copy(B.hemiC).multiply(light); hemi.intensity = B.hemiI * amb * ATM.dark * (SG.on ? 1 : BIO.liK);
+  dirL.color.copy(B.dirC).multiply(light); dirL.intensity = B.dirI * sun * ATM.dark * (SG.on ? 1 : BIO.liK);
   pLight.intensity = Math.max(B.pI, night * 1.5); if (night > .05) pLight.color.setHex(0xffd8a8);
   const F = SG.on ? { x: SG.camX, z: 0 } : P, a = (ATM.tod - .05) * Math.PI * 2;
   if (!ATM.fixed) { dirL.position.set(F.x + Math.cos(a) * 16, 6 + Math.max(.2, Math.sin(a)) * 16, F.z + 8); dirL.target.position.set(F.x, 0, F.z); }
@@ -4073,7 +4077,7 @@ function atmUpdate(dt) {
     if (ATM.w && ATM.w.d.bolt && ATM.ramp > .6 && W.on && !W.paused) { ATM.boltT -= dt; if (ATM.boltT <= 0) { ATM.boltT = 4 + Math.random() * 6; atmBolt(ATM.w.d.bolt); } }
   } else {
     ATM.wNext -= dt;
-    if (ATM.wNext <= 0) { const ai = areaIdx(W.stage), k = ATM.night && Math.random() < .5 ? WXN[ai] : pick(WXT[ai]); atmWeather(k); }
+    if (ATM.wNext <= 0) { const ai = SG.on ? areaIdx(W.stage) : bioTi(BIO.cur), k = ATM.night && Math.random() < .5 ? WXN[ai] : pick(WXT[ai]); atmWeather(k); }
   }
   atmApply(dt); atmParticles(dt);
 }
@@ -4146,9 +4150,9 @@ function regionAt(X, Z) {
   if (b > .74) return 4; if (a > .66) return 1; if (a < .32) return 2; if (b < .26) return 3; return 0;
 }
 const REGTINT = [null, [.72, .85, .72], [1.18, 1.22, 1.0], [.92, .9, .95], [.85, .95, 1.05]];
-function decorRegion(X, Z, rng, put, pickKind) {
-  const reg = regionAt(X, Z), R = regOf(W.theme), th = W.theme, x0 = X * CH, z0 = Z * CH;
-  const has = k => !!DM[k], from = list => { const l = list.filter(has); return l.length ? l[Math.floor(rng() * l.length)] : pickKind(); };
+function decorRegion(X, Z, rng, put, pickKind, th, ti) {
+  const reg = regionAt(X, Z), R = REG[ti] || REG[0], x0 = X * CH, z0 = Z * CH;
+  const has = k => !!DM[ti + '|' + k], from = list => { const l = list.filter(has); return l.length ? l[Math.floor(rng() * l.length)] : pickKind(); };
   let n = 3 + Math.floor(rng() * 4), kind = pickKind;
   if (reg === 1) { n = 7 + Math.floor(rng() * 4); kind = () => rng() < .75 ? from(R.tall) : pickKind(); }
   else if (reg === 2) { n = 2 + Math.floor(rng() * 3); kind = () => from(R.small); for (let k = 0; k < 9; k++) put('tuft', x0 + rng() * CH, z0 + rng() * CH, rng() * 6.28, .9 + rng() * .6, rng); }
@@ -4197,6 +4201,84 @@ function faceUpdate(pm, t) {
   else if (W.boss || (SG.on && W.bossOut)) st = 'angry';
   const blink = (t % 3.3) < .11 && st !== 'hurt' && st !== 'happy';
   setFace(pm, st, blink);
+}
+
+/* ============ バイオーム（あるくと せかいが かわる） ============ */
+const BIO = { list: [0], tier: [0, 2, 1], cellS: 72, core: 52, cur: 0, dg: 0, seen: new Set(), chkT: 0, bg: new THREE.Color(), liK: 1, bannerT: -99, cols: [] };
+const hstr = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h; };
+function bioSetup(stage) {
+  const ai = areaIdx(stage), nx = (ai + 1) % THEMES.length, others = shuffle([...THEMES.keys()].filter(i => i !== ai && i !== nx));
+  BIO.list = [ai, nx, others[0]]; BIO.seen = new Set(); BIO.cur = 0; BIO.dg = 0; BIO.bannerT = -99;
+  BIO.cols = BIO.list.map(t => new THREE.Color(THEMES[t].g1));
+  BIO.tot = BIO.list.map(t => THEMES[t].decor.reduce((a, b) => a + b[1], 0));
+}
+function bioCell(x, z) {
+  const S2 = BIO.cellS, cx = Math.floor(x / S2), cz = Math.floor(z / S2); let best = 1e18, X0 = 0, Z0 = 0, bx = 0, bz = 0;
+  for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+    const X = cx + i, Z = cz + j, r = mulberry((X * 92837111) ^ (Z * 689287499) ^ (W.stage * 283923481)), px = (X + .15 + r() * .7) * S2, pz = (Z + .15 + r() * .7) * S2, d = (x - px) ** 2 + (z - pz) ** 2;
+    if (d < best) { best = d; X0 = X; Z0 = Z; bx = px; bz = pz; }
+  }
+  return { id: X0 + ',' + Z0, x: bx, z: bz };
+}
+// 0 = ふるさと（そのステージの せかい）、1 = となりの せかい（きけん）、2 = とおくの せかい
+function biomeAt(x, z) {
+  if (SG.on || BIO.list.length < 2) return 0;
+  if (x * x + z * z < BIO.core * BIO.core) return 0;
+  const c = bioCell(x, z); if (c.x * c.x + c.z * c.z < (BIO.core * 1.15) ** 2) return 0;
+  const r = mulberry(hstr(c.id) ^ (W.stage * 977))(); return r < .28 ? 0 : r < .64 ? 1 : 2;
+}
+function dangerAt(x, z) { if (SG.on) return 0; return BIO.tier[biomeAt(x, z)] + Math.floor(Math.max(0, Math.hypot(x, z) - BIO.core) / 80); }
+const bioTi = b => BIO.list[b] != null ? BIO.list[b] : BIO.list[0];
+function bioStart() {
+  BIO.cur = 0; BIO.dg = 0; BIO.bg.copy(ATM.base ? ATM.base.bg : scene.background); BIO.liK = 1; tileKey = ''; updTiles(); updBioChip();
+}
+function bioUpdate(dt) {
+  if (SG.on) return;
+  // そら・ひかりを その せかいに ちかづける
+  const ti = bioTi(BIO.cur), home = BIO.cur === 0 || ATM.fixed;
+  C2.copy(home ? ATM.base.bg : C3.setHex(THEMES[ti].sky)); BIO.bg.lerp(C2, Math.min(1, dt * 1.2));
+  const lt = home ? 1 : THEMES[ti].li / THEMES[BIO.list[0]].li; BIO.liK += (lt - BIO.liK) * Math.min(1, dt * 1.2);
+  const at = TOD_AMP[home ? BIO.list[0] : ti]; ATM.amp += (at - ATM.amp) * Math.min(1, dt);
+  BIO.chkT -= dt; if (BIO.chkT > 0) return; BIO.chkT = .4;
+  const b = biomeAt(P.x, P.z), dg = dangerAt(P.x, P.z);
+  if (b !== BIO.cur) {
+    BIO.cur = b; const t2 = bioTi(b);
+    banner(`${AREA_CN[t2]}に はいった！ {危険度|きけんど} ${'★'.repeat(Math.min(6, dg + 1))}`, dg >= 2 ? 'red' : 'gold'); BIO.bannerT = W.t; sfx('chest');
+    if (ATM.w) ATM.w.t = Math.min(ATM.w.t, 1); ATM.wNext = Math.min(ATM.wNext, 8);
+    const c = bioCell(P.x, P.z);
+    if (b !== 0 && !BIO.seen.has(c.id)) { BIO.seen.add(c.id); const a = Math.atan2(P.x, P.z); dropChest(P.x + Math.sin(a) * 7, P.z + Math.cos(a) * 7); setTimeout(() => toast('あたらしい せかいで たからばこを みつけた！'), 900); }
+  } else if (dg > BIO.dg && W.t - BIO.bannerT > 12) { banner(`{危険|きけん}な ばしょに ふみこんだ ${'★'.repeat(Math.min(6, dg + 1))}`, 'red'); BIO.bannerT = W.t; sfx('warn'); }
+  BIO.dg = dg; updBioChip();
+}
+function updBioChip() {
+  const el = $('#bioChip'); if (!el) return; const ti = bioTi(BIO.cur), dg = SG.on ? 0 : BIO.dg, k = `${ti}:${dg}`;
+  if (el.dataset.k === k) return; el.dataset.k = k;
+  el.innerHTML = `${RB(AREA_CN[ti])}<b class="stars" style="color:${['#ffd43b', '#ffa94d', '#ff6b6b', '#f03e3e', '#e64980', '#be4bdb', '#7950f2'][Math.min(6, dg)]}">${'★'.repeat(Math.min(6, dg + 1))}</b>`;
+}
+/* ---- じめん（バイオームごとの いろの タイル） ---- */
+const TILE = 6, TN = 14; let tileM = null, tileKey = '';
+function tileInit() {
+  if (tileM) return;
+  const c = document.createElement('canvas'); c.width = c.height = 384; const x = c.getContext('2d');
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) {
+    x.fillStyle = (i + j) % 2 ? '#efefef' : '#e3e3e3'; x.fillRect(i * 64, j * 64, 64, 64);
+    x.fillStyle = 'rgba(255,255,255,.35)'; x.beginPath(); x.arc(i * 64 + 32, j * 64 + 32, 15, 0, 7); x.fill();
+    x.strokeStyle = 'rgba(0,0,0,.1)'; x.lineWidth = 2; x.strokeRect(i * 64 + 1, j * 64 + 1, 62, 62);
+  }
+  const tex = new THREE.CanvasTexture(c); tex.magFilter = THREE.NearestFilter;
+  const g = new THREE.PlaneGeometry(TILE, TILE); g.rotateX(-Math.PI / 2);
+  tileM = instMesh(g, new THREE.MeshLambertMaterial({ map: tex }), TN * TN); scene.add(tileM);
+}
+function updTiles() {
+  tileInit();
+  const F = SG.on ? { x: SG.camX, z: 0 } : P, cx = Math.floor(F.x / TILE), cz = Math.floor(F.z / TILE), key = cx + ',' + cz + (SG.on ? 's' : '') + W.stage;
+  if (tileKey === key) return; tileKey = key; let n = 0;
+  for (let a = -TN / 2; a < TN / 2; a++) for (let b = -TN / 2; b < TN / 2; b++) {
+    const x = (cx + a) * TILE + TILE / 2, z = (cz + b) * TILE + TILE / 2, bi = biomeAt(x, z), col = BIO.cols[bi] || BIO.cols[0], rt = REGTINT[regionAt(Math.floor(x / CH), Math.floor(z / CH))] || [1, 1, 1];
+    const v = 1.07 * (.97 + ((cx + a) * 7 + (cz + b) * 13 & 3) * .02);
+    setRY(tileM, n, x, .004, z, 0, 1, 1, 1); setCol(tileM, n, col.r * v * rt[0], col.g * v * rt[1], col.b * v * rt[2]); n++;
+  }
+  flush(tileM, n);
 }
 
 /* ============ はじまり ============ */
