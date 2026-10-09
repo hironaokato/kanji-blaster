@@ -1198,17 +1198,27 @@ function stats() { let n = 0, m = 0; for (const k in S.kanji) { const r = S.kanj
 const kanjiPower = () => { const { n, m } = stats(); return (n + m) * 0.01; };
 const skinUnlocked = i => stats().n >= SKINS[i].need;
 function orderList() { const out = []; for (let g = S.grade; g <= 3; g++) out.push(...KG[g]); return out; }
-function previewList() {
-  const out = []; if (S.grade < 3) { for (let g = S.grade + 1; g <= 3; g++) out.push(...KG[g]); } else out.push(...orderList().filter(d => !S.kanji[d.k]).slice(15));
-  return out.filter(d => !S.kanji[d.k]);
+// いまの 学年（まだ おぼえていない 字が のこっている いちばん 下の 学年）
+const curGrade = () => { for (let g = S.grade; g <= 3; g++) if (KG[g].some(d => !S.kanji[d.k])) return g; return 3; };
+// 学年の リストを 10字ずつの グループに わけ、まだ あまり 出ていない グループから じゅんばんに えらぶ
+// → おなじ なかまの 字ばかり つづかず、学年ぜんたいから まんべんなく 出る
+function spread(list) {
+  const blocks = [];
+  list.forEach((d, i) => { const b = blocks[Math.floor(i / 10)] || (blocks[Math.floor(i / 10)] = { cov: 0, items: [] }); if (S.kanji[d.k]) b.cov++; else b.items.push(d.k); });
+  const live = blocks.filter(b => b && b.items.length); live.forEach(b => { b.items = shuffle(b.items); b.cov += Math.random() * .9; });
+  const out = [];
+  while (live.some(b => b.items.length)) { const L = live.filter(b => b.items.length), m = Math.min(...L.map(b => b.cov)), b = L.find(x => x.cov === m); out.push(b.items.pop()); b.cov += 1; }
+  return out;
 }
+function newOrder() { const g = curGrade(), out = spread(KG[g]); for (let h = g + 1; h <= 3; h++) out.push(...spread(KG[h])); return out; }
+function previewOrder() { const g = curGrade(); if (g < 3) { const out = []; for (let h = g + 1; h <= 3; h++) out.push(...spread(KG[h])); return out; } return newOrder().slice(6); }
 // spec: 'new' あたらしい / 'rev' ふくしゅう / 'pre' よしゅう
 function pickKanji(spec) {
   const now = Date.now(), chosen = new Set(), out = [];
   const seen = Object.entries(S.kanji).filter(([k]) => KMAP[k]).map(([k, r]) => ({ k, r, due: r.last + INTERVAL[r.b] }));
   const rev = [...seen.filter(x => x.r.b === 0 && now - x.r.last > 6e4).sort((a, b) => a.r.last - b.r.last), ...seen.filter(x => x.r.b > 0 && x.due <= now).sort((a, b) => a.due - b.due)].map(x => x.k);
-  const newL = orderList().filter(d => !S.kanji[d.k]).map(d => d.k);
-  const preL = previewList().map(d => d.k);
+  const newL = newOrder();
+  const preL = previewOrder();
   const take = (list) => list.find(k => !chosen.has(k));
   for (const want of spec) {
     let k = null, cat = want;
@@ -2597,7 +2607,7 @@ function resetRun() {
 function startStage() {
   ac(); keepAwake(); hideAll(); $('#hud').hidden = false;
   W.stage = S.stage; W.signRead = new Set();
-  { const learned = shuffle(KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0)), next = orderList().filter(d => !S.kanji[d.k]).slice(0, 6); SIGNPOOL = learned.length >= 4 ? [...learned.slice(0, 30), ...next.slice(0, 3)] : [...learned, ...next]; }
+  { const learned = shuffle(KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0)), next = newOrder().slice(0, 6).map(k => KMAP[k]); SIGNPOOL = learned.length >= 4 ? [...learned.slice(0, 30), ...next.slice(0, 3)] : [...learned, ...next]; }
   buildEnv(W.stage); resetRun();
   if (P.model) { scene.remove(P.model.g); }
   P.model = buildPlayer(skinUnlocked(S.skin) ? S.skin : 0); scene.add(P.model.g);
