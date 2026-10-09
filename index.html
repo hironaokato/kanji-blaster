@@ -56,7 +56,7 @@ button:focus-visible,label:focus-visible,input:focus-visible,textarea:focus-visi
 /* ---------- 画面 ---------- */
 .screen{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 32px);box-sizing:border-box}
 .wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-#home{background-color:var(--navy2);background-image:radial-gradient(circle at 14px 14px,rgba(255,255,255,.055) 6px,transparent 7px);background-size:28px 28px}
+#home,#who{background-color:var(--navy2);background-image:radial-gradient(circle at 14px 14px,rgba(255,255,255,.055) 6px,transparent 7px);background-size:28px 28px}
 .brand{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-top:6px;position:relative}
 .brand h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,9vw,3.6rem);line-height:1;letter-spacing:.02em;transform:rotate(-2.5deg);text-shadow:0 5px 0 var(--ink)}
 .brand h1 .k{color:var(--yellow);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
@@ -157,7 +157,7 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 .howto ol b{color:var(--chalk)}
 
 /* ---------- 漢字ミッション（ノート紙） ---------- */
-#mission{color-scheme:light;background:#e9e2cf;background-image:linear-gradient(#e9e2cf,#e2d9c2);color:var(--paper-ink)}
+#mission,#parentPage{color-scheme:light;background:#e9e2cf;background-image:linear-gradient(#e9e2cf,#e2d9c2);color:var(--paper-ink)}
 #mission .wrap{gap:14px}
 .mtop{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .mtop .btn{background:#fff;color:var(--ink)}
@@ -229,6 +229,17 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 
 /* ---------- ゲームHUD ---------- */
 #hud{position:fixed;inset:0;pointer-events:none;touch-action:none}
+#modFx{position:absolute;inset:0;pointer-events:none}
+#modFx.bloodmoon{background:radial-gradient(ellipse at 50% 55%,rgba(255,40,60,.06) 0 40%,rgba(150,0,25,.5) 100%)}
+#modFx.dark{background:radial-gradient(circle at 50% 55%,transparent 0 16vmin,rgba(6,4,20,.55) 34vmin,rgba(3,2,12,.9) 62vmin)}
+#modFx.starfall{background:radial-gradient(ellipse at 50% 55%,transparent 0 45%,rgba(70,50,190,.4) 100%)}
+#modFx.gale{background:radial-gradient(ellipse at 50% 55%,transparent 0 55%,rgba(60,200,255,.28) 100%)}
+#modFx.berserk{background:radial-gradient(ellipse at 50% 55%,transparent 0 50%,rgba(255,60,0,.38) 100%)}
+#modFx.eldorado{background:radial-gradient(ellipse at 50% 55%,transparent 0 55%,rgba(255,200,40,.32) 100%)}
+#modFx.giant{background:radial-gradient(ellipse at 50% 55%,transparent 0 55%,rgba(255,130,40,.28) 100%)}
+#modFx.horde{background:radial-gradient(ellipse at 50% 55%,transparent 0 55%,rgba(120,220,60,.26) 100%)}
+@keyframes mfPulse{50%{opacity:.65}}
+@media (prefers-reduced-motion:reduce){#modFx{animation:none!important}}
 .xpbar{position:absolute;left:0;right:0;top:0;height:18px;padding-top:env(safe-area-inset-top,0px);background:#10133a;border-bottom:3px solid var(--ink)}
 .xpbar i{position:absolute;left:0;bottom:0;height:18px;width:0;background:linear-gradient(90deg,#4dabf7,#a5d8ff);transition:width .12s}
 .xpbar span{position:absolute;left:10px;bottom:0;height:18px;line-height:18px;font-family:var(--display);font-size:.85rem;color:#fff;text-shadow:0 1px 0 var(--ink),0 -1px 0 var(--ink),1px 0 0 var(--ink),-1px 0 0 var(--ink)}
@@ -331,6 +342,95 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
   .qopts .btn{min-height:3.6em;font-size:1.35rem}.qopts .btn.kan{font-size:2.6rem}
   .lvc{min-height:240px}.lvc .lic{width:88px;height:88px}.lvc .lic svg{width:64px;height:64px}
 }
+/* ---- ルビ・中二病 演出 ---- */
+ruby rt{font-size:.45em;font-weight:700;letter-spacing:0;font-family:var(--body)}
+.title-ch{font-family:var(--display);font-size:1rem;color:#d0bfff;text-shadow:0 0 10px #9775fa,0 2px 0 var(--ink)}
+#chapter{position:fixed;left:0;right:0;top:20%;pointer-events:none;display:flex;justify-content:center;z-index:6}
+.chb{background:linear-gradient(90deg,transparent,rgba(12,6,28,.88) 14%,rgba(12,6,28,.88) 86%,transparent);padding:14px 70px;text-align:center;display:flex;flex-direction:column;gap:6px;color:#fff;border-top:2px solid #ffc83a;border-bottom:2px solid #ffc83a;max-width:100%;box-sizing:border-box}
+.chb small{font-family:var(--display);letter-spacing:.3em;color:#ffc83a;font-size:1rem}
+.chb b{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,6.5vw,3.2rem);text-shadow:0 0 18px #b38cff;line-height:1.5}
+.chb span{font-weight:900;color:#d0bfff;font-size:1.05rem}
+.chb em{font-style:normal;font-weight:700;font-size:.9rem;color:#fff}
+#chapter.show{animation:chap 3.4s ease-out forwards}
+@keyframes chap{0%{opacity:0;transform:scaleX(.2)}9%{opacity:1;transform:scaleX(1)}85%{opacity:1}100%{opacity:0}}
+#bossIntro{position:fixed;inset:0;pointer-events:none;display:grid;place-items:center;background:linear-gradient(transparent 0 32%,rgba(0,0,0,.78) 32% 68%,transparent 68%);z-index:6}
+.bib{text-align:center;color:#fff;padding:0 16px}
+.bib small{display:block;font-family:var(--display);color:#ff8787;font-size:clamp(1rem,3.5vw,1.5rem);letter-spacing:.15em}
+.bib b{display:inline-block;font-family:var(--display);font-weight:400;font-size:clamp(2.4rem,9vw,4.6rem);color:#fff;-webkit-text-stroke:2px #c92a2a;paint-order:stroke fill;text-shadow:0 0 30px #ff2222;animation:bis .5s ease-out}
+@keyframes bis{from{transform:scale(2.2);opacity:0}}
+#bossIntro.show{animation:bi 2.3s ease-out forwards}
+@keyframes bi{0%{opacity:0}8%{opacity:1}85%{opacity:1}100%{opacity:0}}
+#sigArrow{position:fixed;left:0;top:0;pointer-events:none;width:0;height:0;z-index:5}
+#sigArrow svg{position:absolute;left:-22px;top:-22px;width:44px;height:44px;filter:drop-shadow(0 0 6px #b38cff)}
+#sigArrow b{position:absolute;left:-30px;top:20px;width:60px;text-align:center;font-family:var(--display);font-weight:400;font-size:.85rem;color:#fff;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
+#timerSub ruby rt{font-size:.6em}
+/* 運命の選択 */
+.fatebox{background:radial-gradient(circle at 50% 0,#3b1660,#140a26 72%);border-color:#ffc83a;color:#fff;width:min(100%,760px)}
+.fatebox h2{color:#ffc83a;text-shadow:0 0 16px #b38cff;font-size:clamp(1.8rem,6vw,2.4rem)}
+.fatebox .fsub{color:#d0bfff;font-family:var(--display);font-weight:400}
+.fcards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.fcards{grid-template-columns:1fr}}
+.fcard{background:linear-gradient(180deg,#2a1450,#1a0d33);border:3px solid #9775fa;border-radius:16px;padding:14px 12px;color:#fff;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;box-shadow:0 6px 0 #000,0 0 24px rgba(151,117,250,.35);animation:cardin .35s ease-out backwards;touch-action:manipulation}
+.fcard:nth-child(2){animation-delay:.12s}
+.fcard:hover,.fcard:focus-visible{border-color:#ffc83a;box-shadow:0 6px 0 #000,0 0 30px rgba(255,200,58,.45)}
+.fcard:active{transform:translateY(4px);box-shadow:0 2px 0 #000}
+.fobj{width:52px;height:52px;color:#ffc83a}.fobj svg{width:100%;height:100%}
+.fname{font-family:var(--display);font-weight:400;font-size:1.4rem;color:#ffc83a;line-height:1.6}
+.fmod{font-family:var(--display);font-size:1.2rem;color:#ff8787;line-height:1.6}
+.fdesc{font-size:.85rem;font-weight:700;color:#e5dbff;line-height:1.5}
+.fdiv{width:60%;height:2px;background:linear-gradient(90deg,transparent,#9775fa,transparent)}
+/* こどもを えらぶ */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.pcard{background:var(--panel2);border:3px solid var(--ink);border-radius:18px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 5px 0 var(--ink);touch-action:manipulation}
+.pcard:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.pcard b{font-size:1.25rem;font-weight:900}
+.pcard small{color:var(--muted);font-weight:700;font-size:.8rem;text-align:center;line-height:1.6}
+.av{width:64px;height:64px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:1.8rem;color:var(--ink);flex:none}
+.av.sm{width:26px;height:26px;font-size:.8rem;border-width:2px;display:inline-grid;vertical-align:middle;margin-right:6px}
+.tin{font-size:1.2rem;padding:8px 10px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:#2a2622;width:min(100%,280px);box-sizing:border-box;-webkit-user-select:text;user-select:text;font-family:inherit}
+.pchip{align-self:flex-start;margin-top:8px;display:inline-flex;align-items:center;gap:2px;background:rgba(21,23,51,.6);border:2px solid var(--ink);border-radius:99px;padding:4px 12px 4px 4px;font-weight:900;color:var(--chalk);min-height:40px}
+.pchip small{margin-left:8px;color:var(--muted);font-weight:700;font-size:.75rem}
+/* おうちの人の ページ */
+.pptabs button{display:inline-flex;align-items:center;background:#fff;color:var(--ink)}
+.pptabs button[aria-pressed="true"]{background:var(--yellow)}
+.ppsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.ppsum{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ppsum div{background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ppsum span{font-size:.75rem;font-weight:900;color:#6b6257}
+.ppsum b{font-family:var(--display);font-weight:400;font-size:1.6rem;font-variant-numeric:tabular-nums}
+.ppsum small{font-size:.55em;font-family:var(--body);font-weight:700}
+.ppbox{background:var(--paper);border:3px solid var(--ink);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.ppbox h3{margin:0;font-size:1.05rem;font-weight:900}
+.hint2{margin:0;font-size:.82rem;font-weight:700;color:#6b6257;line-height:1.6}
+.gp{display:grid;grid-template-columns:4em minmax(0,1fr) 5.5em;gap:8px;align-items:center;font-weight:900}
+.gbar{height:16px;background:#ece4d2;border-radius:8px;overflow:hidden;display:flex;gap:2px}
+.gbar i{display:block;height:100%}
+.gm{background:#c77d0a}.gl{background:#ffcf6b}
+.gp b{text-align:right;font-variant-numeric:tabular-nums}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+.chart{position:relative;padding-bottom:1.7em}
+.cbars{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;height:160px;align-items:end;border-bottom:1px solid #c9bfa8;padding-top:18px;background:repeating-linear-gradient(to top,transparent 0 39px,#efe7d6 39px 40px)}
+.cb{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation;min-width:0}
+.cb i{display:block;width:min(70%,22px);background:#2f6fd6;border-radius:4px 4px 0 0}
+.cb:hover i,.cb:focus-visible i{background:#1c4fbf}
+.cv{font-size:.75rem;font-weight:900;color:#2a2622;font-variant-numeric:tabular-nums;min-height:1.2em}
+.cx{position:absolute;bottom:-1.6em;font-size:.7rem;font-weight:700;color:#6b6257;font-variant-numeric:tabular-nums}
+.ctip{position:absolute;top:-6px;width:200px;background:var(--ink);color:#fff;font-size:.8rem;font-weight:700;padding:6px 8px;border-radius:8px;pointer-events:none;text-align:center}
+.ctab{border-collapse:collapse;font-size:.85rem;margin-top:6px;font-variant-numeric:tabular-nums}
+.ctab td,.ctab th{border-bottom:1px solid #e0d6c0;padding:4px 10px;text-align:right}
+.ctab th:first-child,.ctab td:first-child{text-align:left}
+details summary{cursor:pointer;font-weight:900;font-size:.85rem}
+.weak{display:flex;flex-wrap:wrap;gap:6px}
+.wk{display:flex;flex-direction:column;align-items:center;background:#fff;border:2px solid #ffb3b8;border-radius:10px;padding:4px 8px}
+.wk b{font-family:var(--kyo);font-size:1.8rem;line-height:1.15}
+.wk small{font-size:.7rem;font-weight:700;color:#b3261e}
+.plog{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.plog li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-weight:700;font-size:.85rem;border-bottom:1px dashed #e0d6c0;padding-bottom:6px}
+.lt{font-variant-numeric:tabular-nums;color:#6b6257}.lk{min-width:6em}
+.lc{display:inline-grid;place-items:center;width:1.9em;height:1.9em;border-radius:6px;font-family:var(--kyo);font-size:1.05rem;margin-right:3px;border:2px solid}
+.lc.ok{background:#d3f9d8;border-color:#2f9e44}.lc.hint{background:#fff3bf;border-color:#e8a317}.lc.ng{background:#ffe3e3;border-color:#e03131}.lc.pre{background:#e7f5ff;border-color:#74c0fc}
+#parentPage textarea{background:#fff;color:#2a2622}
+
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 
@@ -341,7 +441,7 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 <div id="banner"></div>
 <div id="joy" hidden><div id="joyKnob"></div></div>
 
-<div id="hud" hidden>
+<div id="hud" hidden><div id="modFx"></div>
   <div class="xpbar"><i id="xpFill"></i><span id="lvText">Lv 1</span></div>
   <div class="tl">
     <div class="hp"><i id="hpFill" style="width:100%"></i><span id="hpText">100 / 100</span></div>
@@ -361,6 +461,7 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
       <h1><span class="k">カンジ</span><span class="b">ブラスター</span></h1>
       <p>漢字を 書けば 書くほど つよく、かっこよく なる！</p>
       <button class="btn sm w fsbtn" id="fsBtn" hidden>ぜんがめん</button>
+      <button class="pchip" id="pChip"></button>
     </header>
     <div class="hero">
       <div class="pvbox"><canvas id="pv" aria-label="いまの すがた"></canvas><div class="pvname"><b id="pvName">ルーキー</b><small id="pvLv"></small></div></div>
@@ -394,6 +495,12 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 </section>
 
 <section id="mission" class="screen" hidden><div class="wrap" id="mWrap"></div></section>
+<section id="who" class="screen" hidden><div class="wrap" id="whoWrap"></div></section>
+<section id="parentPage" class="screen" hidden><div class="wrap" id="ppWrap"></div></section>
+<div id="fate" class="modal" hidden><div class="mbox fatebox" id="fateBox"></div></div>
+<div id="chapter" hidden></div>
+<div id="bossIntro" hidden></div>
+<div id="sigArrow" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 12 L38 22 L8 32 L15 22 Z" fill="#d0bfff" stroke="#151733" stroke-width="3" stroke-linejoin="round"/></svg><b></b></div>
 
 <div id="lvup" class="modal" hidden><div class="mbox lvbox" id="lvBox"></div></div>
 <div id="chest" class="modal" hidden><div class="mbox chestbox" id="chestBox"></div></div>
@@ -1037,16 +1144,16 @@ const KOKUGO = [
 
 /* ============ ぶき・パッシブ ============ */
 const WEAPONS = [
-  { id: 'gun',     n: 'ハンドガン',     evo: 'ゴールデンガン',   cost: 0,  css: '#ffe066', col: 0xffe066, desc: 'ちかくの てきを じどうで うつ' },
-  { id: 'orbit',   n: 'ブロックリング', evo: 'ギャラクシーリング', cost: 0,  css: '#74c0fc', col: 0x74c0fc, desc: 'まわりを ブロックが まわる' },
-  { id: 'shot',    n: 'ショットガン',   evo: 'ドラゴンショット',  cost: 4,  css: '#ffa94d', col: 0xffa94d, desc: 'まえに たまを ばらまく' },
-  { id: 'thunder', n: 'サンダー',       evo: 'かみなりの かみ',  cost: 9,  css: '#ffd43b', col: 0xfff27a, desc: 'そらから かみなりが おちる' },
-  { id: 'aura',    n: 'フリーズオーラ', evo: 'ブリザード',       cost: 15, css: '#99e9f2', col: 0x99e9f2, desc: 'まわりの てきを こおらせる' },
-  { id: 'boom',    n: 'ブーメラン',     evo: 'ダブルブーメラン',  cost: 22, css: '#69db7c', col: 0x69db7c, desc: 'なげると もどってくる' },
-  { id: 'rocket',  n: 'ロケット',       evo: 'ミサイルの あめ',  cost: 30, css: '#ff6b6b', col: 0xff6b6b, desc: 'あたると だいばくはつ' },
-  { id: 'fire',    n: 'ファイア',       evo: 'ドラゴンブレス',    cost: 40, css: '#ff922b', col: 0xff922b, desc: 'ほのおで もやす' },
-  { id: 'laser',   n: 'レーザー',       evo: 'ハイパービーム',    cost: 52, css: '#da77f2', col: 0xe599f7, desc: 'ビームが ぜんぶ つらぬく' },
-  { id: 'meteor',  n: 'メテオ',         evo: 'ギャラクシー',      cost: 66, css: '#b197fc', col: 0xb197fc, desc: 'いんせきが ふってくる' },
+  { id: 'gun',     n: 'ハンドガン',     evo: '{黄金魔銃|おうごんまじゅう}ゴルディオン',   cost: 0,  css: '#ffe066', col: 0xffe066, desc: 'ちかくの てきを じどうで うつ' },
+  { id: 'orbit',   n: 'ブロックリング', evo: '{天環|てんかん}ギャラクシア', cost: 0,  css: '#74c0fc', col: 0x74c0fc, desc: 'まわりを ブロックが まわる' },
+  { id: 'shot',    n: 'ショットガン',   evo: '{竜咆|りゅうほう}ドラゴンブレイカー',  cost: 4,  css: '#ffa94d', col: 0xffa94d, desc: 'まえに たまを ばらまく' },
+  { id: 'thunder', n: 'サンダー',       evo: '{雷神|らいじん}トールハンマー',  cost: 9,  css: '#ffd43b', col: 0xfff27a, desc: 'そらから かみなりが おちる' },
+  { id: 'aura',    n: 'フリーズオーラ', evo: '{絶対零度|ぜったいれいど}ニブルヘイム',       cost: 15, css: '#99e9f2', col: 0x99e9f2, desc: 'まわりの てきを こおらせる' },
+  { id: 'boom',    n: 'ブーメラン',     evo: '{双月|そうげつ}ツインルナ',  cost: 22, css: '#69db7c', col: 0x69db7c, desc: 'なげると もどってくる' },
+  { id: 'rocket',  n: 'ロケット',       evo: '{終焉|しゅうえん}ラグナロク',  cost: 30, css: '#ff6b6b', col: 0xff6b6b, desc: 'あたると だいばくはつ' },
+  { id: 'fire',    n: 'ファイア',       evo: '{獄炎|ごくえん}インフェルノ',    cost: 40, css: '#ff922b', col: 0xff922b, desc: 'ほのおで もやす' },
+  { id: 'laser',   n: 'レーザー',       evo: '{断罪|だんざい}の{光|ひかり}ジャッジメント',    cost: 52, css: '#da77f2', col: 0xe599f7, desc: 'ビームが ぜんぶ つらぬく' },
+  { id: 'meteor',  n: 'メテオ',         evo: '{天墜|てんつい}メテオストライク',      cost: 66, css: '#b197fc', col: 0xb197fc, desc: 'いんせきが ふってくる' },
 ];
 const WMAX = 8;
 const EVOCOL = { gun: 0xffd43b, shot: 0xff6b6b, thunder: 0xffffff, boom: 0xffd43b, rocket: 0xffa94d, fire: 0x74c0fc, laser: 0xffffff, meteor: 0xff6b6b };
@@ -1164,13 +1271,23 @@ const BOSS_T = 180;
 
 /* ============ セーブ ============ */
 const KEY = 'kanjiblaster.v1';
-const DEF = () => ({ v: 2, stage: 1, best: 0, pending: false, coins: 0, stars: 0, wl: { 0: 1, 1: 1 }, cur: 0, up: { hp: 0, power: 0, speed: 0, magnet: 0, luck: 0 }, skin: 0, kanji: {}, grade: 2, deaths: 0, parent: false, sound: true, kills: 0, day: '', streak: 0, missions: 0, bestLv: 0, dex: {}, check: 'auto', order: true, level: 'normal' });
+const DEF = () => ({ v: 2, stage: 1, best: 0, pending: false, coins: 0, stars: 0, wl: { 0: 1, 1: 1 }, cur: 0, up: { hp: 0, power: 0, speed: 0, magnet: 0, luck: 0 }, skin: 0, kanji: {}, grade: 2, deaths: 0, parent: false, sound: true, kills: 0, day: '', streak: 0, missions: 0, bestLv: 0, dex: {}, check: 'auto', order: true, level: 'normal', build: null, days: {}, log: [], tot: { ok: 0, ng: 0 } });
+const PKEY = 'kanjiblaster.profiles';
+function loadProfiles() {
+  try { const r = localStorage.getItem(PKEY); if (r) { const o = JSON.parse(r); if (o && Array.isArray(o.list)) return o; } } catch (e) {}
+  const o = { list: [], cur: null };
+  try { const old = localStorage.getItem(KEY); if (old) { o.list.push({ id: 'p1', name: 'プレイヤー1', col: '#ff8b3d' }); o.cur = 'p1'; localStorage.setItem(KEY + '.p1', old); localStorage.setItem(PKEY, JSON.stringify(o)); } } catch (e) {}
+  return o;
+}
+let PROF = loadProfiles();
+function saveProfiles() { try { localStorage.setItem(PKEY, JSON.stringify(PROF)); } catch (e) {} }
+const skey = () => KEY + '.' + (PROF.cur || 'guest');
 let S = load();
 function load() {
-  try { const r = localStorage.getItem(KEY); if (r) { const o = Object.assign(DEF(), JSON.parse(r)); o.up = Object.assign(DEF().up, o.up || {}); o.dex = o.dex || {}; o.wl[0] = o.wl[1] = 1; if (o.v < 2) { o.up.hp = Math.min(10, o.hpLv || 0); o.up.speed = Math.min(5, o.spLv || 0); o.v = 2; } return o; } } catch (e) {}
+  try { const r = localStorage.getItem(skey()); if (r) { const o = Object.assign(DEF(), JSON.parse(r)); o.up = Object.assign(DEF().up, o.up || {}); o.dex = o.dex || {}; o.wl[0] = o.wl[1] = 1; if (o.v < 2) { o.up.hp = Math.min(10, o.hpLv || 0); o.up.speed = Math.min(5, o.spLv || 0); o.v = 2; } return o; } } catch (e) {}
   return DEF();
 }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function save() { try { localStorage.setItem(skey(), JSON.stringify(S)); } catch (e) {} }
 const wUnlocked = i => !!S.wl[i];
 
 /* ============ 小道具 ============ */
@@ -1284,7 +1401,7 @@ function sfx(name) {
 }
 
 /* ============ 3D 基本 ============ */
-let R, scene, cam, hemi, dirL;
+let R, scene, cam, hemi, dirL, pLight;
 const GC = {}, MC = {}, BC = {};
 const G = (w, h, d) => { const k = w + '_' + h + '_' + d; return GC[k] || (GC[k] = new THREE.BoxGeometry(w, h, d)); };
 const M = c => MC[c] || (MC[c] = new THREE.MeshLambertMaterial({ color: c }));
@@ -1344,8 +1461,6 @@ function buildPlayer(si, wi) {
   else { box(.14, .14, .04, o.eye, -.16, 2.33, .38, true); box(.14, .14, .04, o.eye, .16, 2.33, .38, true); }
   if (o.hair != null) { box(.8, .14, .8, o.hair, 0, 2.63, -.02); box(.8, .4, .14, o.hair, 0, 2.42, -.36); box(.12, .28, .5, o.hair, -.39, 2.48, -.1); box(.12, .28, .5, o.hair, .39, 2.48, -.1); box(.18, .05, .04, o.hair, -.16, 2.47, .38); box(.18, .05, .04, o.hair, .16, 2.47, .38); }
   if (o.beard) { box(.6, .3, .14, o.beard, 0, 2.02, .36); box(.3, .25, .12, o.beard, 0, 1.82, .33); }
-  const wc = WEAPONS[wi != null ? wi : (S.cur || 0)].col;
-  box(.24, .66, .3, 0x2a2a3a, 0, -1.28, .12, false, aR); box(.15, .42, .15, 0x495057, 0, -1.8, .12, false, aR); box(.27, .46, .08, wc, 0, -1.26, .3, false, aR); box(.11, .05, .11, wc, 0, -2.03, .12, true, aR); box(.14, .14, .3, 0x2a2a3a, 0, -1.08, -.12, false, aR);
   const ex = { wings: [], cape: null, glow: null };
   const wings = (c, big) => { [-1, 1].forEach(sd => { const p = new THREE.Group(); p.position.set(sd * .3, 1.75, -.3); const w = new THREE.Mesh(G(big ? 1.5 : 1.15, .08, big ? .9 : .7), M(c)); w.position.set(sd * (big ? .75 : .58), 0, -.15); p.add(w); const w2 = new THREE.Mesh(G(big ? .9 : .7, .08, .4), M(c)); w2.position.set(sd * (big ? 1.4 : 1.1), .15, -.35); p.add(w2); inner.add(p); ex.wings.push({ p, sd }); }); };
   const cape = c => { const p = new THREE.Group(); p.position.set(0, 1.9, -.28); const m = new THREE.Mesh(G(.95, 1.5, .07), M(c)); m.position.y = -.75; p.add(m); inner.add(p); ex.cape = p; };
@@ -1361,7 +1476,9 @@ function buildPlayer(si, wi) {
       const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); x.fillStyle = '#e03131'; x.fillRect(0, 0, 64, 64); x.fillStyle = '#fff'; x.font = 'bold 48px serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('漢', 32, 35);
       const em = new THREE.Mesh(new THREE.PlaneGeometry(.5, .5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c) })); em.position.set(0, 1.45, .27); inner.add(em); ex.glow = 0xffffff; break; }
   }
-  return { g, inner, lL, lR, aL, aR, head, ex, si };
+  const pm = { g, inner, lL, lR, aL, aR, head, ex, si };
+  buildGear(pm, [{ i: wi != null ? wi : (S.cur || 0), lv: 1 }], {}, 1);
+  return pm;
 }
 function animPlayer(pp, t, moving, aiming) {
   const sw = moving ? Math.sin(t * 12) * .7 : 0;
@@ -1371,6 +1488,123 @@ function animPlayer(pp, t, moving, aiming) {
   if (pp.ex.cape) pp.ex.cape.rotation.x = .15 + (moving ? .45 : .05) + Math.sin(t * 6) * .08;
 }
 
+/* ============ そうび の 見た目（ぶき・パッシブが からだに あらわれる） ============ */
+const HANDW = { gun: 9, shot: 8, laser: 8, rocket: 7, fire: 7, thunder: 6, meteor: 6, aura: 5, boom: 5, orbit: 1 };
+function gearSig(weps, pas, lv) { return weps.map(w => w.i + ':' + (w.lv >= WMAX ? 'e' : w.lv >= 4 ? 'b' : 'a')).join(',') + '|' + Object.entries(pas || {}).map(([k, v]) => k + (v >= 5 ? 3 : v >= 3 ? 2 : 1)).join(',') + '|' + (lv >= 30 ? 3 : lv >= 20 ? 2 : lv >= 10 ? 1 : 0); }
+function buildGear(pm, weps, pas, lv) {
+  pas = pas || {}; lv = lv || 1;
+  const sig = gearSig(weps, pas, lv); if (pm.gearSig === sig) return false; pm.gearSig = sig;
+  if (pm.gear) for (const o of pm.gear) o.parent && o.parent.remove(o);
+  pm.gear = []; pm.spin = []; pm.bob = []; pm.gw = []; pm.tip = null; pm.tipCol = 0; pm.trail = 0;
+  const grp = (parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); pm.gear.push(g); return g; };
+  const box = (g, w, h, d, c, x, y, z, glow, rx, ry, rz) => { const m = new THREE.Mesh(G(w, h, d), glow ? MB(c) : M(c)); m.position.set(x, y, z); if (rx) m.rotation.x = rx; if (ry) m.rotation.y = ry; if (rz) m.rotation.z = rz; g.add(m); return m; };
+  const D = 0x2a2a3a, STEEL = 0x495057, WOOD = 0x8d5524;
+  // いちばん つよい ぶきを て に もつ
+  let hand = null; for (const w of weps) { const id = WEAPONS[w.i].id; if (!hand || w.lv * 10 + HANDW[id] > hand.lv * 10 + HANDW[WEAPONS[hand.i].id]) hand = w; }
+  if (hand) {
+    const id = WEAPONS[hand.i].id, t = hand.lv >= WMAX ? 2 : hand.lv >= 4 ? 1 : 0, c = WEAPONS[hand.i].col, ec = EVOCOL[id] || 0xffd43b, mc = t === 2 ? ec : c;
+    const g = grp(pm.aR, 0, -1.02, .12); g.rotation.x = Math.PI / 2; // +Z が まえ、+Y が うえ
+    const s = 1.1 + Math.min(.28, hand.lv * .035); g.scale.set(s, s, s);
+    const tip = new THREE.Object3D(); g.add(tip); pm.tip = tip; pm.tipCol = t === 2 ? ec : t === 1 ? c : 0;
+    const grip = () => box(g, .2, .46, .24, D, 0, -.16, 0, 0, .25);
+    switch (id) {
+      case 'gun':
+        grip(); box(g, .26, .3, .8, t === 2 ? 0x3a2a10 : D, 0, .12, .32); box(g, .28, .1, .64, mc, 0, .3, .3); box(g, .13, .13, .38, STEEL, 0, .16, .88); tip.position.set(0, .16, 1.1);
+        if (t >= 1) { box(g, .12, .14, .42, STEEL, 0, .44, .26); box(g, .1, .1, .04, 0x74c0fc, 0, .44, .48, 1); box(g, .16, .16, .08, c, 0, .16, 1.08, 1); }
+        if (t === 2) { box(g, .08, .34, .56, ec, .19, .14, .34); box(g, .08, .34, .56, ec, -.19, .14, .34); box(g, .13, .13, .4, STEEL, 0, -.03, .9); box(g, .16, .16, .16, 0xff4d5b, 0, .14, .12, 1); box(g, .06, .5, .06, ec, .24, .3, .1, 1, 0, 0, -.5); box(g, .06, .5, .06, ec, -.24, .3, .1, 1, 0, 0, .5); }
+        break;
+      case 'shot':
+        grip(); box(g, .3, .3, .6, WOOD, 0, .04, -.22); box(g, .32, .3, .5, D, 0, .14, .32); box(g, .12, .12, .86, STEEL, .08, .22, .96); box(g, .12, .12, .86, STEEL, -.08, .22, .96); box(g, .34, .1, .32, mc, 0, .33, .32); tip.position.set(0, .22, 1.4);
+        if (t >= 1) { box(g, .36, .36, .3, c, 0, -.12, .5); box(g, .38, .08, .08, 0xffffff, 0, .22, 1.2); }
+        if (t === 2) { box(g, .38, .32, .34, ec, 0, .22, 1.44); box(g, .1, .08, .05, 0xffe066, .13, .34, 1.66, 1); box(g, .1, .08, .05, 0xffe066, -.13, .34, 1.66, 1); box(g, .08, .3, .08, 0xfff3bf, .16, .52, 1.36, 0, -.5); box(g, .08, .3, .08, 0xfff3bf, -.16, .52, 1.36, 0, -.5); box(g, .3, .08, .1, 0xffffff, 0, .06, 1.66); tip.position.set(0, .22, 1.7); }
+        break;
+      case 'laser':
+        grip(); box(g, .24, .34, 1.2, 0xe9ecef, 0, .15, .45); box(g, .05, .07, 1.08, c, .13, .2, .45, 1); box(g, .05, .07, 1.08, c, -.13, .2, .45, 1); box(g, .32, .32, .14, D, 0, .15, 1.1); box(g, .18, .18, .06, c, 0, .15, 1.19, 1); tip.position.set(0, .15, 1.25);
+        if (t >= 1) { box(g, .56, .06, .3, c, 0, .37, .2); box(g, .06, .3, .3, c, 0, .44, .2); }
+        if (t === 2) { box(g, .5, .5, .08, ec, 0, .15, .8, 1); box(g, .4, .4, .08, 0xe599f7, 0, .15, 1.0, 1); box(g, .12, .12, .3, ec, 0, .15, 1.36, 1); tip.position.set(0, .15, 1.5); }
+        break;
+      case 'rocket':
+        grip(); box(g, .34, .34, 1.2, t === 2 ? 0x5c3d0f : STEEL, 0, .3, .3); box(g, .38, .38, .1, mc, 0, .3, .66); box(g, .38, .38, .1, mc, 0, .3, -.06); box(g, .24, .24, .14, 0xff6b6b, 0, .3, .96); box(g, .12, .12, .08, 0xffd43b, 0, .3, 1.04, 1); tip.position.set(0, .3, 1.1);
+        if (t >= 1) { box(g, .1, .2, .3, D, .26, .62, .2); box(g, .08, .08, .04, 0xff4d5b, .26, .66, .36, 1); }
+        if (t === 2) { box(g, .26, .26, .9, ec, -.32, .26, .2); box(g, .18, .18, .1, 0xff6b6b, -.32, .26, .7, 1); box(g, .26, .26, .06, 0xffa94d, 0, .3, -.32, 1); box(g, .2, .2, .06, 0xffa94d, -.32, .26, -.27, 1); }
+        break;
+      case 'fire':
+        grip(); box(g, .3, .3, .5, D, 0, .14, .2); box(g, .2, .2, .7, STEEL, 0, .16, .7); box(g, .26, .26, .1, mc, 0, .16, 1.04); box(g, .14, .14, .1, t === 2 ? 0x74c0fc : 0xff922b, 0, .16, 1.12, 1); tip.position.set(0, .16, 1.2);
+        if (t >= 1) box(g, .3, .12, .3, c, 0, .34, .2);
+        if (t === 2) { box(g, .5, .08, .5, ec, 0, .16, .95, 1, 0, .78); pm.tipCol = 0x74c0fc; }
+        break;
+      case 'thunder':
+        box(g, .12, .12, 1.1, WOOD, 0, 0, .4); box(g, .34, .5, .38, t === 2 ? 0xffe066 : 0xadb5bd, 0, 0, 1.02); box(g, .36, .08, .4, mc, 0, .18, 1.02); box(g, .36, .08, .4, mc, 0, -.18, 1.02); box(g, .06, .4, .06, 0xfff27a, .23, 0, 1.02, 1, 0, 0, .4); tip.position.set(0, 0, 1.1);
+        if (t >= 1) box(g, .06, .4, .06, 0xfff27a, -.23, 0, 1.02, 1, 0, 0, -.4);
+        if (t === 2) { box(g, .5, .66, .16, 0xffffff, 0, 0, 1.02, 1); box(g, .14, .14, .3, 0x74c0fc, 0, 0, -.2, 1); }
+        break;
+      case 'aura':
+        box(g, .1, .1, 1.3, 0xe7f5ff, 0, 0, .45); box(g, .3, .3, .3, 0x99e9f2, 0, 0, 1.18, 1, .78, .78); box(g, .12, .12, .12, 0xffffff, 0, 0, 1.18, 1); tip.position.set(0, 0, 1.2);
+        if (t >= 1) { box(g, .12, .36, .12, 0x99e9f2, .2, 0, 1.0, 1, 0, 0, .6); box(g, .12, .36, .12, 0x99e9f2, -.2, 0, 1.0, 1, 0, 0, -.6); }
+        if (t === 2) { box(g, .36, .36, .36, 0xd0f4ff, 0, 0, 1.22, 1, .78, .78); box(g, .1, .5, .1, 0xffffff, 0, 0, 1.22, 1); }
+        break;
+      case 'meteor':
+        box(g, .1, .1, 1.2, 0x5f3dc4, 0, 0, .4); box(g, .36, .36, .36, 0xb197fc, 0, 0, 1.15, 1); box(g, .5, .06, .06, 0xffd43b, 0, 0, 1.15); box(g, .06, .5, .06, 0xffd43b, 0, 0, 1.15); tip.position.set(0, 0, 1.2);
+        if (t >= 1) box(g, .2, .2, .2, 0xffffff, 0, 0, 1.15, 1);
+        if (t === 2) { box(g, .54, .54, .54, 0xff6b6b, 0, 0, 1.2, 1, .5, .5); box(g, .7, .06, .7, 0xffd43b, 0, 0, 1.2, 1, 0, .78); }
+        break;
+      case 'boom':
+        box(g, .12, .06, .7, mc, .2, 0, .5, 0, 0, .55); box(g, .12, .06, .7, mc, -.2, 0, .5, 0, 0, -.55); box(g, .16, .08, .16, t === 2 ? 0xffffff : 0x2b8a3e, 0, 0, .8, t === 2); tip.position.set(0, 0, .8);
+        if (t === 2) { box(g, .1, .05, .6, ec, .45, 0, .2, 1, 0, .9); box(g, .1, .05, .6, ec, -.45, 0, .2, 1, 0, -.9); }
+        break;
+      default:
+        box(g, .1, .1, 1, 0xe9ecef, 0, 0, .4); box(g, .3, .3, .3, mc, 0, 0, 1, 1, .4, .4); tip.position.set(0, 0, 1);
+    }
+  }
+  // ほかの ぶきは からだに そうび
+  const body = grp(pm.inner, 0, 0, 0);
+  for (const w of weps) {
+    if (w === hand) continue;
+    const id = WEAPONS[w.i].id, e = w.lv >= WMAX, c = e ? (EVOCOL[id] || 0xffd43b) : WEAPONS[w.i].col;
+    switch (id) {
+      case 'gun': box(body, .2, .42, .3, D, .58, .98, .02); box(body, .22, .1, .32, c, .58, 1.12, .02, e); break;
+      case 'shot': box(body, 1.3, .14, .14, STEEL, 0, 1.5, -.36, 0, 0, 0, .7); box(body, .4, .2, .2, WOOD, .38, 1.12, -.36, 0, 0, 0, .7); box(body, .3, .18, .18, c, -.36, 1.84, -.36, e, 0, 0, .7); break;
+      case 'laser': box(body, .22, .22, .74, 0xe9ecef, -.82, 2.22, .02); box(body, .14, .14, .06, c, -.82, 2.22, .41, 1); box(body, .26, .12, .26, c, -.82, 2.06, -.1); break;
+      case 'rocket': box(body, .44, .36, .5, STEEL, .82, 2.24, -.06); for (let k = 0; k < 4; k++) box(body, .1, .1, .06, e ? 0xffd43b : 0xff6b6b, .72 + (k % 2) * .2, 2.16 + (k >> 1) * .16, .2, e); box(body, .46, .08, .52, c, .82, 2.44, -.06); break;
+      case 'fire': box(body, .26, .74, .26, e ? 0x74c0fc : 0xff922b, .17, 1.45, -.43); box(body, .26, .74, .26, e ? 0x74c0fc : 0xff922b, -.17, 1.45, -.43); box(body, .62, .1, .3, D, 0, 1.86, -.43); box(body, .62, .1, .3, D, 0, 1.06, -.43); break;
+      case 'thunder': { const h = grp(pm.inner, 0, 3.05, 0); for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; box(h, .1, .26, .1, e ? 0xffffff : 0xfff27a, Math.cos(a) * .5, 0, Math.sin(a) * .5, 1, 0, 0, Math.cos(a) * .4); } pm.spin.push([h, 1.5]); break; }
+      case 'aura': { const h = grp(pm.inner, 0, 1.0, 0); for (let k = 0; k < (e ? 5 : 3); k++) { const a = k / (e ? 5 : 3) * Math.PI * 2; box(h, .2, .2, .2, e ? 0xd0f4ff : 0x99e9f2, Math.cos(a) * 1, 0, Math.sin(a) * 1, 1, .78, .78); } pm.spin.push([h, -2]); break; }
+      case 'boom': box(body, .12, .06, .7, c, .18, 1.5, -.33, e, .3, 0, .6); box(body, .12, .06, .7, c, -.18, 1.5, -.33, e, .3, 0, -.6); break;
+      case 'meteor': { const h = grp(pm.inner, -.85, 2.95, -.2); box(h, .3, .3, .3, e ? 0xff6b6b : 0xb197fc, 0, 0, 0, 1, .5, .5); box(h, .46, .05, .46, 0xffd43b, 0, 0, 0, 1, 0, .78); h.userData.by = h.position.y; pm.bob.push(h); pm.spin.push([h, 2.5]); break; }
+    }
+  }
+  // パッシブ
+  const pt = id => { const v = pas[id] || 0; return v >= 5 ? 3 : v >= 3 ? 2 : v ? 1 : 0; };
+  const gl = pt('glove'); if (gl) for (const A of [pm.aL, pm.aR]) { const g = grp(A, 0, -.96, 0); box(g, .54, .34, .54, gl === 3 ? 0xffd43b : 0xff8787, 0, 0, 0); box(g, .56, .1, .56, gl === 3 ? 0xff4d5b : 0xc92a2a, 0, .2, 0); if (gl >= 2) box(g, .4, .1, .08, 0xffe3e3, 0, -.06, .28, 1); }
+  const sh = pt('shoes'); if (sh) { for (const L of [pm.lL, pm.lR]) { const g = grp(L, 0, -.78, .06); box(g, .56, .26, .68, sh === 3 ? 0xffd43b : 0x339af0, 0, 0, 0); box(g, .58, .08, .7, 0xffffff, 0, -.1, 0); if (sh >= 2) { box(g, .06, .28, .3, 0x74c0fc, .3, .1, -.16, 1, .4); box(g, .06, .28, .3, 0x74c0fc, -.3, .1, -.16, 1, .4); } } pm.trail = sh === 3 ? 0xffd43b : 0x74c0fc; }
+  const ar = pt('armor'); if (ar) { box(body, .92, .74, .1, ar === 3 ? 0xffd43b : 0xf783ac, 0, 1.47, .29); box(body, .26, .22, .06, 0xff4d5b, 0, 1.52, .35, 1); if (ar >= 2) { box(body, .4, .26, .64, 0xf783ac, -.74, 2.0, 0); box(body, .4, .26, .64, 0xf783ac, .74, 2.0, 0); } }
+  const cl = pt('clock'); if (cl) { const g = grp(pm.aL, 0, -.7, 0); box(g, .48, .14, .48, 0x343a40, 0, 0, 0); box(g, .2, .2, .06, 0xffd43b, 0, 0, .25, 1); }
+  const cv = pt('clover'); if (cv) { box(body, .22, .22, .06, 0x69db7c, -.28, 1.68, .3, 1); if (cv >= 2) box(body, .1, .1, .06, 0xffffff, -.28, 1.68, .34, 1); }
+  const mg = pt('magnet'); if (mg) { const h = grp(pm.inner, .85, 1.0, .3); box(h, .1, .3, .1, 0xff6b6b, -.1, 0, 0); box(h, .1, .3, .1, 0xff6b6b, .1, 0, 0); box(h, .3, .1, .1, 0xff6b6b, 0, .15, 0); box(h, .1, .08, .1, 0xe9ecef, -.1, -.18, 0, 1); box(h, .1, .08, .1, 0xe9ecef, .1, -.18, 0, 1); h.userData.by = h.position.y; pm.bob.push(h); }
+  const bg = pas.big || 0; pm.inner.scale.setScalar(1 + bg * .04);
+  // レベルで かっこよく
+  const tier = lv >= 30 ? 3 : lv >= 20 ? 2 : lv >= 10 ? 1 : 0;
+  if (tier >= 1 && !ar) { box(body, .42, .2, .66, 0xffc83a, -.74, 2.02, 0); box(body, .42, .2, .66, 0xffc83a, .74, 2.02, 0); }
+  if (tier >= 2) { const h = grp(pm.inner, 0, 1.9, -.62); const rc = tier === 3 ? 0xff6b6b : 0xb197fc; for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; box(h, .14, .14, .05, rc, Math.cos(a) * .7, Math.sin(a) * .7, 0, 1, 0, 0, a); } box(h, .2, .2, .05, 0xffffff, 0, 0, 0, 1, 0, 0, .78); pm.spin.push([h, .8, 'z']); }
+  if (tier >= 3) { const wc = [0xffd43b, 0xfff3bf, 0xffffff]; [-1, 1].forEach(sd => { const w = grp(pm.inner, sd * .25, 2.0, -.42); for (let k = 0; k < 3; k++) box(w, 1.4 - k * .3, .2, .06, wc[k], sd * (.62 - k * .08), .35 - k * .3, -.06 * k, 1, 0, 0, sd * (.55 - k * .4)); pm.gw.push([w, sd]); }); }
+  if (tier >= 3) { const h = grp(pm.inner, 0, 2.95, 0); for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2; box(h, .1, .34, .1, 0xffd43b, Math.cos(a) * .36, 0, Math.sin(a) * .36, 1); } }
+  return true;
+}
+function animGear(pm, t, dt) {
+  if (!pm.spin) return;
+  for (const [h, sp, ax] of pm.spin) h.rotation[ax || 'y'] += sp * dt;
+  for (const [w, sd] of pm.gw) w.rotation.z = sd * (Math.sin(t * 5) * .25 + .15);
+  for (const h of pm.bob) h.position.y = h.userData.by + Math.sin(t * 4 + h.position.x) * .1;
+}
+const GV = new THREE.Vector3();
+function gearFx(pm, dt, moving) {
+  if (pm.tip && pm.tipCol && Math.random() < dt * 18) { pm.tip.getWorldPosition(GV); emit(GV.x, GV.y, GV.z, 1, pm.tipCol, 1.2, .14, .45, 0, .8); }
+  if (pm.trail && moving && Math.random() < dt * 20) emit(P.x + (Math.random() - .5) * .5, .15, P.z + (Math.random() - .5) * .5, 1, pm.trail, .6, .16, .4, 0, .2);
+}
+function updGear() {
+  if (!P.model || !W.weps) return;
+  if (buildGear(P.model, W.weps, W.pas, W.lv) && W.on) { sphereFx(P.x, 1.4, P.z, 2.5, 0xffffff, .25); }
+}
 /* ---- アニメつき まとめ描き（シェーダーで 手足を うごかす） ---- */
 const TIME = { value: 0 };
 function animMat(opts = {}) {
@@ -1835,6 +2069,7 @@ function initGL() {
   cam = new THREE.PerspectiveCamera(38, 1, .1, 240);
   hemi = new THREE.HemisphereLight(0xffffff, 0x445566, .85); scene.add(hemi);
   dirL = new THREE.DirectionalLight(0xffffff, .75); dirL.position.set(10, 20, 8); scene.add(dirL); scene.add(dirL.target);
+  pLight = new THREE.PointLight(0xffe3a8, 0, 18, 1.4); scene.add(pLight);
   enemyMat = animMat(); ghostMat = animMat({ transparent: true, opacity: .62 });
   decorMat = animMat(); glowMat = new THREE.MeshBasicMaterial({ vertexColors: true });
   bulletM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 900); scene.add(bulletM);
@@ -1871,7 +2106,7 @@ function resize() { if (!R) return; const w = innerWidth, h = innerHeight; R.set
 function buildEnv(stage) {
   const th = THEMES[areaIdx(stage)];
   scene.background = new THREE.Color(th.sky); scene.fog = new THREE.Fog(th.sky, 40, 80);
-  hemi.intensity = .85 * th.li; dirL.intensity = .75 * th.li;
+  hemi.intensity = .85 * th.li; dirL.intensity = .75 * th.li; hemi.color.setHex(0xffffff); dirL.color.setHex(0xffffff); pLight.intensity = 0;
   if (groundM) { scene.remove(groundM); groundM.geometry.dispose(); groundM.material.dispose(); groundTex.dispose(); }
   const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
   for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) {
@@ -1950,18 +2185,19 @@ function updSigns(dt) {
 }
 
 /* ============ ゲーム状態 ============ */
-const W = { on: false, paused: false, susp: false, t: 0, stage: 1, ts: 1, enemies: [], bullets: [], gems: [], picks: [], meteors: [], weps: [], pas: {}, lv: 1, xp: 0, need: 7, pendLv: 0, kills: 0, coinsRun: 0, combo: 0, comboT: 0, bestCombo: 0, bossOut: false, boss: null, clearing: 0, revived: false, shake: 0, spawnAcc: 0, nextSwarm: 50, nextElite: 70, nextBarrel: 8, nextQuiz: 40, kp: 0, dmgMul: 1, cdMul: 1, area: 1, magnet: 2.6, xpMul: 1, maxHp: 100, spdMul: 1, crit: .08, theme: THEMES[0], qbox: null, nextKillMs: 100, signRead: new Set() };
+const W = { on: false, paused: false, susp: false, t: 0, stage: 1, ts: 1, enemies: [], bullets: [], gems: [], picks: [], meteors: [], weps: [], pas: {}, lv: 1, xp: 0, need: 7, pendLv: 0, kills: 0, coinsRun: 0, combo: 0, comboT: 0, bestCombo: 0, bossOut: false, boss: null, clearing: 0, revived: false, shake: 0, spawnAcc: 0, nextSwarm: 50, nextElite: 70, nextBarrel: 8, nextQuiz: 40, kp: 0, dmgMul: 1, cdMul: 1, area: 1, magnet: 2.6, xpMul: 1, maxHp: 100, spdMul: 1, crit: .08, theme: THEMES[0], qbox: null, nextKillMs: 100, signRead: new Set(), mod: null, obj: 'survive', fate: null, sigils: 0, huntN: 200, mrT: 3 };
 const P = { x: 0, z: 0, hp: 100, face: 0, rot: 0, inv: 0, dashT: 0, dashCd: 0, dvx: 0, dvz: 0, walk: 0, model: null };
 const xpNeed = L => Math.floor(2 + L * 2.4 + Math.pow(L, 1.65) * .55);
 function stageMul(st) { const x = st - 1; return (1 + .45 * x + .04 * x * x) * Math.max(.6, 1 - .12 * S.deaths); }
 function recalc() {
   const p = id => W.pas[id] || 0;
-  W.dmgMul = (1 + W.kp) * (1 + .1 * p('glove')) * (1 + .08 * S.up.power) * (W.revived ? 1.25 : 1);
+  const md = W.mod || MOD0;
+  W.dmgMul = (1 + W.kp) * (1 + .1 * p('glove')) * (1 + .08 * S.up.power) * (W.revived ? 1.25 : 1) * md.dmg;
   W.cdMul = 1 - .08 * p('clock'); W.area = 1 + .1 * p('big');
-  W.spdMul = (1 + .08 * p('shoes')) * (1 + .05 * S.up.speed);
+  W.spdMul = (1 + .08 * p('shoes')) * (1 + .05 * S.up.speed) * md.pSpd;
   W.magnet = 3.2 * (1 + .35 * p('magnet')) * (1 + .15 * S.up.magnet);
-  W.xpMul = (1 + .12 * p('clover')) * (1 + .08 * S.up.luck); W.crit = .08 + .03 * p('clover');
-  const old = W.maxHp; W.maxHp = 100 + 20 * S.up.hp + 20 * p('armor'); if (W.maxHp > old) P.hp += W.maxHp - old;
+  W.xpMul = (1 + .12 * p('clover')) * (1 + .08 * S.up.luck) * md.xp; W.crit = .08 + .03 * p('clover');
+  const old = W.maxHp; W.maxHp = Math.round((100 + 20 * S.up.hp + 20 * p('armor')) * md.hp); if (W.maxHp > old) P.hp += W.maxHp - old;
   P.hp = Math.min(P.hp, W.maxHp);
 }
 
@@ -2030,7 +2266,7 @@ function updFx(dt) {
   for (const p of boltPool) if (p.life > 0) { p.life -= dt; p.m.material.opacity = Math.max(0, p.life / p.max); if (p.life <= 0) p.m.visible = false; }
 }
 function flashScreen(op = .5) { const f = $('#flash'); f.style.transition = 'none'; f.style.opacity = op; requestAnimationFrame(() => { f.style.transition = 'opacity .35s'; f.style.opacity = 0; }); }
-function banner(t, cls = '') { const b = $('#banner'); b.textContent = t; b.className = cls; void b.offsetWidth; b.classList.add('show'); }
+function banner(t, cls = '') { if (!$('#bossIntro').hidden) return; const b = $('#banner'); b.innerHTML = RB(t); b.className = cls; void b.offsetWidth; b.classList.add('show'); }
 
 /* ---- ダメージの数字 ---- */
 const FL = []; const V3 = new THREE.Vector3();
@@ -2061,11 +2297,12 @@ function spawnEnemy(role, at, elite) {
   const mk = role === 'boss' ? 'boss' + areaIdx(W.stage) : role === 'barrel' ? 'barrel' : W.theme.roster[role]; const md = MODELS[mk];
   const p = at || spawnPos();
   const mul = stageMul(W.stage) * (role === 'barrel' || role === 'boss' ? 1 : (1 + W.t / 80));
-  const e = { role, mk, x: p.x, z: p.z, hp: R0.hp * mul * (elite ? 10 : 1), spd: R0.spd * (1 + Math.min(.3, .02 * (W.stage - 1))) * (elite ? .9 : 1), dmg: R0.dmg * (1 + .08 * (W.stage - 1)) * (elite ? 1.5 : 1), r: R0.r * (elite ? 1.6 : 1), s: md.s * (elite ? 1.6 : 1), xp: R0.xp * (elite ? 10 : 1),
+  const MM = role === 'barrel' ? MOD0 : (W.mod || MOD0);
+  const e = { role, mk, x: p.x, z: p.z, hp: R0.hp * mul * (elite ? 10 : 1) * MM.eHp, spd: R0.spd * (1 + Math.min(.3, .02 * (W.stage - 1))) * (elite ? .9 : 1) * MM.eSpd, dmg: R0.dmg * (1 + .08 * (W.stage - 1)) * (elite ? 1.5 : 1), r: R0.r * (elite ? 1.6 : 1) * MM.eSize, s: md.s * (elite ? 1.6 : 1) * MM.eSize, xp: R0.xp * (elite ? 10 : 1),
     atk: .5, flash: 0, slowT: 0, burnT: 0, burnD: 0, kx: 0, kz: 0, ph: Math.random() * 6, elite, boss: role === 'boss', still: role === 'barrel', fly: md.fly, hop: md.hop, ghost: md.ghost, shot: md.shot, as: md.as || 9, orbT: -9, ang: Math.random() * 6, rise: (role === 'barrel' || md.fly || md.ghost) ? 0 : .35, shootT: 1.5 + Math.random() * 2 };
   e.max = e.hp; W.enemies.push(e);
   if (e.rise > 0 && Math.abs(p.x - P.x) < 22 && Math.abs(p.z - P.z) < 18) emit(p.x, .2, p.z, 5, W.theme.dirt, 3, .22, .5);
-  if (e.boss) { e.slamT = 3.5; e.sumT = 6; e.ringT = 5; e.windup = 0; W.boss = e; $('#bossBar').hidden = false; $('#bossName').textContent = md.n + (W.stage > 21 ? ' +' + Math.floor((W.stage - 1) / 21) : ''); }
+  if (e.boss) { e.slamT = 3.5; e.sumT = 6; e.ringT = 5; e.windup = 0; W.boss = e; $('#bossBar').hidden = false; $('#bossName').innerHTML = rb(EPI[areaIdx(W.stage)]) + ' ' + esc(md.n + (W.stage > 21 ? ' +' + Math.floor((W.stage - 1) / 21) : '')); }
   return e;
 }
 function pickType() {
@@ -2075,18 +2312,19 @@ function pickType() {
   if (t > 80 || (st >= 2 && t > 40)) tb.push(['mid', 3]);
   if (t > 70 || (st >= 2 && t > 30)) tb.push(['shoot', 1.1 + Math.min(1.4, t / 120)]);
   if (t > 110 || st >= 4) tb.push(['tank', 1.2 + t / 120]);
-  if (st >= 3 && t > 60) tb.push(['ghost', 2]);
+  if ((st >= 3 && t > 60) || (W.mod && W.mod.ghost && t > 15)) tb.push(['ghost', W.mod && W.mod.ghost ? 5 : 2]);
   const tot = tb.reduce((a, b) => a + b[1], 0); let r = Math.random() * tot;
   for (const [k, w] of tb) { r -= w; if (r <= 0) return k; } return 'basic';
 }
 function director(dt) {
   if (W.clearing > 0) return;
-  if (!W.bossOut && W.t >= BOSS_T) { W.bossOut = true; spawnEnemy('boss', spawnPos(16)); banner('ボスが あらわれた！', 'red'); sfx('warn'); W.shake = .6; flashScreen(.25); }
-  const rate = Math.min(11, (2.6 + W.t / 18) * (1 + .1 * (W.stage - 1))) * (W.boss ? .55 : 1);
+  if (!W.bossOut && bossReady()) { W.bossOut = true; const be = spawnEnemy('boss', spawnPos(16)); hideSigils(); bossIntro(be); }
+  if (W.mod.meteorRain && !W.boss) meteorRain(dt);
+  const rate = Math.min(11 * Math.max(1, W.mod.eRate), (2.6 + W.t / 18) * (1 + .1 * (W.stage - 1)) * W.mod.eRate) * (W.boss ? .55 : 1);
   W.spawnAcc += rate * dt;
   while (W.spawnAcc >= 1) { W.spawnAcc--; spawnEnemy(pickType()); }
   if (W.t >= W.nextSwarm) { W.nextSwarm += 45; const n = 18 + Math.min(16, W.stage * 2); const kind = W.t > 100 ? 'fast' : 'swarm'; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; spawnEnemy(kind, { x: P.x + Math.cos(a) * 17, z: P.z + Math.sin(a) * 17 }); } banner('かこまれた！', 'red'); }
-  if (W.t >= W.nextElite) { W.nextElite += 55; const pr = pickType(); const e = spawnEnemy(pr === 'swarm' ? 'basic' : pr, null, true); if (e) banner('つよい てきが きた！', 'gold'); }
+  if (W.t >= W.nextElite) { W.nextElite += 55 * W.mod.elite; const pr = pickType(); const e = spawnEnemy(pr === 'swarm' ? 'basic' : pr, null, true); if (e && !W.bossOut) banner('つよい てきが きた！', 'gold'); }
   if (W.t >= W.nextBarrel) { W.nextBarrel += 16 + Math.random() * 8; const a = Math.random() * 6.28; spawnEnemy('barrel', { x: P.x + Math.cos(a) * 11, z: P.z + Math.sin(a) * 11 }); }
   if (W.t >= W.nextQuiz) { W.nextQuiz += 60; spawnQuizBox(); }
   if (W.t >= W.nextKbox && !W.boss && !W.kbox) { W.nextKbox += 50; spawnKanjiBox(); }
@@ -2141,7 +2379,7 @@ function updGems(dt) {
   for (let i = W.gems.length - 1; i >= 0; i--) {
     const g = W.gems[i]; g.t += dt; const dx = P.x - g.x, dz = P.z - g.z, d2 = dx * dx + dz * dz;
     if (!g.fly && (d2 < mr2 || W.vacuum)) g.fly = true;
-    if (g.fly) { g.sp = Math.min(40, g.sp + dt * 60); const d = Math.sqrt(d2) || 1; g.x += dx / d * g.sp * dt; g.z += dz / d * g.sp * dt; if (d < .8) { W.gems.splice(i, 1); if (g.coin) { S.coins += g.v; W.coinsRun += g.v; floater(P.x, P.z, 1.1, '+' + g.v, 'coin'); sfx('coin'); } else { gainXp(g.v); sfx('gem'); } continue; } }
+    if (g.fly) { g.sp = Math.min(40, g.sp + dt * 60); const d = Math.sqrt(d2) || 1; g.x += dx / d * g.sp * dt; g.z += dz / d * g.sp * dt; if (d < .8) { W.gems.splice(i, 1); if (g.coin) { const cv = Math.round(g.v * W.mod.coin); S.coins += cv; W.coinsRun += cv; floater(P.x, P.z, 1.1, '+' + cv, 'coin'); sfx('coin'); } else { gainXp(g.v); sfx('gem'); } continue; } }
   }
   let nc = 0;
   for (const g of W.gems) {
@@ -2182,7 +2420,7 @@ function updPicks(dt) {
       if (p.kind === 'heart') { const h = Math.round(W.maxHp * .3); P.hp = Math.min(W.maxHp, P.hp + h); floater(P.x, P.z, 1.1, '+' + h, 'heal'); emit(P.x, 1, P.z, 16, 0xff4d6d, 5, .25, .8, 0); sfx('ok'); updHud(); }
       else if (p.kind === 'magnet') { W.vacuum = true; ringFx(P.x, P.z, 30, 0x74c0fc, .8); banner('マグネット！'); sfx('chest'); }
       else if (p.kind === 'bomb') { bombAll(); }
-      else if (p.kind === 'bag') { const c = 20 + rand(30) + W.stage * 5; S.coins += c; W.coinsRun += c; floater(P.x, P.z, 1.1, '+' + c, 'coin'); emit(P.x, 1, P.z, 20, 0xffc83a, 7, .25, .9); sfx('coin'); }
+      else if (p.kind === 'bag') { const c = Math.round((20 + rand(30) + W.stage * 5) * W.mod.coin); S.coins += c; W.coinsRun += c; floater(P.x, P.z, 1.1, '+' + c, 'coin'); emit(P.x, 1, P.z, 20, 0xffc83a, 7, .25, .9); sfx('coin'); }
       else if (p.kind === 'chest') { openChest(); }
     }
   }
@@ -2241,7 +2479,7 @@ const FIRE = {
   },
   meteor(w, st, col) {
     const ts = inView(st.cnt); if (!ts.length) return false;
-    ts.forEach((t, k) => { const m = meteorPool.find(m => !m.active); if (!m) return; const wr = warnPool.find(x => !x.visible); m.active = true; m.x = t.x; m.z = t.z; m.t = -k * .12; m.dmg = st.dmg; m.r = st.splash * W.area; m.col = col; m.warn = wr; m.m.material.color.setHex(col); if (wr) { wr.visible = true; wr.position.set(t.x, .08, t.z); wr.scale.set(m.r, 1, m.r); } W.meteors.push(m); });
+    ts.forEach((t, k) => { const m = meteorPool.find(m => !m.active); if (!m) return; const wr = warnPool.find(x => !x.visible); m.active = true; m.hurtP = false; m.x = t.x; m.z = t.z; m.t = -k * .12; m.dmg = st.dmg; m.r = st.splash * W.area; m.col = col; m.warn = wr; m.m.material.color.setHex(col); if (wr) { wr.visible = true; wr.position.set(t.x, .08, t.z); wr.scale.set(m.r, 1, m.r); } W.meteors.push(m); });
     return true;
   },
 };
@@ -2327,7 +2565,7 @@ function updMeteors(dt) {
     const fall = Math.min(1, m.t / .7); m.m.visible = true; m.m.position.set(m.x - 6 * (1 - fall), 16 * (1 - fall) + .5, m.z - 4 * (1 - fall)); m.m.rotation.set(m.t * 5, m.t * 4, 0); m.m.scale.setScalar(m.r * .4);
     if (Math.random() < .8) emit(m.m.position.x, m.m.position.y, m.m.position.z, 1, 0xffa94d, 1, .4, .4, 0, .2);
     if (m.warn) { const s = m.r * (.5 + fall * .5); m.warn.scale.set(s, 1, s); }
-    if (fall >= 1) { explode(m.x, m.z, m.r, m.dmg, m.col); W.shake = Math.max(W.shake, .35); m.active = false; m.m.visible = false; if (m.warn) m.warn.visible = false; W.meteors.splice(i, 1); }
+    if (fall >= 1) { explode(m.x, m.z, m.r, m.dmg, m.col); if (m.hurtP && Math.hypot(P.x - m.x, P.z - m.z) < m.r) hurtPlayer(8 + W.stage * 2); m.hurtP = false; W.shake = Math.max(W.shake, .35); m.active = false; m.m.visible = false; if (m.warn) m.warn.visible = false; W.meteors.splice(i, 1); }
   }
 }
 
@@ -2405,7 +2643,7 @@ function updEnemies(dt) {
 function dash() {
   if (P.dashCd > 0 || P.dashT > 0) return;
   let { mx, mz } = moveVec(); if (Math.hypot(mx, mz) < .1) { mx = Math.sin(P.face); mz = Math.cos(P.face); }
-  const l = Math.hypot(mx, mz); P.dvx = mx / l * 24; P.dvz = mz / l * 24; P.dashT = .22; P.dashCd = 2.2; sfx('dash');
+  const l = Math.hypot(mx, mz); P.dvx = mx / l * 24; P.dvz = mz / l * 24; P.dashT = .22; P.dashCd = 2.2 * W.mod.dashCd; sfx('dash');
 }
 
 /* ---- レベルアップ ---- */
@@ -2433,7 +2671,7 @@ function optHTML(o, k) {
   else if (o.t === 'p') { const lv = W.pas[o.id] || 0; ic = pIcon(o.id); name = PMAP[o.id].n; badge = lv ? `<span class="badge">Lv${lv} → ${lv + 1}</span>` : '<span class="badge new">NEW!</span>'; desc = PMAP[o.id].desc; }
   else if (o.t === 'heal') { ic = icon('heal', '#4fd67f'); name = 'かいふく'; badge = '<span class="badge new">HP</span>'; desc = 'HPが ぜんぶ もどる'; }
   else { ic = icon('coinb', '#ffc83a'); name = 'コイン'; badge = '<span class="badge new">+50</span>'; desc = 'コインが 50まい もらえる'; }
-  return `<button class="lvc ${evo ? 'evo' : ''}" data-o="${k}"><span class="k">${k + 1}</span><span class="lic">${ic}</span>${badge}<b>${esc(name)}</b><p>${esc(desc)}</p></button>`;
+  return `<button class="lvc ${evo ? 'evo' : ''}" data-o="${k}"><span class="k">${k + 1}</span><span class="lic">${ic}</span>${badge}<b>${RB(name)}</b><p>${RB(desc)}</p></button>`;
 }
 function showLevelUp() {
   if (!W.pendLv) return;
@@ -2487,7 +2725,7 @@ function openChest(force, fromKanji) {
     sfx(n === 3 ? 'evo' : 'chest'); confetti(P.x, P.z, n === 3 ? 80 : 40); flashScreen(.4);
     $('#chestGot').hidden = false;
     $('#chestGot').innerHTML = (n === 3 ? `<span style="color:var(--yellow);font-family:var(--display);font-size:1.3rem">${fromKanji ? '漢字ボーナス トリプル！！' : 'トリプル！！'}</span>` : '') +
-      got.map(g => g.i !== undefined ? `<span>${esc(g.lv >= WMAX ? WEAPONS[g.i].evo + ' に しんか！' : WEAPONS[g.i].n + ' Lv' + g.lv)}</span>` : `<span>${esc(PMAP[g.p].n + ' Lv' + g.lv)}</span>`).join('') + `<span><span class="coin"></span> +${coins}</span>`;
+      got.map(g => g.i !== undefined ? `<span>${RB(g.lv >= WMAX ? WEAPONS[g.i].evo + ' に しんか！' : WEAPONS[g.i].n + ' Lv' + g.lv)}</span>` : `<span>${esc(PMAP[g.p].n + ' Lv' + g.lv)}</span>`).join('') + `<span><span class="coin"></span> +${coins}</span>`;
     const ok = $('#chestOk'); ok.hidden = false; ok.focus();
     ok.onclick = () => { $('#chest').hidden = true; for (const g of got) if (g.i !== undefined && g.lv >= WMAX) evolveFx(g.i); renderSlots(); updHud(); W.paused = false; if (W.pendLv) showLevelUp(); };
   }, 1300);
@@ -2550,7 +2788,7 @@ function update(dtR) {
   if (tg) P.face = Math.atan2(tg.x - P.x, tg.z - P.z); else if (moving) P.face = Math.atan2(mx, mz);
   let d = P.face - P.rot; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2; P.rot += d * (1 - Math.exp(-18 * dt));
   if (moving) P.walk += dt;
-  const pm = P.model; pm.g.position.set(P.x, 0, P.z); pm.g.rotation.y = P.rot; animPlayer(pm, W.t, moving, !!tg);
+  const pm = P.model; pm.g.position.set(P.x, 0, P.z); pm.g.rotation.y = P.rot; animPlayer(pm, W.t, moving, !!tg); animGear(pm, W.t, dt); gearFx(pm, dt, moving);
   pm.inner.visible = !(P.inv > 0 && Math.floor(W.t * 20) % 2);
   playerShadow.position.set(P.x, .03, P.z);
   if (playerAura.visible) { playerAura.position.set(P.x, .05, P.z); const s = W.auraScale * (1 + Math.sin(W.t * 5) * .06); playerAura.scale.set(s, 1, s); playerAura.material.opacity = .55; if (P.model.si >= 7) playerAura.material.color.setHSL((W.t * .3) % 1, .9, .6); }
@@ -2566,6 +2804,8 @@ function update(dtR) {
   updPicks(dt);
   updEB(dt);
   updSigns(dt);
+  if (W.obj === 'sigil') updSigils(dt);
+  if (pLight.intensity) pLight.position.set(P.x, 3.2, P.z);
   updParticles(dt);
   updFx(dt);
   if (W.qbox) { const q = W.qbox; q.m.rotation.y += dt * 1.6; q.m.position.y = 1.3 + Math.sin(W.t * 3) * .25; if (Math.random() < dt * 8) emit(q.x, 1.3, q.z, 1, 0xffc83a, 2, .15, .6, 0, .5); if (Math.hypot(P.x - q.x, P.z - q.z) < 1.4) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.qbox = null; openQuiz(); } else if (Math.hypot(P.x - q.x, P.z - q.z) > 40) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.qbox = null; } }
@@ -2604,35 +2844,46 @@ function resetRun() {
   if (W.kbox) { scene.remove(W.kbox.m); W.kbox = null; }
   W.boss = null; $('#bossBar').hidden = true;
 }
-function startStage() {
+function startStage(fate) {
   ac(); keepAwake(); hideAll(); $('#hud').hidden = false;
+  fate = fate || W.fate || rollFate(); W.fate = fate; W.obj = fate.obj; W.mod = Object.assign({}, MOD0, (MODS.find(m => m.id === fate.mod) || MODS[0]).m);
   W.stage = S.stage; W.signRead = new Set();
   { const learned = shuffle(KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0)), next = newOrder().slice(0, 6).map(k => KMAP[k]); SIGNPOOL = learned.length >= 4 ? [...learned.slice(0, 30), ...next.slice(0, 3)] : [...learned, ...next]; }
   buildEnv(W.stage); resetRun();
+  $('#modFx').className = W.fate.mod;
+  if (W.mod.sky) { scene.background.setHex(W.mod.sky); scene.fog.color.setHex(W.mod.sky); hemi.color.setHex(0xff9a9a); dirL.color.setHex(0xffb0a0); }
+  if (W.mod.dark) { scene.fog.near = 18; scene.fog.far = 46; scene.background.multiplyScalar(.35); scene.fog.color.copy(scene.background); hemi.intensity *= .6; dirL.intensity *= .45; pLight.intensity = 2.2; }
   if (P.model) { scene.remove(P.model.g); }
   P.model = buildPlayer(skinUnlocked(S.skin) ? S.skin : 0); scene.add(P.model.g);
   Object.assign(W, { t: 0, ts: 1, lv: 1, xp: 0, need: xpNeed(1), pendLv: 0, kills: 0, coinsRun: 0, combo: 0, comboT: 0, bestCombo: 0, bossOut: false, clearing: 0, revived: false, shake: 0, spawnAcc: 0, nextSwarm: 50, nextElite: 70, nextBarrel: 6, nextQuiz: 40, nextKbox: 45, kbox: null, pas: {}, vacuum: false, nextKillMs: 100, lvFx: false, susp: false, paused: false, dead: false });
-  W.weps = [{ i: wUnlocked(S.cur) ? S.cur : 0, lv: 1, t: 0 }];
+  const B = S.build;
+  if (B && Array.isArray(B.weps) && B.weps.length) {
+    W.weps = B.weps.filter(w => WEAPONS[w.i]).map(w => ({ i: w.i, lv: Math.min(WMAX, w.lv), t: 0 })); W.pas = Object.assign({}, B.pas || {}); W.lv = B.lv || 1; W.xp = B.xp || 0; W.need = xpNeed(W.lv);
+    const c0 = wUnlocked(S.cur) ? S.cur : 0; if (!W.weps.some(w => w.i === c0) && W.weps.length < 6) W.weps.unshift({ i: c0, lv: 1, t: 0 });
+  } else W.weps = [{ i: wUnlocked(S.cur) ? S.cur : 0, lv: 1, t: 0 }];
+  W.sigils = 0; W.mrT = 4; W.huntN = Math.min(600, Math.round((200 + 22 * (W.stage - 1)) * Math.min(1.4, W.mod.eRate)));
+  if (W.obj === 'sigil') placeSigils(); else hideSigils();
   W.kp = kanjiPower(); recalc(); P.x = 0; P.z = 0; P.hp = W.maxHp; P.dashT = 0; P.dashCd = 0; P.inv = 1.5; P.face = 0; P.rot = 0;
   cam.position.set(0, 32, 30); W.on = true;
   renderSlots(); updHud(); updAuraLook(); $('#combo').style.opacity = 0;
-  banner(`ステージ ${W.stage}・${W.theme.name}`);
+  chapterCard(W.stage, fate);
   for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; spawnEnemy(i % 2 ? 'swarm' : 'basic', { x: Math.cos(a) * 12, z: Math.sin(a) * 12 }); }
   if (S.deaths > 0) setTimeout(() => toast(`てきが ${Math.round((1 - Math.max(.6, 1 - .12 * S.deaths)) * 100)}% よわくなったよ`), 1200);
 }
 function stageClear() {
   W.on = false; sfx('win');
   const bonus = 30 + 10 * S.stage; S.coins += bonus;
-  const cleared = S.stage; S.best = Math.max(S.best, cleared); S.bestLv = Math.max(S.bestLv || 0, W.lv); S.stage++; S.deaths = 0; S.pending = true; save();
-  showResult(`<h2>ステージ ${cleared} クリア！</h2>
+  const cleared = S.stage; S.build = { weps: W.weps.map(w => ({ i: w.i, lv: w.lv })), pas: Object.assign({}, W.pas), lv: W.lv, xp: W.xp }; logDay(d => { d.st++; d.sec += Math.round(W.t); }); S.best = Math.max(S.best, cleared); S.bestLv = Math.max(S.bestLv || 0, W.lv); S.stage++; S.deaths = 0; S.pending = true; save();
+  showResult(`<h2>${rb('{第|だい}' + cleared + '{章|しょう} {制覇|せいは}！')}</h2>
     <div class="bigline"><span class="coin"></span> +${W.coinsRun + bonus}</div>
     <p>レベル ${W.lv} ／ たおした てき ${W.kills}たい ／ さいだい ${W.bestCombo}コンボ</p>
+    <p>ぶき・パッシブ・レベルは つぎの ステージに ひきつぐよ！</p>
     <p>つぎは <b style="color:var(--yellow)">漢字ミッション</b>。5つ 書いたら ステージ ${S.stage} へ すすめるよ！</p>
     <div class="col"><button class="btn big y" data-act="mission">漢字ミッションへ</button><button class="btn" data-act="home">きちへ もどる</button></div>`);
 }
 function die() {
   W.dead = true; W.paused = true; $('#lvup').hidden = true; sfx('lose'); flashScreen(.4);
-  S.bestLv = Math.max(S.bestLv || 0, W.lv); save();
+  S.bestLv = Math.max(S.bestLv || 0, W.lv); logDay(d => { d.sec += Math.round(W.t); }); save();
   const ease = Math.round((1 - Math.max(.6, 1 - .12 * (S.deaths + 1))) * 100);
   showResult(`<h2>やられた…</h2>
     <p>${fmtT(W.t)} まで がんばった！ レベル ${W.lv} ／ ${W.kills}たい たおした<br>あつめた コイン <span class="coin"></span> ${W.coinsRun} は もらえるよ。</p>
@@ -2648,7 +2899,7 @@ $('#result').addEventListener('click', e => {
   const act = a.dataset.act;
   if (act === 'mission') openMission('stage');
   else if (act === 'home') { if (W.on) { S.deaths++; save(); } endRun(); goHome(); }
-  else if (act === 'retry') { S.deaths++; save(); startStage(); }
+  else if (act === 'retry') { S.deaths++; save(); startStage(W.fate); }
   else if (act === 'revive') openMission('revive');
 });
 function endRun() { W.on = false; W.susp = false; W.paused = false; }
@@ -2663,7 +2914,7 @@ function resumeRun(noLv) { hideAll(); $('#hud').hidden = false; W.susp = false; 
 function pauseGame() { if (!W.on || W.paused || W.susp) return; W.paused = true; $('#pauseInfo').textContent = `ステージ ${W.stage} ／ ${fmtT(W.t)} ／ レベル ${W.lv}`; $('#pause').hidden = false; }
 $('#pauseBtn').addEventListener('click', pauseGame);
 $('#resumeBtn').addEventListener('click', () => { $('#pause').hidden = true; W.paused = false; });
-$('#quitBtn').addEventListener('click', () => { $('#pause').hidden = true; endRun(); save(); goHome(); });
+$('#quitBtn').addEventListener('click', () => { $('#pause').hidden = true; logDay(d => { d.sec += Math.round(W.t); }); endRun(); save(); goHome(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && W.on && !W.paused) pauseGame(); if (!document.hidden && W.on) keepAwake(); });
 $('#dashBtn').addEventListener('pointerdown', e => { e.preventDefault(); dash(); });
 
@@ -2674,11 +2925,12 @@ function updHud() {
   $('#hudCoins').textContent = S.coins; $('#killChip').textContent = W.kills + ' たい';
   $('#xpFill').style.width = Math.min(100, W.xp / W.need * 100) + '%'; $('#lvText').textContent = 'Lv ' + W.lv;
   $('#timer').textContent = fmtT(W.t);
-  $('#timerSub').textContent = W.bossOut ? (W.boss ? 'ボスを たおせ！' : '') : `ボスまで ${fmtT(Math.max(0, BOSS_T - W.t))}`;
+  $('#timerSub').innerHTML = RB(objText());
 }
 function renderSlots() {
   $('#wSlots').innerHTML = W.weps.map(w => `<span class="slot ${w.lv >= WMAX ? 'evo' : ''}">${wIcon(w.i)}<b>${w.lv >= WMAX ? '★' : w.lv}</b></span>`).join('');
   $('#pSlots').innerHTML = Object.entries(W.pas).map(([id, lv]) => `<span class="slot pas">${pIcon(id)}<b>${lv}</b></span>`).join('');
+  updGear();
 }
 
 /* ============ 漢字ミッション ============ */
@@ -2699,7 +2951,7 @@ function renderMission() {
   if (MS.stage === 'done') { W2.innerHTML = MS.doneHTML; bindDone(); return; }
   const left = todo();
   const title = MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
-  const sub = MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${WEAPONS[MS.evoI].evo}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
+  const sub = MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
   const pad = MS.stage === 'pad';
   W2.innerHTML = `
     <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : MS.kind === 'box' || MS.kind === 'evo' ? 'あとで（ゲームに もどる）' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
@@ -2799,7 +3051,7 @@ function downscale(file) {
     img.src = url;
   });
 }
-function applyResult(it, ok, comment) { it.ok = ok; it.comment = comment; if (it.first === null) it.first = ok; if (!ok) { it.reveal = true; it.animOnce = false; } }
+function applyResult(it, ok, comment) { it.tries = (it.tries || 0) + 1; it.ok = ok; it.comment = comment; if (it.first === null) it.first = ok; if (!ok) { it.reveal = true; it.animOnce = false; } }
 function afterGrade() {
   const left = todo(); MS.blob = null; if (MS.url) URL.revokeObjectURL(MS.url); MS.url = null;
   if (!left.length) { sfx('ok'); finishMission(); return; }
@@ -2834,8 +3086,11 @@ function finishMission() {
   let daily = false;
   if (S.day !== todayStr()) { S.streak = S.day === todayStr(-1) ? S.streak + 1 : 1; S.day = todayStr(); gained += 2; daily = true; }
   S.stars += gained; S.missions++;
+  S.log.push({ t: Date.now(), kind: MS.kind, it: MS.items.map(it => [it.d.k, it.cat === 'pre' ? 'pre' : it.first && !it.hint ? 'ok' : it.first ? 'hint' : 'ng']) }); if (S.log.length > 80) S.log.splice(0, S.log.length - 80);
+  let okN = 0, ngN = 0; MS.items.forEach(it => { if (it.cat === 'pre') return; if (it.first && !it.hint) okN++; else ngN++; }); S.tot.ok += okN; S.tot.ng += ngN;
+  logDay(d => { d.m++; d.ok += okN; d.ng += ngN; d.k += MS.items.reduce((a, it) => a + (it.tries || 1), 0); });
   if (MS.kind === 'stage') S.pending = false;
-  const afterN = stats().n; const newSkins = SKINS.map((s, i) => i).filter(i => SKINS[i].need > beforeN && SKINS[i].need <= afterN);
+  const afterN = stats().n; const newTitle = titleOf(afterN) !== titleOf(beforeN) ? titleOf(afterN) : null; const newSkins = SKINS.map((s, i) => i).filter(i => SKINS[i].need > beforeN && SKINS[i].need <= afterN);
   if (newSkins.length) S.skin = newSkins[newSkins.length - 1];
   save();
   const newW = WEAPONS.filter((w, i) => !wUnlocked(i) && w.cost > beforeStars && w.cost <= S.stars);
@@ -2849,6 +3104,7 @@ function finishMission() {
       ${perfect ? '<p>いっぱつ ごうかく ボーナス つき！</p>' : '<p>なおして 書けたね。つぎは いっぱつで ごうかく できるかな？</p>'}
       ${mastered.length ? `<p>マスターした 漢字：<span style="font-family:var(--kyo);font-size:1.6rem">${esc(mastered.join(' '))}</span></p>` : ''}
       ${daily ? `<p>きょうの はじめての ミッション ★+2（${S.streak}にち れんぞく）</p>` : ''}
+      ${newTitle ? `<div class="newskin">${rb('{称号|しょうごう}')}「${rb(newTitle)}」を てにいれた！</div>` : ''}
       <p>漢字パワー：こうげき +${Math.round(kanjiPower() * 100)}%</p>
       ${newSkins.length ? `<div class="newskin">あたらしい すがた「${esc(SKINS[newSkins[newSkins.length - 1]].n)}」に へんしん！</div>` : nextSkin ? `<p>あと ${nextSkin.need - afterN}こ おぼえると「${esc(nextSkin.n)}」に なれる！</p>` : ''}
       ${newW.length ? `<p style="color:#c0392b">あたらしい ぶき「${esc(newW.map(w => w.n).join('・'))}」が かいほう できるよ！</p>` : ''}
@@ -2859,7 +3115,7 @@ function finishMission() {
   renderMission(); $('#mission').scrollTop = 0;
 }
 function bindDone() {
-  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'revive') revive(); else if (k === 'box') { resumeRun(true); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else startStage(); };
+  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'revive') revive(); else if (k === 'box') { resumeRun(true); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
   const h = $('#dHome'); if (h) h.onclick = () => { MS = null; goHome(); };
 }
 
@@ -2884,7 +3140,7 @@ function renderPreview(dt) {
 }
 
 /* ============ 基地 ============ */
-function hideAll() { ['#home', '#mission', '#quiz', '#result', '#pause', '#lvup', '#chest'].forEach(s => $(s).hidden = true); $('#hud').hidden = true; $('#joy').hidden = true; joy.id = null; joy.x = joy.y = 0; FL.forEach(f => { f.life = 0; f.s.style.opacity = 0; }); }
+function hideAll() { ['#home', '#mission', '#quiz', '#result', '#pause', '#lvup', '#chest', '#who', '#parentPage', '#fate'].forEach(s => $(s).hidden = true); $('#hud').hidden = true; $('#chapter').hidden = true; $('#bossIntro').hidden = true; $('#joy').hidden = true; joy.id = null; joy.x = joy.y = 0; FL.forEach(f => { f.life = 0; f.s.style.opacity = 0; }); }
 function goHome() { endRun(); hideAll(); $('#home').hidden = false; renderHome(); }
 function renderHome() {
   const { n, m } = stats();
@@ -2898,13 +3154,15 @@ function renderHome() {
   const th = THEMES[areaIdx(S.stage)], pending = S.pending && S.stage > 1;
   const nx = SKINS.find(s => s.need > n);
   $('#goPanel').innerHTML = `
-    <span class="area">ステージ ${S.stage}・${esc(th.name)}</span>
+    <span class="title-ch">${rb(titleOf(n))}</span>
+    <span class="area">${rb(chapterName(S.stage))}</span>
     <h2>${pending ? 'まずは 漢字ミッション！' : 'しゅつげき じゅんび OK'}</h2>
-    <p>${pending ? '漢字を 5つ（あたらしい・ふくしゅう・よしゅう）書いて しゃしんを おくろう。ごうかくしたら つぎの ステージへ。' : `3ぷん いきのこると ボスが でるよ。たおして クリア！${S.deaths ? `（いまは てきが ${Math.round((1 - Math.max(.6, 1 - .12 * S.deaths)) * 100)}% よわい）` : ''}`}</p>
-    <button class="btn big y" id="goBtn">${pending ? '漢字ミッションを はじめる' : `ステージ${S.stage}へ しゅつげき！`}</button>
+    <p>${pending ? '漢字を 5つ（あたらしい・ふくしゅう・よしゅう）書いて しゃしんを おくろう。ごうかくしたら つぎの ステージへ。' : `ステージごとに ルールが かわる！ ぶきと レベルは つぎの ステージに ひきつぐよ。${S.deaths ? `（いまは てきが ${Math.round((1 - Math.max(.6, 1 - .12 * S.deaths)) * 100)}% よわい）` : ''}`}</p>
+    <button class="btn big y" id="goBtn">${pending ? '漢字ミッションを はじめる' : `${rb('{運命|うんめい}を えらんで しゅつげき！')}`}</button>
     ${nx ? `<div class="nextskin"><span>つぎの すがた「${esc(nx.n)}」まで あと ${nx.need - n}こ</span></div><div class="bar"><i style="width:${Math.min(100, n / nx.need * 100)}%"></i></div>` : '<div class="nextskin">すべての すがたを かいほうした！</div>'}
     ${S.best ? `<div class="note">${STAR} マスター ${m}こ ／ さいこう レベル ${S.bestLv || 0} ／ たおした てき ${S.kills}たい</div>` : ''}`;
-  $('#goBtn').onclick = () => { sfx('click'); pending ? openMission('stage') : startStage(); };
+  $('#goBtn').onclick = () => { sfx('click'); pending ? openMission('stage') : openFate(); };
+  { const pr = curProf(), nt = nextTitle(n); $('#pChip').innerHTML = `<span class="av sm" style="background:${pr.col}">${esc([...pr.name][0] || '?')}</span>${esc(pr.name)}<small>きりかえ</small>`; $('#pChip').onclick = () => { sfx('click'); renderWho(); }; }
   if (S.missions === 0 && S.best === 0) $('#howto').open = true;
   renderTab();
 }
@@ -2923,7 +3181,7 @@ function weaponsHTML() {
         <div class="bar"><i style="width:${Math.min(100, S.stars / w.cost * 100)}%"></i></div>
         ${can ? `<button class="btn y" data-unlock="${i}">かいほう する！</button>` : `<div class="wdesc">${STAR} ${S.stars} / ${w.cost} で かいほう</div>`}</div>`;
     }
-    return `<div class="wcard ${S.cur === i ? 'equip' : ''}"><div class="whead"><div class="wicon">${wIcon(i)}</div><div><div class="wname">${esc(w.n)}</div><div class="wdesc">${esc(w.desc)}</div><div class="wdesc">Lv8 で「${esc(w.evo)}」に しんか</div></div></div>
+    return `<div class="wcard ${S.cur === i ? 'equip' : ''}"><div class="whead"><div class="wicon">${wIcon(i)}</div><div><div class="wname">${esc(w.n)}</div><div class="wdesc">${esc(w.desc)}</div><div class="wdesc">Lv8 で「${RB(w.evo)}」に しんか</div></div></div>
       <div class="wrow"><button class="btn sm ${S.cur === i ? 'y' : ''}" data-equip="${i}" ${S.cur === i ? 'disabled' : ''}>${S.cur === i ? 'さいしょの ぶき' : 'さいしょの ぶきに する'}</button></div></div>`;
   }).join('')}</div></div>`;
 }
@@ -3003,6 +3261,7 @@ function settingsHTML() {
     <textarea id="bkIn" placeholder="ここに コードを はりつけて よみこむ" aria-label="よみこむコード"></textarea>
     <div class="wrow"><button class="btn sm s" id="bkLoad">コードを よみこむ</button></div>
     <p class="hint">書き順データ：<a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener" style="color:var(--sky)">KanjiVG</a>（© Ulrich Apel, CC BY-SA 3.0）</p>
+    <h3>おうちの人</h3><div class="wrow"><button class="btn sm" id="toParent">おうちの人の ページ（きろく・なまえ）</button></div>
     <h3>はじめから</h3><div class="wrow"><button class="btn sm r" id="resetBtn">${resetArm ? 'ほんとうに けす？ もういちど おす' : 'きろくを ぜんぶ けす'}</button></div>
   </div>`;
 }
@@ -3020,7 +3279,8 @@ $('#tabBody').addEventListener('click', e => {
   if (d.level) { S.level = d.level; save(); renderTab(); return; }
   if (d.sound) { S.sound = d.sound === '1'; save(); if (S.sound) sfx('click'); renderTab(); return; }
   if (t.id === 'bkCopy') { const ta = $('#bkOut'); try { navigator.clipboard.writeText(ta.value).then(() => toast('コピーしました'), () => { ta.select(); toast('コードを えらびました。コピーしてください'); }); } catch (err) { ta.select(); } return; }
-  if (t.id === 'bkLoad') { try { const o = JSON.parse(decodeURIComponent(escape(atob($('#bkIn').value.trim())))); if (!o || typeof o !== 'object' || !o.kanji) throw 0; localStorage.setItem(KEY, JSON.stringify(o)); S = load(); save(); toast('よみこみました'); renderHome(); } catch (err) { toast('コードが ただしく ありません'); } return; }
+  if (t.id === 'bkLoad') { try { const o = JSON.parse(decodeURIComponent(escape(atob($('#bkIn').value.trim())))); if (!o || typeof o !== 'object' || !o.kanji) throw 0; localStorage.setItem(skey(), JSON.stringify(o)); S = load(); save(); toast('よみこみました'); renderHome(); } catch (err) { toast('コードが ただしく ありません'); } return; }
+  if (t.id === 'toParent') { openParent(); return; }
   if (t.id === 'resetBtn') { if (!resetArm) { resetArm = true; renderTab(); return; } S = DEF(); save(); resetArm = false; toast('きろくを けしました'); renderHome(); return; }
 });
 
@@ -3034,12 +3294,241 @@ const fsOn = () => !!(document.fullscreenElement || document.webkitFullscreenEle
 async function toggleFS() { try { if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document); else { const r = fsReq.call(fsEl); if (r && r.catch) await r; } } catch (e) { toast('この がめんでは ぜんがめんに できません'); } setTimeout(resize, 300); }
 if (fsReq) ['#fsBtn', '#fsBtn2'].forEach(id => { const b = $(id); b.hidden = false; b.addEventListener('click', toggleFS); });
 
+/* ============ ルビ（ふりがな） ============ */
+// {漢字|よみ} → <ruby>
+const rb = s => String(s).replace(/\{([^|{}]+)\|([^{}]+)\}/g, '<ruby>$1<rt>$2</rt></ruby>');
+const RB = s => rb(esc(s));
+const kana = s => String(s).replace(/\{([^|{}]+)\|([^{}]+)\}/g, '$2');
+
+/* ============ 中二病な なまえ ============ */
+const AREA_CN = ['{翠緑|すいりょく}の{平原|へいげん}', '{黄昏|たそがれ}の{街|まち}', '{灼熱|しゃくねつ}の{砂海|さかい}', '{氷獄|ひょうごく}の{霊峰|れいほう}', '{冥府|めいふ}の{墓標|ぼひょう}', '{煉獄|れんごく}の{火口|かこう}', '{虚空|こくう}の{星界|せいかい}'];
+const EPI = ['{腐敗|ふはい}の{王|おう}', '{鉄壁|てっぺき}の{巨人|きょじん}', '{砂塵|さじん}の{帝王|ていおう}', '{凍|い}てつく{獣王|じゅうおう}', '{闇|やみ}の{将軍|しょうぐん}', '{煉獄|れんごく}の{覇者|はしゃ}', '{星喰|ほしく}らい'];
+const TITLES = [[0, '{見習|みなら}い{漢字使|かんじつか}い'], [5, '{文字|もじ}の{剣士|けんし}'], [15, '{封印|ふういん}の{書記官|しょきかん}'], [30, '{漆黒|しっこく}の{筆聖|ひっせい}'], [60, '{紅蓮|ぐれん}の{言霊使|ことだまつか}い'], [100, '{千字|せんじ}の{覇王|はおう}'], [200, '{森羅万象|しんらばんしょう}を{綴|つづ}る{者|もの}']];
+const titleOf = n => { let t = TITLES[0][1]; for (const [k, v] of TITLES) if (n >= k) t = v; return t; };
+const nextTitle = n => TITLES.find(([k]) => k > n);
+const chapterName = st => `{第|だい}${st}{章|しょう}　${AREA_CN[areaIdx(st)]}`;
+
+/* ============ 運命（ステージの ルール） ============ */
+const OBJS = {
+  survive: { n: '{生存|せいぞん}の{刻|とき}', d: '3ぷん いきのこれ。そのあと ボスが あらわれる' },
+  hunt:    { n: '{殲滅|せんめつ}の{誓|ちか}い', d: 'てきを たくさん たおすと ボスが あらわれる' },
+  sigil:   { n: '{封印石|ふういんせき}の{探索|たんさく}', d: 'ちらばった ふういんせき 5こを あつめると ボスが あらわれる' },
+};
+const MODS = [
+  { id: 'bloodmoon', n: '{紅|あか}き{月|つき}の{夜|よる}', d: 'てきが はやい。けいけんち 1.5ばい', m: { eSpd: 1.25, xp: 1.5, sky: 0x4a0d18 } },
+  { id: 'giant',     n: '{巨人|きょじん}の{刻|とき}',       d: 'てきが おおきくて タフ。かずは すくない。コイン 2ばい', m: { eSize: 1.35, eHp: 1.8, eRate: .6, coin: 2 } },
+  { id: 'horde',     n: '{大群|たいぐん}の{行進|こうしん}',   d: 'てきが 2ばい わく。でも よわい', m: { eRate: 1.8, eHp: .55, xp: 1.2 } },
+  { id: 'gale',      n: '{疾風|しっぷう}の{加護|かご}',     d: 'じぶんが すごく はやい。ダッシュ れんぱつ', m: { pSpd: 1.35, dashCd: .45 } },
+  { id: 'berserk',   n: '{狂戦士|バーサーカー}の{契約|けいやく}', d: 'こうげき 1.6ばい。でも HPが はんぶん', m: { dmg: 1.6, hp: .5 } },
+  { id: 'eldorado',  n: '{黄金郷|エルドラド}',               d: 'つよい てきが たくさん。たからばこ ざくざく', m: { elite: .4, coin: 1.5 } },
+  { id: 'dark',      n: '{闇|やみ}の{帳|とばり}',           d: 'まわりが くらい。おばけが おおい。けいけんち 1.4ばい', m: { dark: 1, ghost: 1, xp: 1.4 } },
+  { id: 'starfall',  n: '{星降|ほしふ}りの{夜|よる}',       d: 'いんせきが ふってくる（じぶんにも あたる）。けいけんち 1.3ばい', m: { meteorRain: 1, xp: 1.3 } },
+];
+const MOD0 = { eSpd: 1, eHp: 1, eSize: 1, eRate: 1, xp: 1, coin: 1, pSpd: 1, dashCd: 1, dmg: 1, hp: 1, elite: 1, dark: 0, ghost: 0, meteorRain: 0, sky: 0 };
+const OBJ_ICON = {
+  survive: '<svg viewBox="0 0 40 40"><circle cx="20" cy="21" r="14" fill="none" stroke="currentColor" stroke-width="4"/><path d="M20 12v10l7 4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
+  hunt: '<svg viewBox="0 0 40 40"><path d="M8 32L30 10M24 8l8 0 0 8M10 22l8 8M6 34l4-4" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>',
+  sigil: '<svg viewBox="0 0 40 40"><path d="M20 4l10 16-10 16-10-16z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><path d="M20 12v16" stroke="currentColor" stroke-width="3"/></svg>',
+};
+function rollFate(not) {
+  for (let t = 0; t < 20; t++) {
+    const obj = pick(Object.keys(OBJS)), mod = pick(MODS);
+    if (!not || not.obj !== obj || not.mod !== mod.id) return { obj, mod: mod.id };
+  }
+  return { obj: 'survive', mod: 'gale' };
+}
+function openFate() {
+  hideAll(); sfx('chest');
+  const a = rollFate(), b = rollFate(a), cards = [a, b];
+  const card = (f, i) => { const o = OBJS[f.obj], m = MODS.find(x => x.id === f.mod); return `<button class="fcard" data-f="${i}">
+    <span class="fobj">${OBJ_ICON[f.obj]}</span><b class="fname">${rb(o.n)}</b><span class="fdesc">${esc(o.d)}</span>
+    <span class="fdiv"></span><span class="fmod">${rb(m.n)}</span><span class="fdesc">${esc(m.d)}</span></button>`; };
+  $('#fateBox').innerHTML = `<p class="fsub">${rb(chapterName(S.stage))}</p><h2>${rb('{運命|うんめい}を えらべ')}</h2><div class="fcards">${cards.map(card).join('')}</div><button class="btn sm" id="fateBack">きちへ もどる</button>`;
+  $('#fate').hidden = false;
+  $('#fateBox').querySelectorAll('[data-f]').forEach(b => b.onclick = () => { sfx('evo'); $('#fate').hidden = true; startStage(cards[+b.dataset.f]); });
+  $('#fateBack').onclick = () => { $('#fate').hidden = true; goHome(); };
+}
+
+/* ---- ステージ はじまりの 章カード ---- */
+function chapterCard(st, fate) {
+  const o = OBJS[fate.obj], m = MODS.find(x => x.id === fate.mod), el = $('#chapter');
+  el.innerHTML = `<div class="chb"><small>${rb(chapterName(st).split('　')[0])}</small><b>${rb(AREA_CN[areaIdx(st)])}</b><span>${rb(o.n)} ／ ${rb(m.n)}</span><em>${esc(o.d)}</em></div>`;
+  el.hidden = false; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  clearTimeout(chapterCard.t); chapterCard.t = setTimeout(() => { el.hidden = true; }, 3400);
+}
+/* ---- ボス とうじょう カットイン ---- */
+function bossIntro(e) {
+  const a = areaIdx(W.stage), el = $('#bossIntro');
+  el.innerHTML = `<div class="bib"><small>― ${rb(EPI[a])} ―</small><b>${esc(MODELS['boss' + a].n)}</b></div>`;
+  $('#banner').classList.remove('show'); el.hidden = false; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  W.ts = .25; sfx('warn'); W.shake = .8; flashScreen(.35);
+  setTimeout(() => { if (W.on) W.ts = 1; el.hidden = true; }, 2300);
+}
+
+/* ---- 封印石 ---- */
+const SIGILS = [];
+function makeSigils() {
+  for (let i = 0; i < 5; i++) {
+    const g = new THREE.Group();
+    const c = new THREE.Mesh(new THREE.OctahedronGeometry(.8), new THREE.MeshBasicMaterial({ color: 0xb197fc })); c.position.y = 1.6; g.add(c);
+    const c2 = new THREE.Mesh(new THREE.OctahedronGeometry(.45), new THREE.MeshBasicMaterial({ color: 0xffffff })); c2.position.y = 1.6; g.add(c2);
+    const pil = new THREE.Mesh(new THREE.BoxGeometry(.7, 40, .7), new THREE.MeshBasicMaterial({ color: 0xd0bfff, transparent: true, opacity: .28, depthWrite: false })); pil.position.y = 20; g.add(pil);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(1.2, 1.5, 6), new THREE.MeshBasicMaterial({ color: 0x9775fa, transparent: true, opacity: .8, side: THREE.DoubleSide, depthWrite: false })); ring.rotation.x = -Math.PI / 2; ring.position.y = .08; g.add(ring);
+    g.visible = false; scene.add(g); SIGILS.push({ g, c, ring, on: false });
+  }
+}
+function placeSigils() {
+  const base = Math.random() * 6.28;
+  SIGILS.forEach((s, i) => { const a = base + i * 1.256 + (Math.random() - .5) * .6, d = 16 + i * 4 + Math.random() * 6; s.x = Math.cos(a) * d; s.z = Math.sin(a) * d; s.g.position.set(s.x, 0, s.z); s.g.visible = true; s.on = true; });
+}
+function hideSigils() { SIGILS.forEach(s => { s.g.visible = false; s.on = false; }); $('#sigArrow').hidden = true; }
+const V3b = new THREE.Vector3();
+function updSigils(dt) {
+  let near = null, nd = 1e9;
+  for (const s of SIGILS) {
+    if (!s.on) continue; s.c.rotation.y += dt * 2; s.c.position.y = 1.6 + Math.sin(TIME.value * 3 + s.x) * .25; s.ring.rotation.z += dt;
+    if (Math.random() < dt * 6) emit(s.x, 1.6, s.z, 1, 0xd0bfff, 1.5, .18, .8, 0, .8);
+    const d = Math.hypot(P.x - s.x, P.z - s.z);
+    if (d < 1.7) { s.on = false; s.g.visible = false; W.sigils++; sfx('evo'); flashScreen(.3); ringFx(s.x, s.z, 8, 0xb197fc, .7); emit(s.x, 1.6, s.z, 40, 0xd0bfff, 9, .3, 1); banner(W.sigils >= 5 ? '{封印|ふういん}が とけた！' : `{封印石|ふういんせき} ${W.sigils} / 5`, 'gold'); for (let k = 0; k < 6; k++) dropGem(s.x + (Math.random() - .5) * 3, s.z + (Math.random() - .5) * 3, 3 + W.stage); continue; }
+    if (d < nd) { nd = d; near = s; }
+  }
+  const ar = $('#sigArrow');
+  if (!near) { ar.hidden = true; return; }
+  V3b.set(near.x, 1.5, near.z).project(cam);
+  const sx = (V3b.x * .5 + .5) * innerWidth, sy = (-V3b.y * .5 + .5) * innerHeight, m = 60;
+  if (sx > m && sx < innerWidth - m && sy > m + 40 && sy < innerHeight - m) { ar.hidden = true; return; }
+  const cx = innerWidth / 2, cy = innerHeight / 2, dx = sx - cx, dy = sy - cy, k = Math.min((cx - m) / Math.abs(dx || 1e-6), (cy - m) / Math.abs(dy || 1e-6));
+  ar.hidden = false; ar.style.transform = `translate(${cx + dx * k}px,${cy + dy * k}px)`;
+  ar.querySelector('svg').style.transform = `rotate(${Math.atan2(dy, dx)}rad)`; ar.querySelector('b').textContent = Math.round(nd) + 'm';
+}
+function bossReady() {
+  if (W.obj === 'hunt') return W.kills >= W.huntN || W.t >= 270;
+  if (W.obj === 'sigil') return W.sigils >= 5 || W.t >= 270;
+  return W.t >= BOSS_T;
+}
+function objText() {
+  if (W.bossOut) return W.boss ? 'ボスを たおせ！' : '';
+  if (W.obj === 'hunt') return `{討伐|とうばつ} ${Math.min(W.kills, W.huntN)} / ${W.huntN}`;
+  if (W.obj === 'sigil') return `{封印石|ふういんせき} ${W.sigils} / 5`;
+  return `ボスまで ${fmtT(Math.max(0, BOSS_T - W.t))}`;
+}
+/* ---- 星降り ---- */
+function meteorRain(dt) {
+  W.mrT -= dt; if (W.mrT > 0) return; W.mrT = 2 + Math.random();
+  const m = meteorPool.find(x => !x.active); if (!m) return; const wr = warnPool.find(x => !x.visible);
+  const a = Math.random() * 6.28, d = 2 + Math.random() * 10;
+  m.active = true; m.x = P.x + Math.cos(a) * d; m.z = P.z + Math.sin(a) * d; m.t = -.5; m.dmg = 60 + W.stage * 25; m.r = 3; m.col = 0xff922b; m.warn = wr; m.hurtP = true; m.m.material.color.setHex(0xff922b);
+  if (wr) { wr.visible = true; wr.position.set(m.x, .08, m.z); wr.scale.set(m.r, 1, m.r); }
+  W.meteors.push(m);
+}
+
+/* ============ こどもごとの きろく ============ */
+const AVCOL = ['#ff8b3d', '#5ec8ff', '#4fd67f', '#b38cff', '#ff4d5b', '#ffc83a'];
+function persistAsk() { try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {} }
+function readSave(id) { try { const r = localStorage.getItem(KEY + '.' + id); if (r) return JSON.parse(r); } catch (e) {} return null; }
+function profStats(id) { const o = readSave(id) || {}; let n = 0; for (const k in (o.kanji || {})) if (o.kanji[k].c > 0) n++; return { n, st: o.stage || 1, best: o.best || 0 }; }
+function renderWho(mode) {
+  hideAll(); $('#who').hidden = false; const W2 = $('#whoWrap'); const L = PROF.list;
+  const card = p => { const st = profStats(p.id); return `<button class="pcard" data-pid="${esc(p.id)}"><span class="av" style="background:${p.col}">${esc([...p.name][0] || '?')}</span><b>${esc(p.name)}</b><small>${rb(titleOf(st.n))}</small><small>漢字 ${st.n}こ ／ ステージ ${st.st}</small></button>`; };
+  W2.innerHTML = `<header class="brand"><h1><span class="k">カンジ</span><span class="b">ブラスター</span></h1><p>${L.length ? 'だれが あそぶ？' : 'はじめまして！ なまえを おしえてね'}</p></header>
+    ${L.length ? `<div class="pgrid">${L.map(card).join('')}</div>` : ''}
+    <div class="panel" id="newProf" ${L.length && mode !== 'new' ? 'hidden' : ''}>
+      <h3>あたらしく はじめる</h3>
+      <label class="hint" for="pName">なまえ（8もじ まで）</label><input id="pName" class="tin" maxlength="8" autocomplete="off" placeholder="なまえ">
+      <p class="hint">いろ</p><div class="seg" id="pCols">${AVCOL.map((c, i) => `<button data-col="${c}" aria-pressed="${i === L.length % AVCOL.length}" style="background:${c};width:44px;height:44px;border-radius:50%" aria-label="いろ ${i + 1}"></button>`).join('')}</div>
+      <p class="hint">はじめる 学年</p><div class="seg" id="pGrades">${[1, 2, 3].map(g => `<button data-g="${g}" aria-pressed="${g === 2}">${g}年生</button>`).join('')}</div>
+      <div class="wrow"><button class="btn big y" id="pMake">はじめる！</button>${L.length ? '<button class="btn" id="pCancel">やめる</button>' : ''}</div>
+    </div>
+    <div class="wrow" style="justify-content:space-between">${L.length && mode !== 'new' ? '<button class="btn s" id="pNew">＋ あたらしく つくる</button>' : '<span></span>'}<button class="btn sm" id="pParent">おうちの人の ページ</button></div>`;
+  W2.querySelectorAll('[data-pid]').forEach(b => b.onclick = () => { sfx('click'); switchProfile(b.dataset.pid); });
+  const sel = (box, attr) => box.querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { box.querySelectorAll(`[${attr}]`).forEach(x => x.setAttribute('aria-pressed', x === b)); });
+  sel($('#pCols'), 'data-col'); sel($('#pGrades'), 'data-g');
+  if ($('#pNew')) $('#pNew').onclick = () => renderWho('new');
+  if ($('#pCancel')) $('#pCancel').onclick = () => renderWho();
+  $('#pParent').onclick = () => openParent();
+  $('#pMake').onclick = () => {
+    const name = ($('#pName').value || '').trim() || `プレイヤー${L.length + 1}`;
+    const col = $('#pCols [aria-pressed="true"]').dataset.col, g = +$('#pGrades [aria-pressed="true"]').dataset.g;
+    const id = 'p' + Date.now().toString(36);
+    PROF.list.push({ id, name: name.slice(0, 8), col }); const o = DEF(); o.grade = g; try { localStorage.setItem(KEY + '.' + id, JSON.stringify(o)); } catch (e) {}
+    saveProfiles(); persistAsk(); sfx('win'); switchProfile(id);
+  };
+  if (!L.length || mode === 'new') setTimeout(() => { try { $('#pName').focus(); } catch (e) {} }, 50);
+}
+function switchProfile(id) { PROF.cur = id; saveProfiles(); S = load(); persistAsk(); curTab = 'weapons'; noteSel = null; dexSel = null; goHome(); }
+const curProf = () => PROF.list.find(p => p.id === PROF.cur) || { name: '', col: AVCOL[0] };
+
+/* ============ おうちの人の ページ ============ */
+let PP = { open: false, sel: null };
+function dayKey(off = 0) { const d = new Date(Date.now() + off * 864e5); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function logDay(f) { const k = dayKey(); const d = S.days[k] || (S.days[k] = { m: 0, ok: 0, ng: 0, k: 0, st: 0, sec: 0 }); f(d); const keys = Object.keys(S.days).sort(); while (keys.length > 120) delete S.days[keys.shift()]; }
+function openParent() {
+  hideAll(); $('#parentPage').hidden = false; $('#parentPage').scrollTop = 0;
+  if (PP.open) { renderParentPage(); return; }
+  const a = 12 + rand(8), b = 3 + rand(7);
+  $('#ppWrap').innerHTML = `<div class="mtop"><button class="btn sm" id="ppBack">もどる</button></div>
+    <div class="mtitle"><span class="eyebrow">おうちの人へ</span><h2>がくしゅうの きろく</h2><p>こどもが まちがえて ひらかないように、けいさんの こたえを いれてください。</p></div>
+    <div class="parent"><div class="prow"><label for="ppGate"><b>${a} × ${b} =</b></label><input id="ppGate" type="number" inputmode="numeric" autocomplete="off"><button class="btn sm" id="ppOpen">ひらく</button></div></div>`;
+  $('#ppBack').onclick = leaveParent;
+  $('#ppOpen').onclick = () => { if (Number($('#ppGate').value) !== a * b) { toast('こたえが ちがいます'); return; } PP.open = true; PP.sel = PROF.cur; renderParentPage(); };
+}
+function leaveParent() { PP.open = false; if (PROF.list.some(p => p.id === PROF.cur)) goHome(); else renderWho(); }
+function renderParentPage() {
+  if (!PROF.list.some(p => p.id === PP.sel)) PP.sel = PROF.list[0] && PROF.list[0].id;
+  const p = PROF.list.find(x => x.id === PP.sel); const W2 = $('#ppWrap');
+  if (!p) { W2.innerHTML = `<div class="mtop"><button class="btn sm" id="ppBack">もどる</button></div><p>きろくが ありません。</p>`; $('#ppBack').onclick = leaveParent; return; }
+  const o = Object.assign(DEF(), readSave(p.id) || {}); o.days = o.days || {}; o.log = o.log || []; o.tot = o.tot || { ok: 0, ng: 0 };
+  const K = o.kanji || {}; let learned = 0, master = 0, pre = 0; const weak = [];
+  for (const k in K) { const r = K[k]; if (r.c > 0) learned++; if (r.m) master++; if (r.p && !r.c) pre++; if (r.w > 0 && r.b === 0 && !r.m) weak.push([k, r]); }
+  weak.sort((a, b) => b[1].w - a[1].w || b[1].last - a[1].last);
+  const playDays = Object.keys(o.days).filter(k => o.days[k].m > 0 || o.days[k].st > 0).length;
+  const firstRate = o.tot.ok + o.tot.ng ? Math.round(o.tot.ok / (o.tot.ok + o.tot.ng) * 100) + '%' : '―';
+  const days = []; for (let i = 13; i >= 0; i--) { const k = dayKey(-i); days.push({ k, d: o.days[k] || { m: 0, ok: 0, ng: 0, k: 0, st: 0, sec: 0 } }); }
+  const mx = Math.max(1, ...days.map(x => x.d.k)), sum = days.reduce((a, x) => a + x.d.k, 0);
+  const md = k => { const [, m, d] = k.split('-'); return `${+m}/${+d}`; };
+  const wd = k => '日月火水木金土'[new Date(k + 'T12:00:00').getDay()];
+  const bars = days.map((x, i) => { const h = x.d.k / mx * 100, lab = (x.d.k === mx && x.d.k > 0) || i === 13; return `<button class="cb" data-tip="${md(x.k)}（${wd(x.k)}）：${x.d.k}字・ミッション ${x.d.m}回・ステージ ${x.d.st}こ" aria-label="${md(x.k)} ${x.d.k}字"><span class="cv">${lab && x.d.k ? x.d.k : ''}</span><i style="height:${h}%"></i><span class="cx">${+x.k.split('-')[2]}</span></button>`; }).join('');
+  const grades = [1, 2, 3].map(g => { const L = KG[g], n = L.filter(d => K[d.k] && K[d.k].c > 0).length, m = L.filter(d => K[d.k] && K[d.k].m).length; return `<div class="gp"><span>${g}年生</span><div class="gbar"><i class="gm" style="width:${m / L.length * 100}%"></i><i class="gl" style="width:${(n - m) / L.length * 100}%"></i></div><b>${n} / ${L.length}</b></div>`; }).join('');
+  const kindName = { stage: 'ミッション', box: '漢字ボックス', evo: 'しんか', revive: 'ふっかつ' };
+  const logs = o.log.slice(-15).reverse().map(l => { const d = new Date(l.t); return `<li><span class="lt">${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}</span><span class="lk">${kindName[l.kind] || ''}</span><span class="li">${l.it.map(([k, r]) => `<span class="lc ${r}">${esc(k)}</span>`).join('')}</span></li>`; }).join('') || '<li>まだ ありません</li>';
+  W2.innerHTML = `<div class="mtop"><button class="btn sm" id="ppBack">もどる</button><span style="font-weight:900">がくしゅうの きろく</span></div>
+    <div class="seg pptabs">${PROF.list.map(x => `<button data-pp="${esc(x.id)}" aria-pressed="${x.id === p.id}"><span class="av sm" style="background:${x.col}">${esc([...x.name][0] || '?')}</span>${esc(x.name)}</button>`).join('')}</div>
+    <div class="ppsum">
+      <div><span>おぼえた 字</span><b>${learned}<small> / 440</small></b></div><div><span>マスター</span><b>${master}</b></div>
+      <div><span>にがて</span><b>${weak.length}</b></div><div><span>よしゅう ずみ</span><b>${pre}</b></div>
+      <div><span>1かいで ごうかく</span><b>${firstRate}</b></div><div><span>あそんだ 日</span><b>${playDays}<small> 日（れんぞく ${o.streak || 0}）</small></b></div>
+    </div>
+    <div class="ppbox"><h3>学年べつ</h3>${grades}<p class="hint2"><i class="sw gm"></i>マスター　<i class="sw gl"></i>おぼえた（いっぱつ ごうかく）</p></div>
+    <div class="ppbox"><h3>この 14日間に 書いた 字の かず</h3><p class="hint2">ごうけい ${sum}字。ぼうを タップすると くわしく 見られます。</p>
+      <div class="chart"><div class="cbars">${bars}</div><div class="ctip" id="ctip" hidden></div></div>
+      <details><summary>ひょうで 見る</summary><table class="ctab"><tr><th>日</th><th>書いた 字</th><th>ミッション</th><th>ステージ</th></tr>${days.slice().reverse().map(x => `<tr><td>${md(x.k)}（${wd(x.k)}）</td><td>${x.d.k}</td><td>${x.d.m}</td><td>${x.d.st}</td></tr>`).join('')}</table></details></div>
+    <div class="ppbox"><h3>にがてな 字</h3>${weak.length ? `<div class="weak">${weak.slice(0, 30).map(([k, r]) => `<span class="wk"><b>${esc(k)}</b><small>まちがい ${r.w}</small></span>`).join('')}</div><p class="hint2">つぎの ミッションで ふくしゅうとして 出ます。</p>` : '<p class="hint2">いまは ありません。</p>'}</div>
+    <div class="ppbox"><h3>さいきんの きろく</h3><ul class="plog">${logs}</ul><p class="hint2"><span class="lc ok">字</span>いっぱつ ごうかく　<span class="lc hint">字</span>ヒントで ごうかく　<span class="lc ng">字</span>なおして ごうかく　<span class="lc pre">字</span>よしゅう</p></div>
+    <div class="ppbox"><h3>${esc(p.name)} の せってい</h3>
+      <div class="prow"><label for="ppName">なまえ</label><input id="ppName" class="tin" maxlength="8" value="${esc(p.name)}"><button class="btn sm" id="ppRename">かえる</button></div>
+      <p class="hint2">バックアップ コード（べつの きかいに うつすときに つかいます）</p><textarea id="ppCode" readonly>${esc(btoa(unescape(encodeURIComponent(JSON.stringify(o)))))}</textarea>
+      <div class="wrow"><button class="btn sm" id="ppCopy">コードを コピー</button><button class="btn sm r" id="ppDel">${PP.delArm === p.id ? 'ほんとうに けす？ もういちど おす' : 'この こどもの きろくを けす'}</button></div></div>`;
+  $('#ppBack').onclick = leaveParent;
+  W2.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { PP.sel = b.dataset.pp; PP.delArm = null; renderParentPage(); });
+  const tip = $('#ctip');
+  W2.querySelectorAll('.cb').forEach(b => { const show = () => { tip.textContent = b.dataset.tip; tip.hidden = false; const r = b.getBoundingClientRect(), c = b.closest('.chart').getBoundingClientRect(); tip.style.left = Math.max(0, Math.min(c.width - 200, r.left - c.left + r.width / 2 - 100)) + 'px'; }; b.onpointerenter = show; b.onclick = show; b.onpointerleave = () => tip.hidden = true; });
+  $('#ppRename').onclick = () => { const v = $('#ppName').value.trim(); if (!v) return; p.name = v.slice(0, 8); saveProfiles(); toast('なまえを かえました'); renderParentPage(); };
+  $('#ppCopy').onclick = () => { const ta = $('#ppCode'); try { navigator.clipboard.writeText(ta.value).then(() => toast('コピーしました'), () => { ta.select(); }); } catch (e) { ta.select(); } };
+  $('#ppDel').onclick = () => {
+    if (PP.delArm !== p.id) { PP.delArm = p.id; renderParentPage(); return; }
+    try { localStorage.removeItem(KEY + '.' + p.id); } catch (e) {}
+    PROF.list = PROF.list.filter(x => x.id !== p.id); PP.delArm = null; toast('きろくを けしました');
+    if (PROF.cur === p.id) { PROF.cur = PROF.list[0] ? PROF.list[0].id : null; if (PROF.cur) S = load(); }
+    saveProfiles(); renderParentPage();
+  };
+}
+
 /* ============ はじまり ============ */
-initGL(); initPreview();
+initGL(); makeSigils(); initPreview();
 const cv = $('#gl');
 cv.addEventListener('pointerdown', joyDown); addEventListener('pointermove', joyMove); addEventListener('pointerup', joyUp); addEventListener('pointercancel', joyUp);
 requestAnimationFrame(loop);
-goHome();
+if (PROF.cur && PROF.list.length === 1) goHome(); else renderWho();
 })();
 </script>
 
