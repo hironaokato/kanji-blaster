@@ -230,6 +230,20 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 /* ---------- ゲームHUD ---------- */
 #hud{position:fixed;inset:0;pointer-events:none;touch-action:none}
 #modFx{position:absolute;inset:0;pointer-events:none}
+#wxFx{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
+#wxFx.rain,#wxFx.storm{background:repeating-linear-gradient(104deg,transparent 0 22px,rgba(210,225,255,.22) 22px 24px,transparent 24px 61px),linear-gradient(rgba(30,40,80,.18),rgba(30,40,80,.1));background-size:240px 240px,100% 100%;animation:wxrain .32s linear infinite}
+#wxFx.storm{background-color:rgba(10,15,40,.12)}
+@keyframes wxrain{to{background-position:-60px 240px,0 0}}
+#wxFx.snow{background:radial-gradient(ellipse at 50% 50%,transparent 45%,rgba(255,255,255,.35) 100%)}
+#wxFx.blizzard{background:repeating-linear-gradient(170deg,transparent 0 30px,rgba(255,255,255,.25) 30px 33px,transparent 33px 70px),radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.08) 20%,rgba(255,255,255,.6) 100%);background-size:300px 300px,100% 100%;animation:wxbliz .5s linear infinite}
+@keyframes wxbliz{to{background-position:-300px 50px,0 0}}
+#wxFx.sakura{background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(255,180,210,.28) 100%)}
+#wxFx.sand{background:repeating-linear-gradient(178deg,transparent 0 26px,rgba(240,200,120,.25) 26px 28px,transparent 28px 64px),radial-gradient(ellipse at 50% 50%,rgba(233,196,106,.12) 20%,rgba(214,166,80,.55) 100%);background-size:400px 400px,100% 100%;animation:wxsand .45s linear infinite}
+@keyframes wxsand{to{background-position:-400px 20px,0 0}}
+#wxFx.fog{background:radial-gradient(ellipse at 50% 55%,rgba(255,255,255,.05) 15%,rgba(235,238,245,.62) 80%)}
+#wxFx.ember{background:radial-gradient(ellipse at 50% 120%,rgba(255,120,40,.4),transparent 60%)}
+#wxFx.ash{background:radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(60,60,70,.45) 100%)}
+@media (prefers-reduced-motion:reduce){#wxFx{animation:none!important}}
 #sgUI{position:absolute;inset:0;pointer-events:none}
 #sgTop{position:absolute;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 96px);display:flex;flex-direction:column;align-items:center;gap:4px;width:min(64vw,460px)}
 #sgMap{width:100%;height:auto;aspect-ratio:10/1;pointer-events:auto;border-radius:12px;border:2px solid var(--ink);touch-action:none}
@@ -289,6 +303,7 @@ body.sg #toast{bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
 .slot.evo{background:linear-gradient(135deg,#ffe066,#ff922b);}
 .slot.pas{width:26px;height:26px;border-radius:7px}
 .slot.pas svg{width:18px;height:18px}
+.chip svg{width:16px;height:16px;flex:0 0 auto}.chip ruby rt{font-size:.5em}
 .chip{display:inline-flex;align-items:center;gap:5px;background:rgba(21,23,51,.78);border:2px solid var(--ink);border-radius:99px;padding:3px 9px;font-size:.8rem;font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
 #hud .tr{position:absolute;right:12px;top:calc(env(safe-area-inset-top,0px) + 28px);display:flex;gap:6px;align-items:center;pointer-events:auto}
 #hud .tc{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 26px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:min(40vw,360px)}
@@ -476,7 +491,7 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
 <div id="banner"></div>
 <div id="joy" hidden><div id="joyKnob"></div></div>
 
-<div id="hud" hidden><div id="modFx"></div>
+<div id="hud" hidden><div id="wxFx"></div><div id="modFx"></div>
   <div class="xpbar"><i id="xpFill"></i><span id="lvText">Lv 1</span></div>
   <div class="tl">
     <div class="hp"><i id="hpFill" style="width:100%"></i><span id="hpText">100 / 100</span></div>
@@ -485,7 +500,7 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
   </div>
   <div class="tc"><div id="timer">0:00</div><div id="timerSub">ボスまで 3:00</div>
     <div class="bossbar" id="bossBar" hidden><b id="bossName">ボス</b><div class="hp" style="width:100%"><i id="bossFill" style="width:100%"></i></div></div></div>
-  <div class="tr"><span class="chip" id="killChip">0 たい</span><span class="chip"><span class="coin"></span><span id="hudCoins">0</span></span><button class="btn sm w" id="pauseBtn" aria-label="ポーズ">II</button></div>
+  <div class="tr"><span class="chip tod" id="todChip"></span><span class="chip heat" id="heatChip"></span><span class="chip" id="killChip">0 たい</span><span class="chip"><span class="coin"></span><span id="hudCoins">0</span></span><button class="btn sm w" id="pauseBtn" aria-label="ポーズ">II</button></div>
   <div id="combo"><b id="comboN">0</b><span>コンボ</span></div>
   <button id="dashBtn" aria-label="ダッシュ">ダッシュ</button>
   <div id="sgUI" hidden>
@@ -1502,7 +1517,8 @@ function buildPlayer(si, wi) {
   for (const L of [lL, lR]) box(.5, .17, .6, o.shoe || 0x343a40, 0, -.82, .06, false, L);
   for (const A of [aL, aR]) box(.45, .22, .45, o.skin, 0, -.98, 0, false, A);
   box(1.02, .14, .54, o.belt || 0x343a40, 0, .97, 0); box(.2, .16, .05, 0xffd43b, 0, .97, .28);
-  if (!o.noWhite) { box(.17, .17, .04, 0xffffff, -.16, 2.33, .375); box(.17, .17, .04, 0xffffff, .16, 2.33, .375); box(.09, .11, .04, o.eye, -.14, 2.32, .39); box(.09, .11, .04, o.eye, .18, 2.32, .39); box(.22, .05, .04, 0x8a3a3a, 0, 2.1, .38); }
+  let faceBase = null;
+  if (!o.noWhite) { const ew = [box(.17, .17, .04, 0xffffff, -.16, 2.33, .375), box(.17, .17, .04, 0xffffff, .16, 2.33, .375), box(.09, .11, .04, o.eye, -.14, 2.32, .39), box(.09, .11, .04, o.eye, .18, 2.32, .39)]; faceBase = { eyes: ew, mouth: box(.22, .05, .04, 0x8a3a3a, 0, 2.1, .38) }; }
   else { box(.14, .14, .04, o.eye, -.16, 2.33, .38, true); box(.14, .14, .04, o.eye, .16, 2.33, .38, true); }
   if (o.hair != null) { box(.8, .14, .8, o.hair, 0, 2.63, -.02); box(.8, .4, .14, o.hair, 0, 2.42, -.36); box(.12, .28, .5, o.hair, -.39, 2.48, -.1); box(.12, .28, .5, o.hair, .39, 2.48, -.1); box(.18, .05, .04, o.hair, -.16, 2.47, .38); box(.18, .05, .04, o.hair, .16, 2.47, .38); }
   if (o.beard) { box(.6, .3, .14, o.beard, 0, 2.02, .36); box(.3, .25, .12, o.beard, 0, 1.82, .33); }
@@ -1522,6 +1538,7 @@ function buildPlayer(si, wi) {
       const em = new THREE.Mesh(new THREE.PlaneGeometry(.5, .5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c) })); em.position.set(0, 1.45, .27); inner.add(em); ex.glow = 0xffffff; break; }
   }
   const pm = { g, inner, lL, lR, aL, aR, head, ex, si };
+  if (faceBase && !['knight', 'robot'].includes(o.add)) { buildFace(pm, o, box); pm.face.base = faceBase; setFace(pm, 'normal'); }
   buildGear(pm, [{ i: wi != null ? wi : (S.cur || 0), lv: 1 }], {}, 1);
   return pm;
 }
@@ -2162,8 +2179,8 @@ function buildEnv(stage) {
   groundTex = new THREE.CanvasTexture(c); groundTex.wrapS = groundTex.wrapT = THREE.RepeatWrapping; groundTex.repeat.set(40, 40); groundTex.magFilter = THREE.NearestFilter;
   groundM = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshLambertMaterial({ map: groundTex })); groundM.rotation.x = -Math.PI / 2; scene.add(groundM);
   for (const k in DM) { scene.remove(DM[k].m); DM[k].m.geometry.dispose(); if (DM[k].g) { scene.remove(DM[k].g); DM[k].g.geometry.dispose(); } delete DM[k]; }
-  for (const k of [...th.decor.map(d => d[0]), 'patch', 'tuft']) {
-    const list = DECOR[k](th), lit = list.filter(b => !b.glow), gl = list.filter(b => b.glow), cap = k === 'patch' || k === 'tuft' ? 320 : 200;
+  for (const k of [...new Set([...th.decor.map(d => d[0]), 'patch', 'tuft', 'pond', 'ruin', 'torii'])]) {
+    const list = DECOR[k](th), lit = list.filter(b => !b.glow), gl = list.filter(b => b.glow), cap = k === 'patch' || k === 'tuft' ? 520 : 200;
     const m = instMesh(mergeBoxes(lit), decorMat, cap); scene.add(m); let g = null; if (gl.length) { g = instMesh(mergeBoxes(gl), glowMat, cap); scene.add(g); } DM[k] = { m, g };
   }
   W.theme = th; decorChunk = null;
@@ -2180,18 +2197,19 @@ function updDecor() {
   if (decorChunk === key) return; decorChunk = key;
   const th = W.theme, cnt = {}; for (const k in DM) cnt[k] = 0;
   const tot = th.decor.reduce((a, b) => a + b[1], 0); let si = 0;
-  const put = (k, x, z, a, s, rng) => { const d = DM[k]; if (!d) return; const i = cnt[k]; if (i >= d.m.userData.cap) return; cnt[k]++; setRY(d.m, i, x, 0, z, a, s, s, s); const t = .88 + rng() * .2; setCol(d.m, i, t, t, t); setAnim(d.m, i, rng() * 6, 1); if (d.g) setRY(d.g, i, x, 0, z, a, s, s, s); };
+  const put = (k, x, z, a, s, rng, tint) => { const d = DM[k]; if (!d) return; const i = cnt[k]; if (i >= d.m.userData.cap) return; cnt[k]++; setRY(d.m, i, x, 0, z, a, s, s, s); const t = .88 + rng() * .2; if (tint) setCol(d.m, i, t * tint[0], t * tint[1], t * tint[2]); else setCol(d.m, i, t, t, t); setAnim(d.m, i, rng() * 6, 1); if (d.g) setRY(d.g, i, x, 0, z, a, s, s, s); };
   for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) {
     const X = cx + i, Z = cz + j; const rng = mulberry((X * 73856093) ^ (Z * 19349663) ^ (W.stage * 83492791));
-    const n = 3 + Math.floor(rng() * 4);
+    const pickKind = () => { let r = rng() * tot, kind = th.decor[0][0]; for (const [kk, wt] of th.decor) { r -= wt; if (r <= 0) { kind = kk; break; } } return kind; };
+    const RG = decorRegion(X, Z, rng, put, pickKind), n = RG.n;
     for (let k = 0; k < n; k++) {
-      let r = rng() * tot, kind = th.decor[0][0]; for (const [kk, wt] of th.decor) { r -= wt; if (r <= 0) { kind = kk; break; } }
+      const kind = RG.kind();
       const x = X * CH + rng() * CH, z = Z * CH + rng() * CH, a0 = rng() * 6.28, s = .8 + rng() * .45;
       if (Math.abs(x) < 3 && Math.abs(z) < 3) continue;
+      if (RG.reg === 4 && Math.hypot(x - X * CH - CH / 2, z - Z * CH - CH / 2) < 4.5) continue;
       if (SG.on && z > -6.5 && z < 20) continue;
       put(kind, x, z, FACING.has(kind) ? (a0 - 3.14) * .12 : a0, s, rng);
     }
-    for (let k = 0; k < 2; k++) put('patch', X * CH + rng() * CH, Z * CH + rng() * CH, rng() * 6.28, .8 + rng() * .8, rng);
     for (let k = 0; k < 4; k++) put('tuft', X * CH + rng() * CH, Z * CH + rng() * CH, rng() * 6.28, .8 + rng() * .5, rng);
     if (!SG.on && Math.abs(i) <= 2 && Math.abs(j) <= 2 && rng() < .3 && si < SIGNS.length && SIGNPOOL.length) {
       const sg = SIGNS[si++], sx = X * CH + 2 + rng() * (CH - 4), sz = Z * CH + 2 + rng() * (CH - 4), d = SIGNPOOL[Math.floor(rng() * 9973) % SIGNPOOL.length];
@@ -2346,6 +2364,8 @@ function spawnEnemy(role, at, elite) {
   const MM = role === 'barrel' ? MOD0 : (W.mod || MOD0);
   const e = { role, mk, x: p.x, z: p.z, hp: R0.hp * mul * (elite ? 10 : 1) * MM.eHp, spd: R0.spd * (1 + Math.min(.3, .02 * (W.stage - 1))) * (elite ? .9 : 1) * MM.eSpd, dmg: R0.dmg * (1 + .08 * (W.stage - 1)) * (elite ? 1.5 : 1), r: R0.r * (elite ? 1.6 : 1) * MM.eSize, s: md.s * (elite ? 1.6 : 1) * MM.eSize, xp: R0.xp * (elite ? 10 : 1),
     atk: .5, flash: 0, slowT: 0, burnT: 0, burnD: 0, kx: 0, kz: 0, ph: Math.random() * 6, elite, boss: role === 'boss', still: role === 'barrel', fly: md.fly, hop: md.hop, ghost: md.ghost, shot: md.shot, as: md.as || 9, orbT: -9, ang: Math.random() * 6, rise: (role === 'barrel' || md.fly || md.ghost) ? 0 : .35, shootT: 1.5 + Math.random() * 2 };
+  if (role !== 'barrel') { const hk = heatK(); e.hp *= Math.pow(hk, SG.on ? .5 : e.boss ? .75 : .9); e.dmg *= Math.min(2.5, Math.pow(hk, .3));
+    const hl = heatLv(hk); if (!e.boss && hl >= 3 && Math.random() < Math.min(.35, (hl - 2) * .06)) { e.rage = true; e.spd *= 1.25; e.hp *= 1.5; e.xp *= 2; } }
   e.max = e.hp; W.enemies.push(e);
   if (e.rise > 0 && Math.abs(p.x - P.x) < 22 && Math.abs(p.z - P.z) < 18) emit(p.x, .2, p.z, 5, W.theme.dirt, 3, .22, .5);
   if (e.boss) { e.slamT = 3.5; e.sumT = 6; e.ringT = 5; e.windup = 0; W.boss = e; $('#bossBar').hidden = false; $('#bossName').innerHTML = rb(EPI[areaIdx(W.stage)]) + ' ' + esc(md.n + (W.stage > 21 ? ' +' + Math.floor((W.stage - 1) / 21) : '')); }
@@ -2367,10 +2387,10 @@ function director(dt) {
   if (!W.bossOut && bossReady()) { W.bossOut = true; const be = spawnEnemy('boss', spawnPos(16)); hideSigils(); bossIntro(be); }
   if (W.mod.meteorRain && !W.boss) meteorRain(dt);
   const rate = Math.min(11 * Math.max(1, W.mod.eRate), (2.6 + W.t / 18) * (1 + .1 * (W.stage - 1)) * W.mod.eRate) * (W.boss ? .55 : 1);
-  W.spawnAcc += rate * dt;
+  W.spawnAcc += rate * Math.min(1.8, Math.pow(heatK(), .3)) * dt;
   while (W.spawnAcc >= 1) { W.spawnAcc--; spawnEnemy(pickType()); }
   if (W.t >= W.nextSwarm) { W.nextSwarm += 45; const n = 18 + Math.min(16, W.stage * 2); const kind = W.t > 100 ? 'fast' : 'swarm'; for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; spawnEnemy(kind, { x: P.x + Math.cos(a) * 17, z: P.z + Math.sin(a) * 17 }); } banner('かこまれた！', 'red'); }
-  if (W.t >= W.nextElite) { W.nextElite += 55 * W.mod.elite; const pr = pickType(); const e = spawnEnemy(pr === 'swarm' ? 'basic' : pr, null, true); if (e && !W.bossOut) banner('つよい てきが きた！', 'gold'); }
+  if (W.t >= W.nextElite) { W.nextElite += 55 * W.mod.elite / Math.min(2, Math.pow(heatK(), .25)); const pr = pickType(); const e = spawnEnemy(pr === 'swarm' ? 'basic' : pr, null, true); if (e && !W.bossOut) banner('つよい てきが きた！', 'gold'); }
   if (W.t >= W.nextBarrel) { W.nextBarrel += 16 + Math.random() * 8; const a = Math.random() * 6.28; spawnEnemy('barrel', { x: P.x + Math.cos(a) * 11, z: P.z + Math.sin(a) * 11 }); }
   if (W.t >= W.nextQuiz) { W.nextQuiz += 60; spawnQuizBox(); }
   if (W.t >= W.nextKbox && !W.boss && !W.kbox) { W.nextKbox += 50; spawnKanjiBox(); }
@@ -2394,10 +2414,10 @@ function killEnemy(e, quiet) {
   if (quiet) return;
   if (!e.still && !MODELS[e.mk].nodex) { const first = !S.dex[e.mk]; S.dex[e.mk] = (S.dex[e.mk] || 0) + 1; if (first) { toast(`ずかんに とうろく！「${MODELS[e.mk].n}」`); sfx('chest'); } }
   if (e.still) { sphereFx(e.x, .8, e.z, 1.8, 0xffc83a, .3); dropPickup(e.x, e.z); sfx('coin'); return; }
-  W.kills++; S.kills++; if (SG.on) SG.money = Math.min(sgCap(), SG.money + 3 + Math.round((ROLE[e.role] ? ROLE[e.role].xp : 1) * 3) * (e.elite ? 4 : 1));
+  W.kills++; S.kills++; if (!SG.on) heatKill(e); if (SG.on) SG.money = Math.min(sgCap(), SG.money + 3 + Math.round((ROLE[e.role] ? ROLE[e.role].xp : 1) * 3) * (e.elite ? 4 : 1));
   W.combo++; W.comboT = 2.2; if (W.combo > W.bestCombo) W.bestCombo = W.combo; comboShow();
   dropGem(e.x, e.z, e.xp);
-  if (Math.random() < .06) dropGem(e.x + .5, e.z, Math.ceil(1 + W.stage * .5), true);
+  if (Math.random() < .06 * Math.min(3, Math.sqrt(heatK())) * (ATM.night ? 1.3 : 1)) dropGem(e.x + .5, e.z, Math.ceil(1 + W.stage * .5), true);
   if (e.elite) { dropChest(e.x, e.z); sphereFx(e.x, 1, e.z, 4, 0xffd43b, .5); ringFx(e.x, e.z, 7, 0xffd43b, .6); W.shake = .4; sfx('boom'); }
   if (e.boss) bossDown(e);
   sfx('kill');
@@ -2439,7 +2459,7 @@ function updGems(dt) {
   if (W.vacuum && !W.gems.some(g => !g.coin)) W.vacuum = false;
 }
 function gainXp(v) {
-  W.xp += v * W.xpMul;
+  W.xp += v * W.xpMul * (ATM.night ? 1.3 : 1);
   while (W.xp >= W.need) { W.xp -= W.need; W.lv++; W.need = xpNeed(W.lv); W.pendLv++; }
   if (W.pendLv && $('#lvup').hidden && !W.lvFx) startLevelFx();
 }
@@ -2619,7 +2639,7 @@ function updMeteors(dt) {
 /* ---- てきの うごき ---- */
 function hurtPlayer(d) {
   if (P.inv > 0 || P.dashT > 0 || W.clearing > 0 || W.dead) return;
-  P.hp -= d; P.inv = .5; sfx('hurt'); W.shake = Math.max(W.shake, .3);
+  P.hp -= d; P.inv = .5; P.hurtT = W.t + .45; heatHurt(d); sfx('hurt'); W.shake = Math.max(W.shake, .3);
   const h = $('#hurt'); h.style.opacity = 1; clearTimeout(hurtPlayer.t); hurtPlayer.t = setTimeout(() => h.style.opacity = 0, 160);
   if (P.hp <= 0) { P.hp = 0; die(); }
   updHud();
@@ -2651,7 +2671,7 @@ function updEnemies(dt) {
     let dx = P.x - e.x, dz = P.z - e.z; const d = Math.hypot(dx, dz) || .001;
     if (!e.still) {
       if (d > far && !e.boss) { const a = Math.atan2(-dx, -dz) + Math.PI + (Math.random() - .5); e.x = P.x + Math.sin(a) * (viewR() + 3); e.z = P.z + Math.cos(a) * (viewR() + 3); continue; }
-      e.slowT -= dt; let sp = e.spd * (e.slowT > 0 ? 1 - (e.slow || .5) : 1);
+      e.slowT -= dt; let sp = e.spd * (W.nightSpd || 1) * (e.slowT > 0 ? 1 - (e.slow || .5) : 1);
       let vx = dx / d, vz = dz / d;
       if (e.role === 'shoot') {
         if (d < 7) { vx = -vx * .7; vz = -vz * .7; } else if (d < 11) { vx *= .08; vz *= .08; }
@@ -2679,8 +2699,9 @@ function updEnemies(dt) {
     const sq = e.hop ? 1 + Math.sin(W.t * 12 + e.ph) * .12 : e.windup > 0 ? 1 - (.7 - e.windup) * .3 : 1;
     setRY(m, i, e.x, bob + rise, e.z, e.ang + wob, e.s * (2 - sq), e.s * sq, e.s);
     setAnim(m, i, e.ph * 3, moving && !e.hop ? e.as * (e.slowT > 0 ? .5 : 1) : 0);
-    if (e.flash > 0) setCol(m, i, 3, 3, 3); else if (e.slowT > 0) setCol(m, i, .6, .9, 1.7); else if (e.burnT > 0) setCol(m, i, 1.6, .8, .5); else if (e.elite) { const g = 1.3 + Math.sin(W.t * 6) * .3; setCol(m, i, g, g * .9, .5); } else setCol(m, i, 1, 1, 1);
+    if (e.flash > 0) setCol(m, i, 3, 3, 3); else if (e.slowT > 0) setCol(m, i, .6, .9, 1.7); else if (e.burnT > 0) setCol(m, i, 1.6, .8, .5); else if (e.elite) { const g = 1.3 + Math.sin(W.t * 6) * .3; setCol(m, i, g, g * .9, .5); } else if (e.rage) { const g = 1.2 + Math.sin(W.t * 8 + e.ph) * .25; setCol(m, i, g * 1.3, g * .55, g * .5); } else setCol(m, i, 1, 1, 1);
     if (sh < 500) { const ss = e.fly ? .6 : e.s * .9; setRY(shadowM, sh++, e.x, .03, e.z, 0, ss, 1, ss); }
+    if (e.rage && Math.random() < dt * 5) emit(e.x, 1.4 * e.s, e.z, 1, 0xff4d5b, 1.5, .16, .5, 0, .8);
     if (e.elite && Math.random() < dt * 10) emit(e.x, 1.5 * e.s, e.z, 1, 0xffd43b, 2, .18, .6, 0, .8);
   }
   for (const k in EM) flush(EM[k], cnt[k]);
@@ -2734,7 +2755,7 @@ function showLevelUp() {
 }
 function applyOpt(o) {
   if (o.t === 'w') { const w = W.weps.find(x => x.i === o.i); if (w.lv + 1 >= WMAX) { sfx('chest'); $('#lvup').hidden = true; W.pendLv = Math.max(0, W.pendLv - 1); openMission('evo', o.i); return; } }
-  sfx('click'); $('#lvup').hidden = true; W.pendLv = Math.max(0, W.pendLv - 1);
+  sfx('click'); $('#lvup').hidden = true; W.pendLv = Math.max(0, W.pendLv - 1); W.wowT = W.t + 1.6;
   if (o.t === 'w') { const w = W.weps.find(x => x.i === o.i); w.lv++; if (w.lv >= WMAX) evolveFx(o.i); else { emit(P.x, 1.5, P.z, 20, WEAPONS[o.i].col, 6, .25, .7, 0); } }
   else if (o.t === 'nw') { W.weps.push({ i: o.i, lv: 1, t: 0 }); banner(WEAPONS[o.i].n + ' ゲット！', 'gold'); emit(P.x, 1.5, P.z, 30, WEAPONS[o.i].col, 8, .3, .8); }
   else if (o.t === 'p') { W.pas[o.id] = (W.pas[o.id] || 0) + 1; recalc(); if (o.id === 'armor') P.hp = Math.min(W.maxHp, P.hp + 20); emit(P.x, 1.5, P.z, 20, 0xffffff, 6, .2, .7, 0); }
@@ -2873,6 +2894,7 @@ function update(dtR) {
   dirL.position.set(P.x + 10, 20, P.z + 8); dirL.target.position.set(P.x, 0, P.z);
   hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
   $('#dashBtn').classList.toggle('cd', P.dashCd > 0);
+  heatUpdate(dt); atmUpdate(dt); faceUpdate(pm, W.t);
 }
 
 /* ---- ループ ---- */
@@ -2906,6 +2928,7 @@ function startStage(fate) {
   $('#modFx').className = W.fate.mod;
   if (W.mod.sky) { scene.background.setHex(W.mod.sky); scene.fog.color.setHex(W.mod.sky); hemi.color.setHex(0xff9a9a); dirL.color.setHex(0xffb0a0); }
   if (W.mod.dark) { scene.fog.near = 18; scene.fog.far = 46; scene.background.multiplyScalar(.35); scene.fog.color.copy(scene.background); hemi.intensity *= .6; dirL.intensity *= .45; pLight.intensity = 2.2; }
+  heatStart(); atmStart();
   if (P.model) { scene.remove(P.model.g); }
   P.model = buildPlayer(skinUnlocked(S.skin) ? S.skin : 0); scene.add(P.model.g);
   Object.assign(W, { t: 0, ts: 1, lv: 1, xp: 0, need: xpNeed(1), pendLv: 0, kills: 0, coinsRun: 0, combo: 0, comboT: 0, bestCombo: 0, bossOut: false, clearing: 0, revived: false, shake: 0, spawnAcc: 0, nextSwarm: 50, nextElite: 70, nextBarrel: 6, nextQuiz: 40, nextKbox: 45, kbox: null, pas: {}, vacuum: false, nextKillMs: 100, lvFx: false, susp: false, paused: false, dead: false });
@@ -2926,7 +2949,7 @@ function startStage(fate) {
 function stageClear() {
   W.on = false; sfx('win');
   const bonus = 30 + 10 * S.stage; S.coins += bonus;
-  const cleared = S.stage; S.build = { weps: W.weps.map(w => ({ i: w.i, lv: w.lv })), pas: Object.assign({}, W.pas), lv: W.lv, xp: W.xp }; logDay(d => { d.st++; d.sec += Math.round(W.t); }); S.best = Math.max(S.best, cleared); S.bestLv = Math.max(S.bestLv || 0, W.lv); S.stage++; S.deaths = 0; S.pending = true; save();
+  const cleared = S.stage; S.build = { weps: W.weps.map(w => ({ i: w.i, lv: w.lv })), pas: Object.assign({}, W.pas), lv: W.lv, xp: W.xp }; logDay(d => { d.st++; d.sec += Math.round(W.t); }); S.best = Math.max(S.best, cleared); S.heat = W.heat; S.bestLv = Math.max(S.bestLv || 0, W.lv); S.stage++; S.deaths = 0; S.pending = true; save();
   showResult(`<h2>${rb('{第|だい}' + cleared + '{章|しょう} {制覇|せいは}！')}</h2>
     <div class="bigline"><span class="coin"></span> +${W.coinsRun + bonus}</div>
     <p>レベル ${W.lv} ／ たおした てき ${W.kills}たい ／ さいだい ${W.bestCombo}コンボ</p>
@@ -2936,7 +2959,7 @@ function stageClear() {
 }
 function die() {
   W.dead = true; W.paused = true; $('#lvup').hidden = true; sfx('lose'); flashScreen(.4);
-  S.bestLv = Math.max(S.bestLv || 0, W.lv); logDay(d => { d.sec += Math.round(W.t); }); save();
+  S.bestLv = Math.max(S.bestLv || 0, W.lv); S.heat = Math.max(.7, (W.heat || 1) * .8); logDay(d => { d.sec += Math.round(W.t); }); save();
   const ease = Math.round((1 - Math.max(.6, 1 - .12 * (S.deaths + 1))) * 100);
   showResult(`<h2>やられた…</h2>
     <p>${fmtT(W.t)} まで がんばった！ レベル ${W.lv} ／ ${W.kills}たい たおした<br>あつめた コイン <span class="coin"></span> ${W.coinsRun} は もらえるよ。</p>
@@ -3216,7 +3239,7 @@ function setPreviewSkin(si) { if (!PR) return; if (PR.si === si) return; if (PR.
 function renderPreview(dt) {
   if (!PR) return; const cv = $('#pv'); const w = cv.clientWidth, h = cv.clientHeight; if (!w) return;
   if (cv.width !== Math.round(w * PR.r.getPixelRatio())) { PR.r.setSize(w, h, false); PR.cm.aspect = w / h; PR.cm.updateProjectionMatrix(); }
-  PR.t += dt; if (PR.model) { PR.model.g.rotation.y = PR.t * .8; animPlayer(PR.model, PR.t, true, false); PR.model.g.position.y = Math.abs(Math.sin(PR.t * 6)) * .08; }
+  PR.t += dt; if (PR.model) { PR.model.g.rotation.y = PR.t * .8; animPlayer(PR.model, PR.t, true, false); setFace(PR.model, (PR.t % 7) < 1.6 ? 'happy' : (PR.t % 7) < 2.4 ? 'wow' : 'normal', (PR.t % 3.1) < .12); PR.model.g.position.y = Math.abs(Math.sin(PR.t * 6)) * .08; }
   PR.r.render(PR.sc, PR.cm);
 }
 
@@ -3692,7 +3715,7 @@ function sgInit() {
 function sgStart() {
   sgInit(); SG.on = true; SG.units.length = 0; SG.money = 150; SG.wal = 1; SG.can = 0; SG.cdT = {}; SG.kbox = false; SG.nextWave = 35; SG.pan = null; SG.panT = 0; SG.fFlash = 0;
   const st = W.stage - 1, sm = 1 + .45 * st + .04 * st * st; SG.sm = sm; SG.eMul = 1.2 * Math.pow(sm, .85) / (1 + .08 * st);
-  SG.fmax = SG.fhp = Math.round(1500 * stageMul(W.stage) * (1 + .05 * (W.lv - 1)));
+  SG.fmax = SG.fhp = Math.round(1500 * stageMul(W.stage) * (1 + .05 * (W.lv - 1)) * Math.pow(heatK(), .5));
   const learned = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0).length; SG.learned = learned;
   SG.canMax = Math.max(18, 32 - learned / 10); SG.can = SG.canMax * .4;
   SG.castle.position.set(SG.cx, 0, -1.8); SG.fort.position.set(SG.fx, 0, -1.8);
@@ -3893,7 +3916,7 @@ function updateSiege(dtR) {
   cam.lookAt(cam.position.x, 2.2, -1);
   dirL.position.set(SG.camX + 10, 20, 8); dirL.target.position.set(SG.camX, 0, 0);
   hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
-  sgHud();
+  sgHud(); atmUpdate(dt); faceUpdate(pm, W.t);
 }
 function sgHud(force) {
   SG.hudT = (SG.hudT || 0) + .016; if (!force && SG.hudT < .08) return; SG.hudT = 0;
@@ -3927,6 +3950,253 @@ function sgBindUI() {
     const n = parseInt(e.key, 10); if (n >= 1 && n <= 9) { const id = sgIds()[n - 1]; if (id) sgSummon(id); }
     if (e.code === 'KeyC' || e.code === 'Enter') sgCannon(); if (e.code === 'KeyQ') sgWallet();
   });
+}
+
+/* ============ 脅威度（つよくなりすぎ ふせぎ：プレイを みて てきが つよくなる） ============ */
+const HEAT = { win: 0, dmg: 0, near: 0, nearN: 0, sT: 0, kills: 0, far: 0, lastLv: 1, bannerT: -99 };
+const heatLv = h => Math.max(1, Math.floor(Math.log(Math.max(1, h)) / Math.log(1.3)) + 1);
+const HEATCOL = ['#ffd43b', '#ffa94d', '#ff6b6b', '#f03e3e', '#e64980', '#be4bdb', '#7950f2'];
+function heatStart() {
+  W.heat = Math.max(.7, Math.min(60, (S.heat || 1) * .92));
+  Object.assign(HEAT, { win: 0, dmg: 0, near: 0, nearN: 0, sT: 0, kills: 0, far: 0, bannerT: -99 }); HEAT.lastLv = heatLv(W.heat); updHeatChip();
+}
+function heatUpdate(dt) {
+  if (SG.on || W.clearing > 0 || W.bossOut) return;
+  HEAT.win += dt; HEAT.sT -= dt;
+  if (HEAT.sT <= 0) { HEAT.sT = .5; let c = 0; for (const e of W.enemies) if (!e.dead && !e.still && Math.abs(e.x - P.x) < 8 && Math.abs(e.z - P.z) < 8) c++; HEAT.near += c; HEAT.nearN++; }
+  if (HEAT.win < 6) return;
+  if (W.t < 15) { HEAT.win = HEAT.dmg = HEAT.near = HEAT.nearN = HEAT.kills = HEAT.far = 0; return; }
+  const hp = HEAT.dmg / W.maxHp, near = HEAT.near / Math.max(1, HEAT.nearN), farR = HEAT.kills ? HEAT.far / HEAT.kills : 0;
+  let alive = 0; for (const e of W.enemies) if (!e.dead && !e.still) alive++;
+  const hpNow = P.hp / W.maxHp, calm = hpNow > .6 && alive < 110;
+  let k = 1;
+  if (hp > .6) k = .72; else if (hp > .35) k = .85; else if (hpNow < .35) k = .9; else if (alive > 160) k = .93; else if (hp > .18) k = .97;
+  else if (calm && hp < .01 && HEAT.kills >= 10 && farR > .85) k = 1.22;
+  else if (calm && hp < .04 && HEAT.kills >= 6 && (near < 3 || farR > .75)) k = 1.13;
+  else if (calm && hp < .1) k = 1.04;
+  W.heat = Math.max(.6, Math.min(60, W.heat * k));
+  HEAT.win = HEAT.dmg = HEAT.near = HEAT.nearN = HEAT.kills = HEAT.far = 0;
+  const lv = heatLv(W.heat);
+  if (lv > HEAT.lastLv && W.t - HEAT.bannerT > 28) { HEAT.bannerT = W.t; banner(`{脅威度|きょういど} ${lv}！ てきが {本気|ほんき}を だしてきた`, 'red'); sfx('warn'); }
+  HEAT.lastLv = lv; updHeatChip();
+}
+function heatHurt(d) { HEAT.dmg += d; }
+function heatKill(e) { HEAT.kills++; if (Math.hypot(e.x - P.x, e.z - P.z) > 8) HEAT.far++; }
+const heatK = () => W.heat || 1;
+function updHeatChip() {
+  const el = $('#heatChip'); if (!el) return; const lv = heatLv(heatK()), c = HEATCOL[Math.min(HEATCOL.length - 1, Math.floor((lv - 1) / 2))];
+  el.innerHTML = `<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1c1 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 2-6 1 2 2 2 3 2-1-3 0-5 1-7z" fill="${c}" stroke="#151733" stroke-width="1.6" stroke-linejoin="round"/></svg>${lv}`;
+  el.title = '脅威度'; el.setAttribute('aria-label', '脅威度 ' + lv);
+}
+
+/* ============ じかん・てんき・ちけい ============ */
+const DAYLEN = 240;
+// [じこく, そらの いろ, ひかりの いろ, たいよう, まわりの あかるさ, よるの つよさ]
+const TODK = [[0, 0xffb3c6, 0xffd0b0, .55, .8, .35], [.1, 0xd8ecff, 0xfff4e0, 1, 1, 0], [.3, 0xffffff, 0xffffff, 1.1, 1.05, 0], [.5, 0xffc38a, 0xffb070, .9, .92, 0], [.6, 0xb07ad9, 0xff8a6a, .5, .68, .5], [.7, 0x2a3570, 0x8fa8ff, .2, .45, 1], [.93, 0x2a3570, 0x8fa8ff, .2, .45, 1], [1, 0xffb3c6, 0xffd0b0, .55, .8, .35]];
+const TOD_AMP = [1, 1, 1, 1, .45, .35, .45];
+const PHASES = [[0, 'yoake', '{夜明|よあ}け'], [.06, 'asa', 'あさ'], [.2, 'hiru', 'ひる'], [.47, 'yuu', 'ゆうがた'], [.64, 'yoru', 'よる'], [.96, 'yoake', '{夜明|よあ}け']];
+const phaseOf = t => { let p = PHASES[0]; for (const q of PHASES) if (t >= q[0]) p = q; return p; };
+const WX = {
+  rain: { n: 'あめが ふってきた', cols: [0xdbe4ff], sx: .07, sy: 1.5, sz: .07, vy: -26, vx: -3, dark: .78, fog: .8, op: .6, css: 'rain' },
+  storm: { n: '{雷雨|らいう}だ！ かみなりが てきに おちるよ', cols: [0xdbe4ff], sx: .08, sy: 1.8, sz: .08, vy: -32, vx: -6, dark: .55, fog: .7, op: .65, bolt: 1, css: 'storm' },
+  snow: { css: 'snow', n: 'ゆきが ふってきた', cols: [0xffffff], sx: .22, sy: .22, sz: .22, vy: -2.4, vx: .5, wob: 1.2, dark: .92, fog: .85, op: .9 },
+  blizzard: { css: 'blizzard', n: 'ふぶきだ！', cols: [0xffffff, 0xe7f5ff], sx: .22, sy: .22, sz: .22, vy: -4, vx: -10, wob: .6, dark: .82, fog: .5, op: .85 },
+  sakura: { css: 'sakura', n: 'さくらが まっている', cols: [0xffc9de, 0xffa8c5, 0xffffff], sx: .3, sy: .05, sz: .22, vy: -1.5, vx: 1.2, wob: 1.5, spin: 1, op: .95 },
+  leaves: { n: 'かぜが ふいてきた', cols: [0xff922b, 0xffd43b, 0x94d82d], sx: .34, sy: .05, sz: .24, vy: -2, vx: 5, wob: 2, spin: 1, op: .95 },
+  sand: { css: 'sand', n: 'すなあらしだ！', cols: [0xe9c46a, 0xd4a373], sx: .55, sy: .06, sz: .06, vy: -.4, vx: -18, wob: .5, dark: .85, fog: .55, op: .7 },
+  fireflies: { n: 'ほたるが とんでいる', cols: [0xd8f5a2, 0xffe066], sx: .2, sy: .2, sz: .2, wander: 1.4, ymax: 3, op: 1, night: 1 },
+  wisps: { n: 'たましいの ひかりが さまよっている…', cols: [0x74c0fc, 0xb197fc], sx: .24, sy: .24, sz: .24, wander: 1.2, ymax: 3, fog: .8, op: 1 },
+  fog: { css: 'fog', n: 'きりが でてきた', cols: [0xf1f3f5], sx: 3.4, sy: .8, sz: 3.4, vx: 1, op: .2, fog: .45, dark: .9, ymax: 2.4, cnt: .3 },
+  ember: { css: 'ember', n: 'ひのこが まいあがる', cols: [0xff922b, 0xffd43b, 0xff6b6b], sx: .13, sy: .13, sz: .13, vy: 3, vx: .5, wob: 1, op: 1 },
+  ash: { css: 'ash', n: 'はいが ふってきた', cols: [0x868e96, 0x495057], sx: .13, sy: .13, sz: .13, vy: -1.2, wob: 1, dark: .85, fog: .75, op: .9 },
+  stardust: { n: 'ほしくずが ながれている', cols: [0xb197fc, 0x74c0fc, 0xffffff], sx: .11, sy: .11, sz: .11, vx: -2, vy: -.3, wob: .5, op: 1 },
+  shower: { n: 'りゅうせいぐんだ！', cols: [0xffffff, 0xffe066], sx: 1.4, sy: .07, sz: .07, vx: -22, vy: -9, op: .9, bolt: 2 },
+};
+const WXT = [['rain', 'sakura', 'leaves', 'storm'], ['rain', 'leaves', 'storm', 'sakura'], ['sand', 'sand', 'rain'], ['snow', 'blizzard', 'snow'], ['fog', 'rain', 'storm'], ['ember', 'ash', 'ember'], ['stardust', 'shower', 'stardust']];
+const WXN = ['fireflies', 'fireflies', 'stardust', 'snow', 'wisps', 'ember', 'shower'];
+const ATM = { tod: .1, base: null, w: null, wT: 0, wNext: 40, amp: 1, fixed: false, dark: 1, fogK: 1, phase: null, night: false, ramp: 0, boltT: 5 };
+const WN = 520, WP = []; let wxM = null;
+const C1 = new THREE.Color(), C2 = new THREE.Color(), C3 = new THREE.Color(), CW = new THREE.Color(0xffffff);
+function atmInit() {
+  if (wxM) return;
+  wxM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .8, depthWrite: false }), WN); wxM.renderOrder = 2; scene.add(wxM);
+  for (let i = 0; i < WN; i++) WP.push({ x: 0, y: 0, z: 0, ph: Math.random() * 6.28, c: 0, vx: 0, vz: 0 });
+}
+function atmStart() {
+  atmInit();
+  ATM.base = { bg: scene.background.clone(), near: scene.fog.near, far: scene.fog.far, hemiC: hemi.color.clone(), hemiI: hemi.intensity, dirC: dirL.color.clone(), dirI: dirL.intensity, pI: pLight.intensity };
+  ATM.fixed = !!(W.mod.sky || W.mod.dark); ATM.amp = TOD_AMP[areaIdx(W.stage)];
+  ATM.tod = W.stage === 1 ? .1 : pick([.08, .22, .4, .56, .7]);
+  ATM.phase = phaseOf(ATM.tod)[1]; ATM.night = !ATM.fixed && ATM.phase === 'yoru';
+  ATM.w = null; ATM.wNext = 30 + Math.random() * 25; ATM.dark = ATM.fogK = 1; ATM.ramp = 0; flush(wxM, 0);
+  W.nightSpd = 1; updTodChip(); atmApply(0);
+}
+function todSample(t) {
+  let a = TODK[0], b = TODK[1];
+  for (let i = 0; i < TODK.length - 1; i++) if (t >= TODK[i][0] && t <= TODK[i + 1][0]) { a = TODK[i]; b = TODK[i + 1]; break; }
+  const u = (t - a[0]) / ((b[0] - a[0]) || 1);
+  C1.setHex(a[1]).lerp(C2.setHex(b[1]), u); const sky = C1.clone();
+  C1.setHex(a[2]).lerp(C2.setHex(b[2]), u); const light = C1.clone();
+  return { sky, light, sun: a[3] + (b[3] - a[3]) * u, amb: a[4] + (b[4] - a[4]) * u, night: a[5] + (b[5] - a[5]) * u };
+}
+function atmApply(dt) {
+  const B = ATM.base; if (!B) return;
+  const w = ATM.w, r = ATM.ramp, tD = w ? 1 + ((w.d.dark || 1) - 1) * r : 1, tF = w ? 1 + ((w.d.fog || 1) - 1) * r : 1;
+  ATM.dark += (tD - ATM.dark) * Math.min(1, dt * 2 + (dt ? 0 : 1)); ATM.fogK += (tF - ATM.fogK) * Math.min(1, dt * 2 + (dt ? 0 : 1));
+  let sky = CW, light = CW, sun = 1, amb = 1, night = 0;
+  if (!ATM.fixed) { const s = todSample(ATM.tod), A = ATM.amp; sky = C3.copy(CW).lerp(s.sky, A); light = s.light.lerp(CW, 1 - A); sun = 1 + (s.sun - 1) * A; amb = 1 + (s.amb - 1) * A; night = s.night * A; }
+  scene.background.copy(B.bg).multiply(sky).multiplyScalar(ATM.dark); scene.fog.color.copy(scene.background);
+  scene.fog.near = B.near * ATM.fogK; scene.fog.far = B.far * ATM.fogK;
+  hemi.color.copy(B.hemiC).multiply(light); hemi.intensity = B.hemiI * amb * ATM.dark;
+  dirL.color.copy(B.dirC).multiply(light); dirL.intensity = B.dirI * sun * ATM.dark;
+  pLight.intensity = Math.max(B.pI, night * 1.5); if (night > .05) pLight.color.setHex(0xffd8a8);
+  const F = SG.on ? { x: SG.camX, z: 0 } : P, a = (ATM.tod - .05) * Math.PI * 2;
+  if (!ATM.fixed) { dirL.position.set(F.x + Math.cos(a) * 16, 6 + Math.max(.2, Math.sin(a)) * 16, F.z + 8); dirL.target.position.set(F.x, 0, F.z); }
+}
+function atmUpdate(dt) {
+  if (!ATM.base) return;
+  if (!ATM.fixed) ATM.tod = (ATM.tod + dt / DAYLEN) % 1;
+  // じかんの かわりめ
+  const ph = phaseOf(ATM.tod);
+  if (!ATM.fixed && ph[1] !== ATM.phase) {
+    ATM.phase = ph[1]; ATM.night = ph[1] === 'yoru'; updTodChip();
+    if (ph[1] === 'yoru') { banner('{夜|よる}が きた… てきが すこし はやい。けいけんち UP！'); sfx('warn'); }
+    else if (ph[1] === 'asa') { const h = Math.round(W.maxHp * .2); P.hp = Math.min(W.maxHp, P.hp + h); floater(P.x, P.z, 1.1, '+' + h, 'heal'); banner('あさが きた！ HP かいふく', 'gold'); sfx('ok'); }
+    else if (ph[1] === 'yuu') toast('ゆうがたに なってきた');
+    else if (ph[1] === 'hiru') toast('おひるだ！');
+  }
+  W.nightSpd = ATM.night ? 1.1 : 1;
+  // てんき
+  if (ATM.w) {
+    ATM.w.t -= dt; ATM.ramp = Math.min(1, ATM.ramp + dt / 4);
+    if (ATM.w.t <= 0) { ATM.ramp = Math.max(0, ATM.ramp - dt / 3); if (ATM.ramp <= 0) { ATM.w = null; ATM.wNext = 25 + Math.random() * 30; } }
+    if (ATM.w && ATM.w.d.bolt && ATM.ramp > .6 && W.on && !W.paused) { ATM.boltT -= dt; if (ATM.boltT <= 0) { ATM.boltT = 4 + Math.random() * 6; atmBolt(ATM.w.d.bolt); } }
+  } else {
+    ATM.wNext -= dt;
+    if (ATM.wNext <= 0) { const ai = areaIdx(W.stage), k = ATM.night && Math.random() < .5 ? WXN[ai] : pick(WXT[ai]); atmWeather(k); }
+  }
+  atmApply(dt); atmParticles(dt);
+}
+function atmWeather(k) {
+  const d = WX[k]; if (!d) return; ATM.w = { k, d, t: 35 + Math.random() * 25 }; ATM.ramp = 0; ATM.boltT = 3;
+  wxM.material.opacity = d.op || .8;
+  for (const p of WP) { p.x = (Math.random() - .5) * 52; p.z = (Math.random() - .5) * 44; p.y = Math.random() * (d.ymax || 16); p.c = Math.floor(Math.random() * d.cols.length); p.vx = 0; p.vz = 0; }
+  for (let i = 0; i < WN; i++) { C1.setHex(d.cols[WP[i].c]); setCol(wxM, i, C1.r, C1.g, C1.b); }
+  banner(d.n);
+}
+function atmBolt(kind) {
+  const F = SG.on ? { x: SG.camX + (Math.random() - .3) * 16, z: (Math.random() - .5) * 3 } : { x: P.x + (Math.random() - .5) * 22, z: P.z + (Math.random() - .5) * 18 };
+  if (kind === 2) { const m = meteorPool.find(m => !m.active); if (!m) return; m.active = true; m.hurtP = false; m.x = F.x; m.z = F.z; m.t = -.4; m.dmg = 40 * stageMul(W.stage); m.r = 2.6; m.col = 0xffe066; m.warn = null; m.m.material.color.setHex(0xffe066); W.meteors.push(m); return; }
+  boltFx(F.x, F.z, 0xffffff); flashScreen(.3); sfx('zap'); W.shake = Math.max(W.shake, .25); ringFx(F.x, F.z, 3, 0xfff3bf, .3);
+  for (const e of W.enemies) if (!e.dead && !e.still && Math.hypot(e.x - F.x, e.z - F.z) < 3 + e.r) hitEnemy(e, 45 * stageMul(W.stage), .5, F.x, F.z, 0xfff3bf);
+}
+function atmParticles(dt) {
+  const fx = $('#wxFx'); if (fx) { const cls = ATM.w && ATM.w.d.css ? ATM.w.d.css : ''; if (fx.className !== cls) fx.className = cls; fx.style.opacity = ATM.w ? ATM.ramp : 0; }
+  if (!ATM.w) { if (wxM.count) flush(wxM, 0); return; }
+  const d = ATM.w.d, F = SG.on ? { x: SG.camX, z: 0 } : P, n = Math.floor(WN * ATM.ramp * (d.cnt || 1)), ym = d.ymax || 16, t = W.t;
+  for (let i = 0; i < n; i++) {
+    const p = WP[i];
+    if (d.wander) { p.vx += (Math.random() - .5) * d.wander * dt * 6; p.vz += (Math.random() - .5) * d.wander * dt * 6; p.vx *= .97; p.vz *= .97; p.x += p.vx * dt; p.z += p.vz * dt; p.y = .6 + (Math.sin(t * 1.3 + p.ph) * .5 + .5) * (ym - .6); }
+    else { p.x += ((d.vx || 0) + (d.wob ? Math.sin(t * 1.7 + p.ph) * d.wob : 0)) * dt; p.y += (d.vy || 0) * dt; p.z += (d.wob ? Math.cos(t * 1.3 + p.ph) * d.wob * .6 : 0) * dt; }
+    if (p.y < 0) p.y += ym; if (p.y > ym) p.y -= ym;
+    if (p.x < -26) p.x += 52; if (p.x > 26) p.x -= 52; if (p.z < -22) p.z += 44; if (p.z > 22) p.z -= 44;
+    const fl = d.wander ? .6 + Math.sin(t * 5 + p.ph * 3) * .4 : 1;
+    setRY(wxM, i, F.x + p.x, p.y, F.z + p.z, d.spin ? t * 3 + p.ph : (d.vx ? Math.atan2(0, 1) : 0), d.sx * fl, d.sy * fl, d.sz * fl);
+  }
+  flush(wxM, n);
+}
+function updTodChip() {
+  const el = $('#todChip'); if (!el) return;
+  const ph = ATM.fixed ? ['', 'fix', W.mod.dark ? '{闇|やみ}' : '{紅月|あかつき}'] : phaseOf(ATM.tod), night = ATM.fixed || ph[1] === 'yoru';
+  el.innerHTML = (night ? '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 2a8 8 0 1 0 5 12A7 7 0 0 1 13 2z" fill="#ffe066" stroke="#151733" stroke-width="1.5"/></svg>' : '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="4.5" fill="#ffc83a" stroke="#151733" stroke-width="1.5"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3M3.6 3.6l2 2M14.4 14.4l2 2M3.6 16.4l2-2M14.4 5.6l2-2" stroke="#ffc83a" stroke-width="2" stroke-linecap="round"/></svg>') + RB(ph[2]);
+}
+
+/* ---- ちけいの くかく（もり・はなばたけ・いせき・いけ） ---- */
+const REG = [
+  { tall: ['tree', 'birch'], small: ['flower', 'mushroom', 'bush'], rock: ['rock', 'log'], big: 'windmill', water: 0x4dabf7, stone: 0x9da3ad, torii: 1 },
+  { tall: ['planter', 'lamp'], small: ['cone', 'hydrant', 'trash'], rock: ['crate', 'car'], big: 'vending', water: 0x5c7cfa, stone: 0xadb5bd, torii: 1 },
+  { tall: ['palm', 'cactus'], small: ['bones', 'pot'], rock: ['column', 'rock'], big: 'pyramid', water: 0x3bc9db, stone: 0xe9c46a },
+  { tall: ['pine'], small: ['gift', 'snowman'], rock: ['snowrock', 'crystal'], big: 'igloo', water: 0xa5d8ff, stone: 0xced4da, torii: 1 },
+  { tall: ['deadtree'], small: ['candle', 'jack'], rock: ['tomb', 'cross'], big: 'lantern', water: 0x2b4a3a, stone: 0x868e96, torii: 1 },
+  { tall: ['obelisk', 'torch'], small: ['skullpile', 'torch'], rock: ['lavarock', 'crystal'], big: 'obelisk', water: 0xff6a1a, stone: 0x3a2a2a, glowWater: 1 },
+  { tall: ['antenna', 'alienplant'], small: ['alienplant'], rock: ['metalcrate', 'crystal'], big: 'dish', water: 0x7048e8, stone: 0x6c7a99, glowWater: 1 },
+];
+const regOf = th => REG[Math.max(0, THEMES.indexOf(th))];
+DECOR.pond = th => { const R = regOf(th), g = !!R.glowWater; return [
+  { w: 4.4, h: .05, d: 3.2, y: .03, c: R.water, glow: g }, { w: 3, h: .06, d: 2.2, x: .2, y: .04, c: R.water, glow: g }, { w: 1.2, h: .07, d: .6, x: -.8, y: .05, z: .4, c: 0xffffff, glow: g },
+  ...[[-2.3, 0], [2.3, .2], [0, -1.7], [.4, 1.7], [-1.7, 1.3], [1.8, -1.2]].map(([x, z], i) => ({ w: .6 + (i % 2) * .3, h: .3, d: .5, x, y: .15, z, c: R.stone })),
+  { w: .5, h: .04, d: .5, x: .9, y: .08, z: -.3, c: th.leaf2 }, { w: .4, h: .04, d: .4, x: -1, y: .08, z: -.5, c: th.leaf2 }, { w: .1, h: .9, d: .1, x: 2.2, y: .45, z: 1, c: th.leaf }, { w: .1, h: .7, d: .1, x: 2.4, y: .35, z: .8, c: th.leaf }]; };
+DECOR.ruin = th => { const c = regOf(th).stone; return [
+  { w: 2.2, h: 1.6, d: .5, y: .8, c }, { w: .9, h: .7, d: .5, x: 1.5, y: .35, c }, { w: .6, h: 2.6, d: .6, x: -1.6, y: 1.3, c }, { w: .8, h: .2, d: .8, x: -1.6, y: 2.7, c },
+  { w: 2, h: .5, d: .5, x: .5, y: .25, z: 1.3, ry: .3, c }, { w: .5, h: .4, d: .5, x: -.5, y: .2, z: -1, c }, { w: 1, h: .1, d: .4, y: 1.65, c: th.leaf }, { w: .4, h: .1, d: .6, x: -1.6, y: 2.82, c: th.leaf }]; };
+DECOR.torii = () => [{ w: .32, h: 3.4, d: .32, x: -1.4, y: 1.7, c: 0xe03131 }, { w: .32, h: 3.4, d: .32, x: 1.4, y: 1.7, c: 0xe03131 }, { w: 3.6, h: .22, d: .3, y: 2.55, c: 0xe03131 },
+  { w: 4.2, h: .28, d: .44, y: 3.45, c: 0x212529 }, { w: .5, h: .2, d: .44, x: -2.05, y: 3.58, c: 0x212529 }, { w: .5, h: .2, d: .44, x: 2.05, y: 3.58, c: 0x212529 }, { w: 3.9, h: .2, d: .36, y: 3.25, c: 0xe03131 },
+  { w: .5, h: .6, d: .12, y: 2.9, c: 0x212529 }, { w: .5, h: .2, d: .5, x: -1.4, y: .1, c: 0x343a40 }, { w: .5, h: .2, d: .5, x: 1.4, y: .1, c: 0x343a40 }];
+FACING.add('torii'); FACING.add('ruin');
+function vnoise(x, z, seed) {
+  const xi = Math.floor(x), zi = Math.floor(z), xf = x - xi, zf = z - zi;
+  const h = (a, b) => { let n = (a * 374761393 + b * 668265263 + seed * 982451653) | 0; n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967296; };
+  const u = xf * xf * (3 - 2 * xf), v = zf * zf * (3 - 2 * zf), l = (a, b, t) => a + (b - a) * t;
+  return l(l(h(xi, zi), h(xi + 1, zi), u), l(h(xi, zi + 1), h(xi + 1, zi + 1), u), v);
+}
+// 0 ふつう 1 もり 2 はなばたけ 3 いせき 4 いけ
+function regionAt(X, Z) {
+  if (SG.on || Math.abs(X) + Math.abs(Z) < 2) return 0;
+  const a = vnoise(X / 2.6, Z / 2.6, W.stage), b = vnoise(X / 3.3 + 50, Z / 3.3, W.stage + 7);
+  if (b > .74) return 4; if (a > .66) return 1; if (a < .32) return 2; if (b < .26) return 3; return 0;
+}
+const REGTINT = [null, [.72, .85, .72], [1.18, 1.22, 1.0], [.92, .9, .95], [.85, .95, 1.05]];
+function decorRegion(X, Z, rng, put, pickKind) {
+  const reg = regionAt(X, Z), R = regOf(W.theme), th = W.theme, x0 = X * CH, z0 = Z * CH;
+  const has = k => !!DM[k], from = list => { const l = list.filter(has); return l.length ? l[Math.floor(rng() * l.length)] : pickKind(); };
+  let n = 3 + Math.floor(rng() * 4), kind = pickKind;
+  if (reg === 1) { n = 7 + Math.floor(rng() * 4); kind = () => rng() < .75 ? from(R.tall) : pickKind(); }
+  else if (reg === 2) { n = 2 + Math.floor(rng() * 3); kind = () => from(R.small); for (let k = 0; k < 9; k++) put('tuft', x0 + rng() * CH, z0 + rng() * CH, rng() * 6.28, .9 + rng() * .6, rng); }
+  else if (reg === 3) { n = 3; kind = () => rng() < .6 ? from(R.rock) : pickKind(); const c = 1 + Math.floor(rng() * 2); for (let k = 0; k < c; k++) put('ruin', x0 + 2 + rng() * (CH - 4), z0 + 2 + rng() * (CH - 4), rng() * 6.28, .9 + rng() * .4, rng); }
+  else if (reg === 4) { n = 1; put('pond', x0 + CH / 2 + (rng() - .5) * 3, z0 + CH / 2 + (rng() - .5) * 3, rng() * 6.28, 1.4 + rng() * .8, rng); }
+  // めじるし（たまに おおきな もの）
+  if (!SG.on && reg !== 4 && rng() < .05) { const lx = x0 + 3 + rng() * (CH - 6), lz = z0 + 3 + rng() * (CH - 6); if (Math.abs(lx) < 6 && Math.abs(lz) < 6) {} else if (R.torii && rng() < .55) put('torii', lx, lz, (rng() - .5) * .4, 1.3 + rng() * .3, rng); else if (has(R.big)) put(R.big, lx, lz, (rng() - .5) * .5, 2.2 + rng() * .6, rng); }
+  const tint = REGTINT[reg]; for (let k = 0; k < (reg ? 3 : 2); k++) put('patch', x0 + rng() * CH, z0 + rng() * CH, rng() * 6.28, (reg ? 1.4 : .8) + rng() * .9, rng, tint);
+  return { n, kind, reg };
+}
+
+/* ============ ひょうじょう ============ */
+function buildFace(pm, o, box) {
+  const dk = 0x3a2a1a, mc = 0x8a3a3a, f = { cur: 'normal', parts: {} };
+  const grp = () => { const g = new THREE.Group(); pm.inner.add(g); return g; };
+  const add = (g, w, h, d, c, x, y, z, rz, basic) => { const m = new THREE.Mesh(G(w, h, d), basic ? MB(c) : M(c)); m.position.set(x, y, z); if (rz) m.rotation.z = rz; g.add(m); return m; };
+  const P2 = f.parts;
+  P2.happyEyes = grp(); [-.16, .16].forEach(x => { add(P2.happyEyes, .11, .04, .04, dk, x - .045, 2.33, .392, .6); add(P2.happyEyes, .11, .04, .04, dk, x + .045, 2.33, .392, -.6); });
+  P2.hurtEyes = grp(); [[-.16, 1], [.16, -1]].forEach(([x, s]) => { add(P2.hurtEyes, .12, .04, .04, dk, x, 2.36, .392, -.45 * s); add(P2.hurtEyes, .12, .04, .04, dk, x, 2.3, .392, .45 * s); });
+  P2.closed = grp(); [-.16, .16].forEach(x => add(P2.closed, .16, .04, .04, dk, x, 2.31, .392));
+  P2.smile = grp(); add(P2.smile, .26, .05, .04, mc, 0, 2.08, .386); add(P2.smile, .06, .06, .04, mc, -.14, 2.11, .386); add(P2.smile, .06, .06, .04, mc, .14, 2.11, .386); add(P2.smile, .16, .04, .04, 0xffffff, 0, 2.1, .39);
+  P2.open = grp(); add(P2.open, .14, .13, .04, 0x5a1a1a, 0, 2.08, .386); add(P2.open, .1, .04, .04, 0xff8787, 0, 2.04, .39);
+  P2.grit = grp(); add(P2.grit, .24, .08, .04, 0xffffff, 0, 2.09, .386); add(P2.grit, .26, .02, .045, 0x5a1a1a, 0, 2.09, .388);
+  P2.angry = grp(); add(P2.angry, .2, .05, .04, dk, -.16, 2.47, .4, -.4); add(P2.angry, .2, .05, .04, dk, .16, 2.47, .4, .4);
+  P2.worried = grp(); add(P2.worried, .2, .05, .04, dk, -.16, 2.48, .4, .35); add(P2.worried, .2, .05, .04, dk, .16, 2.48, .4, -.35); add(P2.worried, .08, .14, .06, 0x74c0fc, .43, 2.42, .18, 0, true);
+  P2.spark = grp(); [-.16, .16].forEach(x => add(P2.spark, .05, .05, .045, 0xffffff, x + .03, 2.37, .4, .78, true));
+  for (const k in P2) P2[k].visible = false;
+  pm.face = f;
+}
+const FACES = { normal: { eyes: 1, mouth: 'base' }, happy: { eyes: 'happyEyes', mouth: 'smile' }, hurt: { eyes: 'hurtEyes', mouth: 'open' }, angry: { eyes: 1, mouth: 'grit', brow: 'angry' }, worried: { eyes: 1, mouth: 'open', brow: 'worried' }, wow: { eyes: 1, mouth: 'open', extra: 'spark' } };
+function setFace(pm, st, blink) {
+  const f = pm.face; if (!f) return; const key = st + (blink ? 'b' : ''); if (f.cur === key) return; f.cur = key;
+  const d = FACES[st] || FACES.normal, P2 = f.parts;
+  for (const k in P2) P2[k].visible = false;
+  const eyesOpen = d.eyes === 1 && !blink; f.base.eyes.forEach(m => m.visible = eyesOpen); if (d.eyes === 1 && blink) P2.closed.visible = true; else if (d.eyes !== 1) P2[d.eyes].visible = true;
+  f.base.mouth.visible = d.mouth === 'base'; if (d.mouth !== 'base') P2[d.mouth].visible = true;
+  if (d.brow) P2[d.brow].visible = true; if (d.extra) P2[d.extra].visible = true;
+}
+function faceUpdate(pm, t) {
+  if (!pm || !pm.face) return;
+  let st = 'normal';
+  if (W.t < (P.hurtT || 0)) st = 'hurt';
+  else if (W.t < (W.wowT || 0)) st = 'wow';
+  else if (P.hp < W.maxHp * .3) st = 'worried';
+  else if (W.combo >= 15) st = 'happy';
+  else if (W.boss || (SG.on && W.bossOut)) st = 'angry';
+  const blink = (t % 3.3) < .11 && st !== 'hurt' && st !== 'happy';
+  setFace(pm, st, blink);
 }
 
 /* ============ はじまり ============ */
