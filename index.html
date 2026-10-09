@@ -411,6 +411,39 @@ ruby rt{font-size:.45em;font-weight:700;letter-spacing:0;font-family:var(--body)
 #bossIntro.show{animation:bi 2.3s ease-out forwards}
 @keyframes bi{0%{opacity:0}8%{opacity:1}85%{opacity:1}100%{opacity:0}}
 #sigArrow{position:fixed;left:0;top:0;pointer-events:none;width:0;height:0;z-index:5}
+.edgearrow{position:fixed;left:0;top:0;pointer-events:none;width:0;height:0;z-index:5}
+.edgearrow svg{position:absolute;left:-22px;top:-22px;width:44px;height:44px;filter:drop-shadow(0 0 6px #ff6b6b)}
+.edgearrow b{position:absolute;left:-60px;top:20px;width:120px;white-space:nowrap;text-align:center;font-family:var(--display);font-weight:400;font-size:.8rem;color:#fff;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
+.buffs{display:flex;gap:4px;flex-wrap:wrap}
+.buf{position:relative;display:inline-flex;align-items:center;gap:2px;min-width:30px;height:28px;padding:0 5px;border:2px solid var(--ink);border-radius:8px;background:rgba(21,23,51,.85);overflow:hidden}
+.buf b{font-family:var(--kyo);font-weight:700;font-size:1rem;color:var(--c,#fff);text-shadow:0 1px 0 var(--ink)}
+.buf i{position:absolute;left:0;bottom:0;height:3px;background:var(--c,#fff)}
+.buf.key svg{width:18px;height:18px}.buf.key b{font-family:var(--display);font-size:.8rem;color:#ffd43b}
+#kBtn{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);pointer-events:auto;animation:uhint 1s ease-in-out infinite;z-index:3}
+@media (prefers-reduced-motion:reduce){#kBtn{animation:none}}
+.lvc.kbonus{background:linear-gradient(#fff3bf,#ffc83a);border-color:#c92a2a}.lvc.kbonus .lic{font-family:var(--kyo);font-size:2rem;color:#c92a2a;font-weight:900}
+.ganbari{background:var(--panel2);border:3px solid var(--ink);border-radius:16px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.ganbari .gtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}.ganbari .gtop>b{font-family:var(--display);font-weight:400}.ganbari .num{font-family:var(--display);font-weight:400;color:var(--yellow);font-size:1.15rem}
+.gweek{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.gday{display:flex;flex-direction:column;align-items:center;gap:2px}.gday small{font-size:.66rem;color:var(--muted);font-weight:900}
+.gst{position:relative;width:38px;height:38px;border-radius:50%;border:2px dashed rgba(255,255,255,.3);display:grid;place-items:center}.gday.on .gst{border:2px solid var(--yellow);background:rgba(255,200,58,.15)}.gst svg{width:26px;height:26px}
+.hanko{display:inline-grid;place-items:center;border:2.5px solid #e03131;color:#e03131;border-radius:50%;font-family:var(--kyo);font-weight:900;background:rgba(255,255,255,.85);transform:rotate(-12deg)}
+.hanko.sm{position:absolute;right:-8px;bottom:-6px;width:24px;height:24px;font-size:.6rem}.hanko.xs{position:absolute;right:-4px;bottom:-4px;width:18px;height:18px;font-size:.5rem;border-width:2px}
+.hanko.big{position:absolute;right:28px;bottom:26px;width:74px;height:74px;font-size:2rem;border-width:4px;background:transparent}
+.gprom{display:flex;flex-direction:column;gap:4px}.gprom span{font-weight:900;font-size:.85rem}.gprom small{font-size:.75rem;color:var(--muted)}.gprom .bar{height:10px}
+.gcert{font-size:.8rem;font-weight:900;color:var(--yellow)}
+.review .lab{display:block;font-size:.85rem;margin-bottom:4px}.review .wcmp{font-style:normal;font-size:.72rem;font-weight:900;color:#868e96}.review .wcmp.wup{color:#2b8a3e}
+.newk{display:flex;flex-wrap:wrap;gap:6px}.newk span{font-family:var(--kyo);font-size:2rem;font-weight:700;width:52px;height:52px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:10px;background:#fff}
+.praise{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;font-weight:700}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal .cd{position:relative;height:40px;border:2px solid #d8d0c0;border-radius:8px;background:#fff;display:flex;align-items:flex-start;justify-content:flex-start;padding:2px 4px}
+.cal .cd small{font-size:.62rem;color:#8a8178;font-weight:900}.cal .cd.on{background:#fff3bf;border-color:#f59f00}.cal .cd.on i{position:absolute;left:50%;top:55%;width:12px;height:12px;transform:translate(-50%,-50%) rotate(45deg);background:#f59f00;border-radius:2px}.cal .cd.today{outline:2px solid var(--ink)}
+.tips summary{font-weight:900;cursor:pointer}.tips ul{margin:6px 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;font-size:.85rem}
+.chart .cb i.nw{background:#f08c00}.chart .cb i.pr{background:#4263eb}.sw.nw{background:#f08c00}.sw.pr{background:#4263eb}
+.certbox{background:#fffdf5;color:#2a2622;border:8px double #c9a227;border-radius:10px;padding:28px 26px;max-width:560px;width:calc(100vw - 32px);position:relative}
+.certin{position:relative;text-align:center;font-family:var(--kyo);min-height:360px}
+.certbox .ct{font-size:2.2rem;font-weight:900;margin:6px 0 14px;letter-spacing:.1em}.certbox .cn{font-size:1.6rem;font-weight:900;margin:8px 0}.certbox .cbody{font-size:1.1rem;line-height:1.9}.certbox .cbody b{font-size:1.8rem;color:#c92a2a}.certbox .cg{font-size:1.1rem}.certbox .cd{margin-top:18px}
+#cert{z-index:30}
+@media print{body.printcert>*:not(#cert){display:none!important}body.printcert #cert{position:static;background:none}body.printcert .noprint{display:none!important}body.printcert{background:#fff}}
 #sigArrow svg{position:absolute;left:-22px;top:-22px;width:44px;height:44px;filter:drop-shadow(0 0 6px #b38cff)}
 #sigArrow b{position:absolute;left:-30px;top:20px;width:60px;text-align:center;font-family:var(--display);font-weight:400;font-size:.85rem;color:#fff;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill}
 #timerSub ruby rt{font-size:.6em}
@@ -461,7 +494,7 @@ ruby rt{font-size:.45em;font-weight:700;letter-spacing:0;font-family:var(--body)
 .chart{position:relative;padding-bottom:1.7em}
 .cbars{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;height:160px;align-items:end;border-bottom:1px solid #c9bfa8;padding-top:18px;background:repeating-linear-gradient(to top,transparent 0 39px,#efe7d6 39px 40px)}
 .cb{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation;min-width:0}
-.cb i{display:block;width:min(70%,22px);background:#2f6fd6;border-radius:4px 4px 0 0}
+.cb i{display:block;width:min(70%,22px);background:#2f6fd6;border-radius:0}.cb i.top{border-radius:4px 4px 0 0}.cb i.gap{margin-top:2px}
 .cb:hover i,.cb:focus-visible i{background:#1c4fbf}
 .cv{font-size:.75rem;font-weight:900;color:#2a2622;font-variant-numeric:tabular-nums;min-height:1.2em}
 .cx{position:absolute;bottom:-1.6em;font-size:.7rem;font-weight:700;color:#6b6257;font-variant-numeric:tabular-nums}
@@ -497,12 +530,14 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
     <div class="hp"><i id="hpFill" style="width:100%"></i><span id="hpText">100 / 100</span></div>
     <div class="slots" id="wSlots"></div>
     <div class="slots" id="pSlots"></div>
+    <div class="buffs" id="buffs"></div>
   </div>
   <div class="tc"><div id="timer">0:00</div><div id="timerSub">ボスまで 3:00</div><span class="chip bio" id="bioChip"></span>
     <div class="bossbar" id="bossBar" hidden><b id="bossName">ボス</b><div class="hp" style="width:100%"><i id="bossFill" style="width:100%"></i></div></div></div>
   <div class="tr"><span class="chip tod" id="todChip"></span><span class="chip heat" id="heatChip"></span><span class="chip" id="killChip">0 たい</span><span class="chip"><span class="coin"></span><span id="hudCoins">0</span></span><button class="btn sm w" id="pauseBtn" aria-label="ポーズ">II</button></div>
   <div id="combo"><b id="comboN">0</b><span>コンボ</span></div>
   <button id="dashBtn" aria-label="ダッシュ">ダッシュ</button>
+  <button id="kBtn" class="btn big y" hidden>漢字で <ruby>結界<rt>けっかい</rt></ruby>を やぶる！</button>
   <div id="sgUI" hidden>
     <div id="sgTop"><canvas id="sgMap" width="560" height="56" aria-label="せんじょうの ちず"></canvas><div class="sgfort"><b><ruby>魔王城<rt>まおうじょう</rt></ruby></b><div class="hp"><i id="sgFortFill" style="width:100%"></i></div></div></div>
     <div id="sgBottom">
@@ -528,6 +563,7 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
       <div class="go" id="goPanel"></div>
     </div>
     <div class="stats" id="stats"></div>
+    <div class="ganbari" id="ganbari"></div>
     <div class="tabs" role="tablist" id="tabs">
       <button class="tab" role="tab" data-tab="weapons" aria-selected="true">ぶき</button>
       <button class="tab" role="tab" data-tab="skins" aria-selected="false">きがえ</button>
@@ -545,9 +581,12 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
         <li><b>レベルアップ：</b>3つの カードから 1つ えらぶ。ぶきが つよくなったり、あたらしい ぶきが ふえたりする。Lv8 で <b>しんか！</b></li>
         <li><b>ダッシュ：</b>ボタン か スペースキー。むてきで よけられる</li>
         <li><b>たからばこ・たる・？ボックス</b> は いいものが でるよ</li>
-        <li><b>漢字ボックス（あかい はこ）：</b>1こ 書くと トリプル たからばこ！</li>
+        <li><b>漢字ボックス（あかい はこ）：</b>1こ 書くと <b>かぎ</b> と トリプル たからばこ！ 45びょうで きえるので いそごう</li>
+        <li><b>かぎつき たからばこ（むらさき）：</b>つよい てきや あたらしい せかいで でる。かぎで あけよう</li>
+        <li><b>アイテム：</b>時の すなどけい・まもりの 結界・スターパワー・かぜの くつ・巻物・ラッキー ポーション・雷だま・おにぎり など</li>
+        <li><b>漢字チャンス：</b>レベルアップで でたら、1こ 書くと 2つ えらべる。ボスの 結界も 漢字で やぶれ！</li>
         <li><b>しんか：</b>ぶきが Lv8 に なるときは 漢字を 1こ 書くと しんか する！</li>
-        <li><b>3ぷんで ボスが くる</b>。たおせば ステージクリア → 漢字ミッション（5こ）で ★を あつめよう</li>
+        <li><b>3ぷんで ボスが くる</b>。たおせば ステージクリア → 漢字ミッション（6こ）で ★を あつめよう</li>
         <li><b>★で</b> あたらしい ぶきが かいほう、<b>おぼえた 漢字の かずで</b> すがたが かっこよく なる！</li>
       </ol>
     </details>
@@ -560,6 +599,8 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
 <div id="fate" class="modal" hidden><div class="mbox fatebox" id="fateBox"></div></div>
 <div id="chapter" hidden></div>
 <div id="bossIntro" hidden></div>
+<div id="kbArrow" class="edgearrow" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 12 L38 22 L8 32 L15 22 Z" fill="#ff6b6b" stroke="#151733" stroke-width="3" stroke-linejoin="round"/></svg><b></b></div>
+<div id="cert" class="modal" hidden></div>
 <div id="sigArrow" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 12 L38 22 L8 32 L15 22 Z" fill="#d0bfff" stroke="#151733" stroke-width="3" stroke-linejoin="round"/></svg><b></b></div>
 
 <div id="lvup" class="modal" hidden><div class="mbox lvbox" id="lvBox"></div></div>
@@ -2397,13 +2438,14 @@ function director(dt) {
   if (W.t >= W.nextElite) { W.nextElite += 55 * W.mod.elite / Math.min(2, Math.pow(heatK(), .25)); const pr = pickType(); const e = spawnEnemy(pr === 'swarm' ? 'basic' : pr, null, true); if (e && !W.bossOut) banner('つよい てきが きた！', 'gold'); }
   if (W.t >= W.nextBarrel) { W.nextBarrel += 16 + Math.random() * 8; const a = Math.random() * 6.28; spawnEnemy('barrel', { x: P.x + Math.cos(a) * 11, z: P.z + Math.sin(a) * 11 }); }
   if (W.t >= W.nextQuiz) { W.nextQuiz += 60; spawnQuizBox(); }
-  if (W.t >= W.nextKbox && !W.boss && !W.kbox) { W.nextKbox += 50; spawnKanjiBox(); }
+  if (W.t >= W.nextKbox && !W.boss && !W.kbox) { W.nextKbox += 40; spawnKanjiBox(); }
 }
 
 /* ---- ダメージ ---- */
 function hitEnemy(e, dmg, kb = .25, srcx = P.x, srcz = P.z, wcol) {
   if (e.dead) return;
-  let d = dmg * W.dmgMul; const crit = Math.random() < W.crit; if (crit) d *= 2;
+  if (e.boss && !SG.on) { if (e.barrier) { if (Math.random() < .15) floater(e.x, e.z, e.s, 'けっかい', 'crit'); return; } if (!e.barDone && e.hp - dmg * W.dmgMul * buffDmg() < e.max * .5) { e.barDone = true; e.hp = Math.min(e.hp, e.max * .5); bossBarrier(e); return; } }
+  let d = dmg * W.dmgMul * buffDmg(); const crit = Math.random() < W.crit; if (crit) d *= 2;
   e.hp -= d; e.flash = .09;
   if (!e.boss && !e.still && kb) { const dx = e.x - srcx, dz = e.z - srcz, l = Math.hypot(dx, dz) || 1; const k = kb * (e.elite ? .3 : 1) / (e.s); e.kx += dx / l * k * 10; e.kz += dz / l * k * 10; }
   if (crit) { floater(e.x, e.z, e.s, Math.round(d) + '!', 'crit'); sfx('crit'); } else if (Math.random() < .55 || d > 40) floater(e.x, e.z, e.s, Math.round(d));
@@ -2421,8 +2463,9 @@ function killEnemy(e, quiet) {
   W.kills++; S.kills++; if (!SG.on) heatKill(e); if (SG.on) SG.money = Math.min(sgCap(), SG.money + 3 + Math.round((ROLE[e.role] ? ROLE[e.role].xp : 1) * 3) * (e.elite ? 4 : 1));
   W.combo++; W.comboT = 2.2; if (W.combo > W.bestCombo) W.bestCombo = W.combo; comboShow();
   dropGem(e.x, e.z, e.xp);
+  if (Math.random() < .007) dropItem(e.x + .6, e.z - .4);
   if (Math.random() < .06 * Math.min(3, Math.sqrt(heatK())) * (ATM.night ? 1.3 : 1)) dropGem(e.x + .5, e.z, Math.ceil(1 + W.stage * .5), true);
-  if (e.elite) { dropChest(e.x, e.z); sphereFx(e.x, 1, e.z, 4, 0xffd43b, .5); ringFx(e.x, e.z, 7, 0xffd43b, .6); W.shake = .4; sfx('boom'); }
+  if (e.elite) { dropLChest(e.x, e.z); sphereFx(e.x, 1, e.z, 4, 0xffd43b, .5); ringFx(e.x, e.z, 7, 0xffd43b, .6); W.shake = .4; sfx('boom'); }
   if (e.boss) bossDown(e);
   sfx('kill');
   if (W.kills >= W.nextKillMs) { banner(`${W.nextKillMs}たい げきは！`, 'gold'); confetti(P.x, P.z, 50); sfx('chest'); W.nextKillMs += W.nextKillMs < 500 ? 100 : 250; }
@@ -2450,7 +2493,7 @@ function updGems(dt) {
   for (let i = W.gems.length - 1; i >= 0; i--) {
     const g = W.gems[i]; g.t += dt; const dx = P.x - g.x, dz = P.z - g.z, d2 = dx * dx + dz * dz;
     if (!g.fly && (d2 < mr2 || W.vacuum)) g.fly = true;
-    if (g.fly) { g.sp = Math.min(40, g.sp + dt * 60); const d = Math.sqrt(d2) || 1; g.x += dx / d * g.sp * dt; g.z += dz / d * g.sp * dt; if (d < .8) { W.gems.splice(i, 1); if (g.coin) { const cv = Math.round(g.v * W.mod.coin); S.coins += cv; W.coinsRun += cv; floater(P.x, P.z, 1.1, '+' + cv, 'coin'); sfx('coin'); } else { gainXp(g.v); sfx('gem'); } continue; } }
+    if (g.fly) { g.sp = Math.min(40, g.sp + dt * 60); const d = Math.sqrt(d2) || 1; g.x += dx / d * g.sp * dt; g.z += dz / d * g.sp * dt; if (d < .8) { W.gems.splice(i, 1); if (g.coin) { const cv = Math.round(g.v * W.mod.coin * buffCoin()); S.coins += cv; W.coinsRun += cv; floater(P.x, P.z, 1.1, '+' + cv, 'coin'); sfx('coin'); } else { gainXp(g.v); sfx('gem'); } continue; } }
   }
   let nc = 0;
   for (const g of W.gems) {
@@ -2463,11 +2506,11 @@ function updGems(dt) {
   if (W.vacuum && !W.gems.some(g => !g.coin)) W.vacuum = false;
 }
 function gainXp(v) {
-  W.xp += v * W.xpMul * (ATM.night ? 1.3 : 1);
+  W.xp += v * W.xpMul * (ATM.night ? 1.3 : 1) * buffXp();
   while (W.xp >= W.need) { W.xp -= W.need; W.lv++; W.need = xpNeed(W.lv); W.pendLv++; }
   if (W.pendLv && $('#lvup').hidden && !W.lvFx) startLevelFx();
 }
-const PICKS = { heart: 0xff4d6d, magnet: 0xff6b6b, bomb: 0x343a40, bag: 0xffc83a, chest: 0xffc83a };
+const PICKS = { heart: 0xff4d6d, magnet: 0xff6b6b, bomb: 0x343a40, bag: 0xffc83a, chest: 0xffc83a, lchest: 0x9775fa, clock: 0x74c0fc, shield: 0x99e9f2, star: 0xffd43b, boots: 0x69db7c, scroll: 0xfff3bf, lucky: 0xf783ac, orb: 0xfff27a, onigiri: 0xffffff };
 function makePickMesh(kind) {
   const g = new THREE.Group();
   const add = (w, h, d, c, x, y, z, basic) => { const m = new THREE.Mesh(G(w, h, d), basic ? MB(c) : M(c)); m.position.set(x, y, z); g.add(m); };
@@ -2475,19 +2518,23 @@ function makePickMesh(kind) {
   else if (kind === 'heart') { add(.5, .5, .5, 0xff4d6d, -.18, .9, 0, true); add(.5, .5, .5, 0xff4d6d, .18, .9, 0, true); add(.45, .45, .45, 0xff4d6d, 0, .6, 0, true); }
   else if (kind === 'magnet') { add(.3, .8, .3, 0xff6b6b, -.3, .9, 0, true); add(.3, .8, .3, 0x74c0fc, .3, .9, 0, true); add(.9, .3, .3, 0xadb5bd, 0, .5, 0, true); }
   else if (kind === 'bomb') { add(.8, .8, .8, 0x343a40, 0, .7, 0); add(.15, .3, .15, 0xff8b3d, 0, 1.25, 0, true); }
+  else if (kind !== 'bag') itemMesh(kind, add);
   else { add(.8, .7, .6, 0xffc83a, 0, .55, 0); add(.3, .2, .3, 0xe8a317, 0, 1, 0); }
   return g;
 }
 function addPick(kind, x, z) { let p = pickPool.find(p => !p.on && p.kind === kind); if (!p) { p = { kind, g: makePickMesh(kind) }; scene.add(p.g); pickPool.push(p); } p.on = true; p.x = x; p.z = z; p.t = 0; p.g.visible = true; p.g.position.set(x, 0, z); W.picks.push(p); }
-function dropPickup(x, z) { const r = Math.random(); addPick(r < .38 ? 'heart' : r < .6 ? 'magnet' : r < .78 ? 'bomb' : 'bag', x, z); }
+function dropPickup(x, z) { dropItem(x, z); }
 function dropChest(x, z) { addPick('chest', x, z); }
 function updPicks(dt) {
   for (let i = W.picks.length - 1; i >= 0; i--) {
     const p = W.picks[i]; p.t += dt; p.g.rotation.y += dt * 2; p.g.position.y = Math.sin(p.t * 4) * .15 + .1;
-    if (W.clearing > 0 || SG.on || W.vacuum && p.kind === 'chest') { const dx = P.x - p.x, dz = P.z - p.z, d = Math.hypot(dx, dz) || 1; const sp = Math.min(d, dt * 14); p.x += dx / d * sp; p.z += dz / d * sp; p.g.position.x = p.x; p.g.position.z = p.z; }
+    if (W.clearing > 0 || SG.on || W.vacuum && (p.kind === 'chest' || p.kind === 'lchest')) { const dx = P.x - p.x, dz = P.z - p.z, d = Math.hypot(dx, dz) || 1; const sp = Math.min(d, dt * 14); p.x += dx / d * sp; p.z += dz / d * sp; p.g.position.x = p.x; p.g.position.z = p.z; }
     if (p.t % .4 < dt) emit(p.x, 1, p.z, 1, PICKS[p.kind] || 0xffffff, 1.5, .15, .6, 0, .6);
     if (Math.hypot(P.x - p.x, P.z - p.z) < 1.3) {
+      if (p.kind === 'lchest' && !W.keys) { lockedHint(); continue; }
       W.picks.splice(i, 1); p.on = false; p.g.visible = false;
+      if (p.kind === 'lchest') { W.keys--; banner('かぎで あけた！', 'gold'); openChest(); updBuffs(true); continue; }
+      if (ITEMS[p.kind]) { useItem(p.kind); continue; }
       if (p.kind === 'heart') { const h = Math.round(W.maxHp * .3); P.hp = Math.min(W.maxHp, P.hp + h); floater(P.x, P.z, 1.1, '+' + h, 'heal'); emit(P.x, 1, P.z, 16, 0xff4d6d, 5, .25, .8, 0); sfx('ok'); updHud(); }
       else if (p.kind === 'magnet') { W.vacuum = true; ringFx(P.x, P.z, 30, 0x74c0fc, .8); banner('マグネット！'); sfx('chest'); }
       else if (p.kind === 'bomb') { bombAll(); }
@@ -2643,6 +2690,7 @@ function updMeteors(dt) {
 /* ---- てきの うごき ---- */
 function hurtPlayer(d) {
   if (P.inv > 0 || P.dashT > 0 || W.clearing > 0 || W.dead) return;
+  if (bufOn('shield') || bufOn('star')) { P.inv = .3; ringFx(P.x, P.z, 1.8, 0x99e9f2, .25); return; }
   P.hp -= d; P.inv = .5; P.hurtT = W.t + .45; heatHurt(d); sfx('hurt'); W.shake = Math.max(W.shake, .3);
   const h = $('#hurt'); h.style.opacity = 1; clearTimeout(hurtPlayer.t); hurtPlayer.t = setTimeout(() => h.style.opacity = 0, 160);
   if (P.hp <= 0) { P.hp = 0; die(); }
@@ -2752,10 +2800,13 @@ function optHTML(o, k) {
 }
 function showLevelUp() {
   if (!W.pendLv) return;
-  W.paused = true; const opts = lvOptions();
-  $('#lvBox').innerHTML = `<h2>レベルアップ！ Lv${W.lv - W.pendLv + 1}</h2><div class="lvcards">${opts.map(optHTML).join('')}</div>`;
+  W.paused = true; const opts = lvOptions(), L = W.lv - W.pendLv + 1;
+  if (W.nextBonusLv == null) W.nextBonusLv = Math.ceil((L + 1) / 3) * 3;
+  const bonus = L >= W.nextBonusLv && !SG.on;
+  $('#lvBox').innerHTML = `<h2>レベルアップ！ Lv${L}</h2><div class="lvcards">${opts.map(optHTML).join('')}${bonus ? `<button class="lvc kbonus" data-kb="1"><span class="k">★</span><span class="lic">漢</span><b>漢字チャンス！</b><p>1こ 書くと この レベルアップで 2つ えらべる</p></button>` : ''}</div>`;
   $('#lvup').hidden = false;
-  $('#lvBox').querySelectorAll('[data-o]').forEach(b => b.onclick = () => { applyOpt(opts[+b.dataset.o]); });
+  $('#lvBox').querySelectorAll('[data-o]').forEach(b => b.onclick = () => { if (bonus) W.nextBonusLv = L + 3; applyOpt(opts[+b.dataset.o]); });
+  const kb = $('#lvBox [data-kb]'); if (kb) kb.onclick = () => { W.nextBonusLv = L + 3; sfx('chest'); $('#lvup').hidden = true; openMission('bonus'); };
 }
 function applyOpt(o) {
   if (o.t === 'w') { const w = W.weps.find(x => x.i === o.i); if (w.lv + 1 >= WMAX) { sfx('chest'); $('#lvup').hidden = true; W.pendLv = Math.max(0, W.pendLv - 1); openMission('evo', o.i); return; } }
@@ -2824,7 +2875,7 @@ function spawnKanjiBox() {
   x.fillStyle = '#fff'; x.font = 'bold 42px serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('漢', 32, 35);
   const tex = new THREE.CanvasTexture(c), mat = new THREE.MeshBasicMaterial({ map: tex }), m = new THREE.Mesh(G(1.7, 1.7, 1.7), mat);
   const a = Math.random() * 6.28; const p = { x: P.x + Math.cos(a) * 8, z: P.z + Math.sin(a) * 8 };
-  m.position.set(p.x, 1.4, p.z); scene.add(m); W.kbox = { m, x: p.x, z: p.z, tex, mat }; banner('漢字ボックスが でた！', 'gold'); sfx('chest');
+  m.position.set(p.x, 1.4, p.z); scene.add(m); W.kbox = { m, x: p.x, z: p.z, tex, mat, t: 45 }; banner('漢字ボックスが でた！', 'gold'); sfx('chest');
 }
 function makeQuiz() {
   const known = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0);
@@ -2860,7 +2911,7 @@ function update(dtR) {
   W.t += dt;
   const { mx, mz } = moveVec(); const moving = Math.hypot(mx, mz) > .1;
   if (P.dashT > 0) { P.dashT -= dt; P.x += P.dvx * dt; P.z += P.dvz * dt; emit(P.x, 1.2, P.z, 2, 0xffffff, 1, .3, .3, 0, .1); }
-  else { const sp = 6 * W.spdMul; P.x += mx * sp * dt; P.z += mz * sp * dt; }
+  else { const sp = 6 * W.spdMul * buffSpd(); P.x += mx * sp * dt; P.z += mz * sp * dt; }
   P.dashCd -= dt; P.inv -= dt;
   const tg = nearest(P.x, P.z, 15);
   if (tg) P.face = Math.atan2(tg.x - P.x, tg.z - P.z); else if (moving) P.face = Math.atan2(mx, mz);
@@ -2887,7 +2938,7 @@ function update(dtR) {
   updParticles(dt);
   updFx(dt);
   if (W.qbox) { const q = W.qbox; q.m.rotation.y += dt * 1.6; q.m.position.y = 1.3 + Math.sin(W.t * 3) * .25; if (Math.random() < dt * 8) emit(q.x, 1.3, q.z, 1, 0xffc83a, 2, .15, .6, 0, .5); if (Math.hypot(P.x - q.x, P.z - q.z) < 1.4) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.qbox = null; openQuiz(); } else if (Math.hypot(P.x - q.x, P.z - q.z) > 40) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.qbox = null; } }
-  if (W.kbox) { const q = W.kbox; q.m.rotation.y += dt * 2; q.m.position.y = 1.4 + Math.sin(W.t * 3) * .3; if (Math.random() < dt * 12) emit(q.x, 1.4, q.z, 1, pick([0xffc83a, 0xe03131]), 2.5, .18, .7, 0, .6); const dk = Math.hypot(P.x - q.x, P.z - q.z); if (dk < 1.6) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.kbox = null; sfx('chest'); openMission('box'); return; } else if (dk > 40) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.kbox = null; } }
+  if (W.kbox) { const q = W.kbox; q.m.rotation.y += dt * 2; q.m.position.y = 1.4 + Math.sin(W.t * 3) * .3; if (Math.random() < dt * 12) emit(q.x, 1.4, q.z, 1, pick([0xffc83a, 0xe03131]), 2.5, .18, .7, 0, .6); const dk = Math.hypot(P.x - q.x, P.z - q.z); if (dk < 1.6) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.kbox = null; sfx('chest'); openMission('box'); return; } else if (dk > 70 || (q.t -= dt) <= 0) { scene.remove(q.m); q.tex.dispose(); q.mat.dispose(); W.kbox = null; toast('漢字ボックスが きえちゃった… つぎは とろう！'); } }
   if (W.comboT > 0) { W.comboT -= dt; if (W.comboT <= 0) { W.combo = 0; $('#combo').style.opacity = 0; } }
   // カメラ
   const portrait = innerHeight > innerWidth * 1.05;
@@ -2898,7 +2949,8 @@ function update(dtR) {
   dirL.position.set(P.x + 10, 20, P.z + 8); dirL.target.position.set(P.x, 0, P.z);
   hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
   $('#dashBtn').classList.toggle('cd', P.dashCd > 0);
-  heatUpdate(dt); bioUpdate(dt); updTiles(); atmUpdate(dt); faceUpdate(pm, W.t);
+  heatUpdate(dt); bioUpdate(dt); updTiles(); atmUpdate(dt); faceUpdate(pm, W.t); updBuffs(false, dt); updBarrier();
+  edgeArrow($('#kbArrow'), W.kbox ? W.kbox.x : null, W.kbox ? W.kbox.z : 0, W.kbox ? '漢字 ' + Math.ceil(W.kbox.t) + 'びょう' : '');
 }
 
 /* ---- ループ ---- */
@@ -2932,10 +2984,10 @@ function startStage(fate) {
   $('#modFx').className = W.fate.mod;
   if (W.mod.sky) { scene.background.setHex(W.mod.sky); scene.fog.color.setHex(W.mod.sky); hemi.color.setHex(0xff9a9a); dirL.color.setHex(0xffb0a0); }
   if (W.mod.dark) { scene.fog.near = 18; scene.fog.far = 46; scene.background.multiplyScalar(.35); scene.fog.color.copy(scene.background); hemi.intensity *= .6; dirL.intensity *= .45; pLight.intensity = 2.2; }
-  heatStart(); atmStart();
+  heatStart(); atmStart(); W.buf = {}; W.keys = 0; W.nextBonusLv = null; $('#kBtn').hidden = true; $('#kbArrow').hidden = true; updBuffs(true);
   if (P.model) { scene.remove(P.model.g); }
   P.model = buildPlayer(skinUnlocked(S.skin) ? S.skin : 0); scene.add(P.model.g);
-  Object.assign(W, { t: 0, ts: 1, lv: 1, xp: 0, need: xpNeed(1), pendLv: 0, kills: 0, coinsRun: 0, combo: 0, comboT: 0, bestCombo: 0, bossOut: false, clearing: 0, revived: false, shake: 0, spawnAcc: 0, nextSwarm: 50, nextElite: 70, nextBarrel: 6, nextQuiz: 40, nextKbox: 45, kbox: null, pas: {}, vacuum: false, nextKillMs: 100, lvFx: false, susp: false, paused: false, dead: false });
+  Object.assign(W, { t: 0, ts: 1, lv: 1, xp: 0, need: xpNeed(1), pendLv: 0, kills: 0, coinsRun: 0, combo: 0, comboT: 0, bestCombo: 0, bossOut: false, clearing: 0, revived: false, shake: 0, spawnAcc: 0, nextSwarm: 50, nextElite: 70, nextBarrel: 6, nextQuiz: 40, nextKbox: 35, kbox: null, pas: {}, vacuum: false, nextKillMs: 100, lvFx: false, susp: false, paused: false, dead: false });
   const B = S.build;
   if (B && Array.isArray(B.weps) && B.weps.length) {
     W.weps = B.weps.filter(w => WEAPONS[w.i]).map(w => ({ i: w.i, lv: Math.min(WMAX, w.lv), t: 0 })); W.pas = Object.assign({}, B.pas || {}); W.lv = B.lv || 1; W.xp = B.xp || 0; W.need = xpNeed(W.lv);
@@ -2958,7 +3010,7 @@ function stageClear() {
     <div class="bigline"><span class="coin"></span> +${W.coinsRun + bonus}</div>
     <p>レベル ${W.lv} ／ たおした てき ${W.kills}たい ／ さいだい ${W.bestCombo}コンボ</p>
     <p>ぶき・パッシブ・レベルは つぎの ステージに ひきつぐよ！</p>
-    <p>つぎは <b style="color:var(--yellow)">漢字ミッション</b>。5つ 書いたら ステージ ${S.stage} へ すすめるよ！</p>
+    <p>つぎは <b style="color:var(--yellow)">漢字ミッション</b>。6つ 書いたら ステージ ${S.stage} へ すすめるよ！</p>
     <div class="col"><button class="btn big y" data-act="mission">漢字ミッションへ</button><button class="btn" data-act="home">きちへ もどる</button></div>`);
 }
 function die() {
@@ -3015,11 +3067,11 @@ function renderSlots() {
 
 /* ============ 漢字ミッション ============ */
 let MS = null;
-const SPEC = { stage: ['new', 'new', 'rev', 'rev', 'pre'], revive: ['rev'], box: ['rev'] };
+const SPEC = { stage: ['new', 'new', 'rev', 'rev', 'rev', 'pre'], revive: ['rev'], box: ['rev'] };
 function openMission(kind, evoI) {
-  if (kind === 'revive' || kind === 'box' || kind === 'evo') { W.susp = true; } else endRun();
+  if (['revive', 'box', 'evo', 'bonus', 'shield'].includes(kind)) { W.susp = true; } else endRun();
   hideAll();
-  const spec = kind === 'box' || kind === 'evo' ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
+  const spec = ['box', 'evo', 'bonus', 'shield'].includes(kind) ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
   MS = { kind, evoI, items: pickKanji(spec).map(({ d, cat }) => ({ d, cat, hint: false, first: null, ok: false, comment: '', reveal: false, strokes: [], before: S.kanji[d.k] ? { ...S.kanji[d.k] } : null })), blob: null, url: null, stage: 'pad', status: '', statusCls: '' };
   $('#mission').hidden = false; $('#mission').scrollTop = 0; renderMission();
 }
@@ -3030,11 +3082,11 @@ function renderMission() {
   const W2 = $('#mWrap');
   if (MS.stage === 'done') { W2.innerHTML = MS.doneHTML; bindDone(); return; }
   const left = todo();
-  const title = MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
-  const sub = MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
+  const title = MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'bonus' ? '漢字チャンス！' : MS.kind === 'shield' ? rb('{結界|けっかい}を やぶれ！') : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
+  const sub = MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'bonus' ? '1こ 書けたら レベルアップで 2つ えらべる！ ゲームは とまっているよ。' : MS.kind === 'shield' ? '1こ 書けたら ボスの けっかいが われて 大ダメージ！ ゲームは とまっているよ。' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら かぎ ＋ トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
   const pad = MS.stage === 'pad';
   W2.innerHTML = `
-    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : MS.kind === 'box' || MS.kind === 'evo' ? 'あとで（ゲームに もどる）' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
+    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
     <div class="mtitle"><span class="eyebrow">漢字ミッション</span><h2>${title}</h2><p>${sub}</p></div>
     ${left.length && pad ? `<div class="mguide">□の 上の ひらがなが よみかただよ。マスの なかに 大きく 1こずつ 書いてね。${S.check === 'auto' && S.order ? '<br><small style="font-weight:700">かきじゅんも みているよ。わからない ときは「かきじゅん」ボタン。</small>' : ''}</div>` : ''}
     <div class="mcards">${MS.items.map((it, i) => cardHTML(it, i)).join('')}</div>
@@ -3046,7 +3098,7 @@ function renderMission() {
     <div id="mPrev" class="mpreview" ${MS.stage !== 'parent' || !MS.url ? 'hidden' : ''}>${MS.url ? `<img src="${MS.url}" alt="おくる しゃしん">` : ''}</div>
     <div id="mParent" class="parent" ${MS.stage !== 'parent' ? 'hidden' : ''}></div>
     <div class="mstatus ${MS.statusCls}" id="mStatus">${MS.status}</div>`;
-  $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'box') { resumeRun(); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
+  $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'box' || k === 'shield') { resumeRun(); return; } if (k === 'bonus') { resumeRun(true); if (W.pendLv) setTimeout(showLevelUp, 300); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
   if (pad) { MS.items.forEach((it, i) => { if (!it.ok) bindPad(it, i); }); if ($('#mCheck')) { $('#mCheck').onclick = checkAll; $('#mPhoto').onclick = () => { MS.stage = 'photo'; MS.status = ''; renderMission(); }; } }
   if (MS.stage === 'photo') {
     const onFile = async ev => { const f = ev.target.files && ev.target.files[0]; if (!f) return; try { const blob = await downscale(f); setPhoto(blob); MS.stage = 'parent'; renderMission(); } catch (e) { setStatus('しゃしんが よみこめなかったよ。べつの しゃしんで ためしてね。', 'err'); } };
@@ -3193,12 +3245,12 @@ function finishMission() {
   }
   let daily = false;
   if (S.day !== todayStr()) { S.streak = S.day === todayStr(-1) ? S.streak + 1 : 1; S.day = todayStr(); gained += 2; daily = true; }
-  S.stars += gained; S.missions++;
+  S.stars += gained; S.missions++; const KA = kpAward(MS.items, daily);
   S.log.push({ t: Date.now(), kind: MS.kind, it: MS.items.map(it => [it.d.k, it.cat === 'pre' ? 'pre' : it.first && !it.hint ? 'ok' : it.first ? 'hint' : 'ng']) }); if (S.log.length > 80) S.log.splice(0, S.log.length - 80);
   let okN = 0, ngN = 0; MS.items.forEach(it => { if (it.cat === 'pre') return; if (it.first && !it.hint) okN++; else ngN++; }); S.tot.ok += okN; S.tot.ng += ngN;
   logDay(d => { d.m++; d.ok += okN; d.ng += ngN; d.k += MS.items.reduce((a, it) => a + (it.tries || 1), 0); });
   if (MS.kind === 'stage') S.pending = false;
-  const afterN = stats().n; const newTitle = titleOf(afterN) !== titleOf(beforeN) ? titleOf(afterN) : null; const newSkins = SKINS.map((s, i) => i).filter(i => SKINS[i].need > beforeN && SKINS[i].need <= afterN);
+  const afterN = stats().n; const newCerts = certCheck(beforeN, afterN); const newTitle = titleOf(afterN) !== titleOf(beforeN) ? titleOf(afterN) : null; const newSkins = SKINS.map((s, i) => i).filter(i => SKINS[i].need > beforeN && SKINS[i].need <= afterN);
   if (newSkins.length) S.skin = newSkins[newSkins.length - 1];
   save();
   const newW = WEAPONS.filter((w, i) => !wUnlocked(i) && w.cost > beforeStars && w.cost <= S.stars);
@@ -3209,6 +3261,8 @@ function finishMission() {
       ${HANAMARU.replace('class="hanamaru"', 'class="hanamaru" style="width:120px;height:120px"')}
       <h2>ミッション クリア！</h2>
       <div class="gain">${STAR} +${gained}</div>
+      <p class="kpgain">がんばりポイント <b>+${KA.pt}pt</b>${KA.nw ? `（はじめて 書けた字 ${KA.nw}こ！）` : ''}</p>
+      ${newCerts.length ? `<div class="newskin">${rb('{認定証|にんていしょう}')}を もらった！ 漢字 ${newCerts[newCerts.length - 1]}こ たっせい</div><button class="btn y" id="dCert" data-n="${newCerts[newCerts.length - 1]}">${rb('{認定証|にんていしょう}')}を みる</button>` : ''}
       ${perfect ? '<p>いっぱつ ごうかく ボーナス つき！</p>' : '<p>なおして 書けたね。つぎは いっぱつで ごうかく できるかな？</p>'}
       ${mastered.length ? `<p>マスターした 漢字：<span style="font-family:var(--kyo);font-size:1.6rem">${esc(mastered.join(' '))}</span></p>` : ''}
       ${daily ? `<p>きょうの はじめての ミッション ★+2（${S.streak}にち れんぞく）</p>` : ''}
@@ -3217,14 +3271,15 @@ function finishMission() {
       ${newSkins.length ? `<div class="newskin">あたらしい すがた「${esc(SKINS[newSkins[newSkins.length - 1]].n)}」に へんしん！</div>` : nextSkin ? `<p>あと ${nextSkin.need - afterN}こ おぼえると「${esc(nextSkin.n)}」に なれる！</p>` : ''}
       ${newW.length ? `<p style="color:#c0392b">あたらしい ぶき「${esc(newW.map(w => w.n).join('・'))}」が かいほう できるよ！</p>` : ''}
       <div class="mact" style="width:100%">
-        <button class="btn big y" id="dGo">${MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'box' ? 'トリプル たからばこを あける！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
+        <button class="btn big y" id="dGo">${MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'bonus' ? 'レベルアップへ（2つ えらべる）' : MS.kind === 'shield' ? 'けっかいを やぶる！' : MS.kind === 'box' ? 'かぎと トリプル たからばこ！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
         ${MS.kind === 'stage' ? '<button class="btn w" id="dHome">きちへ もどる</button>' : ''}
       </div></div>`;
   renderMission(); $('#mission').scrollTop = 0;
 }
 function bindDone() {
-  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'revive') revive(); else if (k === 'box') { resumeRun(true); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
+  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'revive') revive(); else if (k === 'bonus') { resumeRun(true); W.pendLv++; setTimeout(showLevelUp, 300); } else if (k === 'shield') { resumeRun(true); breakBarrier(); } else if (k === 'box') { resumeRun(true); W.keys = (W.keys || 0) + 1; updBuffs(true); toast('かぎを 1こ ゲット！ かぎつきの たからばこが あけられる'); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
   const h = $('#dHome'); if (h) h.onclick = () => { MS = null; goHome(); };
+  const dc = $('#dCert'); if (dc) dc.onclick = () => showCert(curProf().name, +dc.dataset.n, S);
 }
 
 /* ============ 基地のプレビュー ============ */
@@ -3248,7 +3303,7 @@ function renderPreview(dt) {
 }
 
 /* ============ 基地 ============ */
-function hideAll() { ['#home', '#mission', '#quiz', '#result', '#pause', '#lvup', '#chest', '#who', '#parentPage', '#fate'].forEach(s => $(s).hidden = true); $('#hud').hidden = true; $('#chapter').hidden = true; $('#bossIntro').hidden = true; $('#joy').hidden = true; joy.id = null; joy.x = joy.y = 0; FL.forEach(f => { f.life = 0; f.s.style.opacity = 0; }); }
+function hideAll() { ['#home', '#mission', '#quiz', '#result', '#pause', '#lvup', '#chest', '#who', '#parentPage', '#fate'].forEach(s => $(s).hidden = true); $('#hud').hidden = true; $('#kbArrow').hidden = true; $('#chapter').hidden = true; $('#bossIntro').hidden = true; $('#joy').hidden = true; joy.id = null; joy.x = joy.y = 0; FL.forEach(f => { f.life = 0; f.s.style.opacity = 0; }); }
 function goHome() { endRun(); hideAll(); $('#home').hidden = false; renderHome(); }
 function renderHome() {
   const { n, m } = stats();
@@ -3265,12 +3320,13 @@ function renderHome() {
     <span class="title-ch">${rb(titleOf(n))}</span>
     <span class="area">${rb(chapterName(S.stage))}</span>
     <h2>${pending ? 'まずは 漢字ミッション！' : 'しゅつげき じゅんび OK'}</h2>
-    <p>${pending ? '漢字を 5つ（あたらしい・ふくしゅう・よしゅう）書いて しゃしんを おくろう。ごうかくしたら つぎの ステージへ。' : `ステージごとに ルールが かわる！ ぶきと レベルは つぎの ステージに ひきつぐよ。${S.deaths ? `（いまは てきが ${Math.round((1 - Math.max(.6, 1 - .12 * S.deaths)) * 100)}% よわい）` : ''}`}</p>
+    <p>${pending ? '漢字を 6つ（あたらしい・ふくしゅう・よしゅう）書こう。ごうかくしたら つぎの ステージへ。' : `ステージごとに ルールが かわる！ ぶきと レベルは つぎの ステージに ひきつぐよ。${S.deaths ? `（いまは てきが ${Math.round((1 - Math.max(.6, 1 - .12 * S.deaths)) * 100)}% よわい）` : ''}`}</p>
     <button class="btn big y" id="goBtn">${pending ? '漢字ミッションを はじめる' : `${rb('{運命|うんめい}を えらんで しゅつげき！')}`}</button>
     ${nx ? `<div class="nextskin"><span>つぎの すがた「${esc(nx.n)}」まで あと ${nx.need - n}こ</span></div><div class="bar"><i style="width:${Math.min(100, n / nx.need * 100)}%"></i></div>` : '<div class="nextskin">すべての すがたを かいほうした！</div>'}
     ${S.best ? `<div class="note">${STAR} マスター ${m}こ ／ さいこう レベル ${S.bestLv || 0} ／ たおした てき ${S.kills}たい</div>` : ''}`;
   $('#goBtn').onclick = () => { sfx('click'); pending ? openMission('stage') : openFate(); };
   { const pr = curProf(), nt = nextTitle(n); $('#pChip').innerHTML = `<span class="av sm" style="background:${pr.col}">${esc([...pr.name][0] || '?')}</span>${esc(pr.name)}<small>きりかえ</small>`; $('#pChip').onclick = () => { sfx('click'); renderWho(); }; }
+  renderGanbari();
   if (S.missions === 0 && S.best === 0) $('#howto').open = true;
   renderTab();
 }
@@ -3596,31 +3652,33 @@ function renderParentPage() {
   const playDays = Object.keys(o.days).filter(k => o.days[k].m > 0 || o.days[k].st > 0).length;
   const firstRate = o.tot.ok + o.tot.ng ? Math.round(o.tot.ok / (o.tot.ok + o.tot.ng) * 100) + '%' : '―';
   const days = []; for (let i = 13; i >= 0; i--) { const k = dayKey(-i); days.push({ k, d: o.days[k] || { m: 0, ok: 0, ng: 0, k: 0, st: 0, sec: 0 } }); }
-  const mx = Math.max(1, ...days.map(x => x.d.k)), sum = days.reduce((a, x) => a + x.d.k, 0);
+  days.forEach(x => { x.nw = x.d.nw || 0; x.pr = x.d.pt != null ? (x.d.rv || 0) + (x.d.fx || 0) + (x.d.pre || 0) : (x.d.k || 0); x.tt = x.nw + x.pr; });
+  const mx = Math.max(1, ...days.map(x => x.tt)), sum = days.reduce((a, x) => a + x.tt, 0);
   const md = k => { const [, m, d] = k.split('-'); return `${+m}/${+d}`; };
   const wd = k => '日月火水木金土'[new Date(k + 'T12:00:00').getDay()];
-  const bars = days.map((x, i) => { const h = x.d.k / mx * 100, lab = (x.d.k === mx && x.d.k > 0) || i === 13; return `<button class="cb" data-tip="${md(x.k)}（${wd(x.k)}）：${x.d.k}字・ミッション ${x.d.m}回・ステージ ${x.d.st}こ" aria-label="${md(x.k)} ${x.d.k}字"><span class="cv">${lab && x.d.k ? x.d.k : ''}</span><i style="height:${h}%"></i><span class="cx">${+x.k.split('-')[2]}</span></button>`; }).join('');
+  const bars = days.map((x, i) => { const lab = (x.tt === mx && x.tt > 0) || i === 13, hn = x.nw / mx * 100, hp = x.pr / mx * 100; return `<button class="cb" data-tip="${md(x.k)}（${wd(x.k)}）：あたらしく ${x.nw}字・くりかえし ${x.pr}かい（${x.d.pt || 0}pt）" aria-label="${md(x.k)} あたらしく ${x.nw}字 くりかえし ${x.pr}かい"><span class="cv">${lab && x.tt ? x.tt : ''}</span>${x.nw ? `<i class="nw top" style="height:${hn}%"></i>` : ''}${x.pr ? `<i class="pr ${x.nw ? 'gap' : 'top'}" style="height:${hp}%"></i>` : ''}<span class="cx">${+x.k.split('-')[2]}</span></button>`; }).join('');
   const grades = [1, 2, 3].map(g => { const L = KG[g], n = L.filter(d => K[d.k] && K[d.k].c > 0).length, m = L.filter(d => K[d.k] && K[d.k].m).length; return `<div class="gp"><span>${g}年生</span><div class="gbar"><i class="gm" style="width:${m / L.length * 100}%"></i><i class="gl" style="width:${(n - m) / L.length * 100}%"></i></div><b>${n} / ${L.length}</b></div>`; }).join('');
-  const kindName = { stage: 'ミッション', box: '漢字ボックス', evo: 'しんか', revive: 'ふっかつ' };
+  const kindName = { stage: 'ミッション', box: '漢字ボックス', evo: 'しんか', revive: 'ふっかつ', bonus: '漢字チャンス', shield: 'けっかい' };
   const logs = o.log.slice(-15).reverse().map(l => { const d = new Date(l.t); return `<li><span class="lt">${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}</span><span class="lk">${kindName[l.kind] || ''}</span><span class="li">${l.it.map(([k, r]) => `<span class="lc ${r}">${esc(k)}</span>`).join('')}</span></li>`; }).join('') || '<li>まだ ありません</li>';
   W2.innerHTML = `<div class="mtop"><button class="btn sm" id="ppBack">もどる</button><span style="font-weight:900">がくしゅうの きろく</span></div>
     <div class="seg pptabs">${PROF.list.map(x => `<button data-pp="${esc(x.id)}" aria-pressed="${x.id === p.id}"><span class="av sm" style="background:${x.col}">${esc([...x.name][0] || '?')}</span>${esc(x.name)}</button>`).join('')}</div>
+    ${ppReviewHTML(o, p)}
     <div class="ppsum">
       <div><span>おぼえた 字</span><b>${learned}<small> / 440</small></b></div><div><span>マスター</span><b>${master}</b></div>
       <div><span>にがて</span><b>${weak.length}</b></div><div><span>よしゅう ずみ</span><b>${pre}</b></div>
       <div><span>1かいで ごうかく</span><b>${firstRate}</b></div><div><span>あそんだ 日</span><b>${playDays}<small> 日（れんぞく ${o.streak || 0}）</small></b></div>
     </div>
     <div class="ppbox"><h3>学年べつ</h3>${grades}<p class="hint2"><i class="sw gm"></i>マスター　<i class="sw gl"></i>おぼえた（いっぱつ ごうかく）</p></div>
-    <div class="ppbox"><h3>この 14日間に 書いた 字の かず</h3><p class="hint2">ごうけい ${sum}字。ぼうを タップすると くわしく 見られます。</p>
+    <div class="ppbox"><h3>この 14日間の れんしゅう</h3><p class="hint2"><i class="sw nw"></i>あたらしく おぼえた字　<i class="sw pr"></i>くりかえし れんしゅう（ふくしゅう・書きなおし・よしゅう）。ごうけい ${sum}。ぼうを タップすると くわしく 見られます。</p>
       <div class="chart"><div class="cbars">${bars}</div><div class="ctip" id="ctip" hidden></div></div>
-      <details><summary>ひょうで 見る</summary><table class="ctab"><tr><th>日</th><th>書いた 字</th><th>ミッション</th><th>ステージ</th></tr>${days.slice().reverse().map(x => `<tr><td>${md(x.k)}（${wd(x.k)}）</td><td>${x.d.k}</td><td>${x.d.m}</td><td>${x.d.st}</td></tr>`).join('')}</table></details></div>
+      <details><summary>ひょうで 見る</summary><table class="ctab"><tr><th>日</th><th>あたらしく</th><th>くりかえし</th><th>ポイント</th><th>ミッション</th></tr>${days.slice().reverse().map(x => `<tr><td>${md(x.k)}（${wd(x.k)}）</td><td>${x.nw}</td><td>${x.pr}</td><td>${x.d.pt || 0}</td><td>${x.d.m}</td></tr>`).join('')}</table></details></div>
     <div class="ppbox"><h3>にがてな 字</h3>${weak.length ? `<div class="weak">${weak.slice(0, 30).map(([k, r]) => `<span class="wk"><b>${esc(k)}</b><small>まちがい ${r.w}</small></span>`).join('')}</div><p class="hint2">つぎの ミッションで ふくしゅうとして 出ます。</p>` : '<p class="hint2">いまは ありません。</p>'}</div>
     <div class="ppbox"><h3>さいきんの きろく</h3><ul class="plog">${logs}</ul><p class="hint2"><span class="lc ok">字</span>いっぱつ ごうかく　<span class="lc hint">字</span>ヒントで ごうかく　<span class="lc ng">字</span>なおして ごうかく　<span class="lc pre">字</span>よしゅう</p></div>
     <div class="ppbox"><h3>${esc(p.name)} の せってい</h3>
       <div class="prow"><label for="ppName">なまえ</label><input id="ppName" class="tin" maxlength="8" value="${esc(p.name)}"><button class="btn sm" id="ppRename">かえる</button></div>
       <p class="hint2">バックアップ コード（べつの きかいに うつすときに つかいます）</p><textarea id="ppCode" readonly>${esc(btoa(unescape(encodeURIComponent(JSON.stringify(o)))))}</textarea>
       <div class="wrow"><button class="btn sm" id="ppCopy">コードを コピー</button><button class="btn sm r" id="ppDel">${PP.delArm === p.id ? 'ほんとうに けす？ もういちど おす' : 'この こどもの きろくを けす'}</button></div></div>`;
-  $('#ppBack').onclick = leaveParent;
+  $('#ppBack').onclick = leaveParent; ppReviewBind(o, p);
   W2.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { PP.sel = b.dataset.pp; PP.delArm = null; renderParentPage(); });
   const tip = $('#ctip');
   W2.querySelectorAll('.cb').forEach(b => { const show = () => { tip.textContent = b.dataset.tip; tip.hidden = false; const r = b.getBoundingClientRect(), c = b.closest('.chart').getBoundingClientRect(); tip.style.left = Math.max(0, Math.min(c.width - 200, r.left - c.left + r.width / 2 - 100)) + 'px'; }; b.onpointerenter = show; b.onclick = show; b.onpointerleave = () => tip.hidden = true; });
@@ -3726,7 +3784,7 @@ function sgStart() {
   SG.road.scale.set(SG.fx - SG.cx + 6, .04, 6.4); SG.road.position.set((SG.cx + SG.fx) / 2, .02, 0); SG.road.material.color.setHex(W.theme.dirt || 0x8d5524);
   SG.castle.visible = SG.fort.visible = SG.road.visible = true;
   P.x = SG.cx + 3; P.z = 2.4; P.face = P.rot = Math.PI / 2; SG.camX = SG.cx + 11; cam.position.set(SG.camX, 10.5, 26);
-  W.nextKbox = 40; W.spawnAcc = 0; W.nextElite = 60;
+  W.nextKbox = 30; W.spawnAcc = 0; W.nextElite = 60;
   $('#sgUI').hidden = false; $('#dashBtn').hidden = true; document.body.classList.add('sg'); sgCards(); sgHud(true);
   if (!S.sgTut) { S.sgTut = 1; save(); $('#sgCards').classList.add('hint'); setTimeout(() => { $('#sgCards').classList.remove('hint'); }, 9000); setTimeout(() => toast('したの カードを おすと なかまが でるよ！'), 3600); }
 }
@@ -3882,7 +3940,7 @@ function sgDirector(dt) {
   if (W.t >= SG.nextWave) { SG.nextWave += 40; const n = Math.round((6 + Math.min(10, st)) * Math.min(1.5, W.mod.eRate)); for (let k = 0; k < n; k++) sgSpawnAt(W.t > 90 ? 'fast' : 'swarm', SG.fx - 2.6 - k * .7); banner('{大軍|たいぐん}が せまってくる！', 'red'); }
   if (W.t >= W.nextElite) { W.nextElite += 55 * W.mod.elite; const pr = pickType(); const e = sgSpawnAt(pr === 'swarm' ? 'basic' : pr, SG.fx - 2.8, true); if (e && !W.bossOut) banner('つよい てきが きた！', 'gold'); }
   if (!W.bossOut && (SG.fhp < SG.fmax * .6 || W.t >= 150)) { W.bossOut = true; const be = sgSpawnAt('boss', SG.fx - 3); if (be) { be.z = be.lz = 0; bossIntro(be); } }
-  if (W.t >= W.nextKbox && !SG.kbox) { W.nextKbox += 50; SG.kbox = true; $('#sgKbox').hidden = false; banner('漢字ボックスが でた！', 'gold'); sfx('chest'); }
+  if (W.t >= W.nextKbox && !SG.kbox) { W.nextKbox += 40; SG.kbox = true; $('#sgKbox').hidden = false; banner('漢字ボックスが でた！', 'gold'); sfx('chest'); }
 }
 function sgHalfW() { return SG.dist * Math.tan(19 * Math.PI / 180) * cam.aspect; }
 function sgClampCam(x) { const h = Math.min(sgHalfW(), (SG.fx - SG.cx) / 2 + 2); return Math.max(SG.cx - 4 + h, Math.min(SG.fx + 4 - h, x)); }
@@ -3920,7 +3978,7 @@ function updateSiege(dtR) {
   cam.lookAt(cam.position.x, 2.2, -1);
   dirL.position.set(SG.camX + 10, 20, 8); dirL.target.position.set(SG.camX, 0, 0);
   hudT += dtR; if (hudT > .2) { hudT = 0; updHud(); }
-  sgHud(); updTiles(); atmUpdate(dt); faceUpdate(pm, W.t);
+  sgHud(); updTiles(); atmUpdate(dt); faceUpdate(pm, W.t); updBuffs(false, dt);
 }
 function sgHud(force) {
   SG.hudT = (SG.hudT || 0) + .016; if (!force && SG.hudT < .08) return; SG.hudT = 0;
@@ -4246,7 +4304,7 @@ function bioUpdate(dt) {
     banner(`${AREA_CN[t2]}に はいった！ {危険度|きけんど} ${'★'.repeat(Math.min(6, dg + 1))}`, dg >= 2 ? 'red' : 'gold'); BIO.bannerT = W.t; sfx('chest');
     if (ATM.w) ATM.w.t = Math.min(ATM.w.t, 1); ATM.wNext = Math.min(ATM.wNext, 8);
     const c = bioCell(P.x, P.z);
-    if (b !== 0 && !BIO.seen.has(c.id)) { BIO.seen.add(c.id); const a = Math.atan2(P.x, P.z); dropChest(P.x + Math.sin(a) * 7, P.z + Math.cos(a) * 7); setTimeout(() => toast('あたらしい せかいで たからばこを みつけた！'), 900); }
+    if (b !== 0 && !BIO.seen.has(c.id)) { BIO.seen.add(c.id); const a = Math.atan2(P.x, P.z); dropLChest(P.x + Math.sin(a) * 7, P.z + Math.cos(a) * 7); setTimeout(() => toast('あたらしい せかいで かぎつきの たからばこを みつけた！'), 900); }
   } else if (dg > BIO.dg && W.t - BIO.bannerT > 12) { banner(`{危険|きけん}な ばしょに ふみこんだ ${'★'.repeat(Math.min(6, dg + 1))}`, 'red'); BIO.bannerT = W.t; sfx('warn'); }
   BIO.dg = dg; updBioChip();
 }
@@ -4281,8 +4339,207 @@ function updTiles() {
   flush(tileM, n);
 }
 
+/* ============ アイテム（ふえた ぶん） ============ */
+const ITEMS = {
+  clock:   { n: '{時|とき}の すなどけい', d: 'てきが 5びょう とまる', col: 0x74c0fc, g: '時' },
+  shield:  { n: 'まもりの {結界|けっかい}', d: '8びょう ダメージを うけない', col: 0x99e9f2, g: '守', buf: 8 },
+  star:    { n: 'スターパワー', d: '8びょう むてき・こうげき 2ばい・はやい', col: 0xffd43b, g: '星', buf: 8 },
+  boots:   { n: 'かぜの くつ', d: '12びょう すごく はやく うごける', col: 0x69db7c, g: '風', buf: 12 },
+  scroll:  { n: 'ちしきの {巻物|まきもの}', d: 'けいけんち たくさん', col: 0xfff3bf, g: '書' },
+  lucky:   { n: 'ラッキー ポーション', d: '20びょう けいけんち 1.5ばい・コイン 2ばい', col: 0xf783ac, g: '運', buf: 20 },
+  orb:     { n: '{雷|かみなり}だま', d: 'まわりの てきに かみなりが つながる', col: 0xfff27a, g: '雷' },
+  onigiri: { n: 'おにぎり', d: 'HP かいふく ＋ すこしずつ かいふく', col: 0xffffff, g: '食', buf: 8 },
+};
+const BUFKEYS = ['shield', 'star', 'boots', 'lucky', 'onigiri'];
+const bufOn = k => W.buf && W.buf[k] > 0;
+const buffSpd = () => (bufOn('boots') ? 1.45 : 1) * (bufOn('star') ? 1.3 : 1);
+const buffDmg = () => bufOn('star') ? 2 : 1;
+const buffXp = () => bufOn('lucky') ? 1.5 : 1;
+const buffCoin = () => bufOn('lucky') ? 2 : 1;
+function itemMesh(kind, add) {
+  switch (kind) {
+    case 'clock': add(.7, .12, .7, 0xb07a3c, 0, .45, 0); add(.7, .12, .7, 0xb07a3c, 0, 1.35, 0); add(.42, .36, .42, 0x74c0fc, 0, .7, 0, true); add(.42, .36, .42, 0x74c0fc, 0, 1.1, 0, true); add(.14, .2, .14, 0xfff3bf, 0, .9, 0, true); break;
+    case 'shield': add(.9, 1.1, .16, 0x99e9f2, 0, .9, 0, true); add(.6, .2, .18, 0xffffff, 0, 1.1, 0, true); add(.2, .6, .18, 0xffffff, 0, .9, 0, true); break;
+    case 'star': add(.8, .8, .3, 0xffd43b, 0, .9, 0, true); add(.5, .5, .32, 0xfff3bf, 0, .9, 0, true); add(.3, .9, .28, 0xffd43b, 0, .9, 0, true); add(.9, .3, .28, 0xffd43b, 0, .95, 0, true); break;
+    case 'boots': add(.36, .5, .36, 0x69db7c, -.2, .75, 0); add(.36, .5, .36, 0x69db7c, .2, .75, 0); add(.4, .2, .6, 0x2b8a3e, -.2, .45, .1); add(.4, .2, .6, 0x2b8a3e, .2, .45, .1); add(.08, .3, .3, 0xffffff, -.42, .9, -.1, true); add(.08, .3, .3, 0xffffff, .42, .9, -.1, true); break;
+    case 'scroll': add(.9, .5, .1, 0xfff3bf, 0, .9, 0); add(.14, .6, .14, 0xc92a2a, -.5, .9, 0); add(.14, .6, .14, 0xc92a2a, .5, .9, 0); add(.5, .06, .12, 0x343a40, 0, 1, 0); add(.4, .06, .12, 0x343a40, 0, .85, 0); break;
+    case 'lucky': add(.5, .6, .5, 0xf783ac, 0, .7, 0, true); add(.24, .3, .24, 0xffffff, 0, 1.15, 0); add(.3, .1, .3, 0xb07a3c, 0, 1.33, 0); add(.2, .2, .05, 0x69db7c, 0, .75, .27, true); break;
+    case 'orb': add(.7, .7, .7, 0xfff27a, 0, .9, 0, true); add(.9, .12, .12, 0xffffff, 0, .9, 0, true); add(.12, .9, .12, 0xffffff, 0, .9, 0, true); break;
+    case 'onigiri': add(.8, .55, .4, 0xffffff, 0, .65, 0); add(.55, .35, .4, 0xffffff, 0, 1.05, 0); add(.6, .35, .42, 0x212529, 0, .55, 0); break;
+    case 'lchest': add(1.3, .8, .9, 0x6c5a8a, 0, .4, 0); add(1.36, .35, .96, 0x9775fa, 0, .95, 0); add(1.4, .14, 1, 0x343a40, 0, .62, 0); add(.34, .4, .12, 0xffd43b, 0, .62, .5); add(.14, .14, .14, 0x343a40, 0, .58, .57); break;
+  }
+}
+function dropItem(x, z) {
+  const r = Math.random(), k = r < .14 ? 'heart' : r < .24 ? 'magnet' : r < .32 ? 'bomb' : r < .4 ? 'bag' : r < .48 ? 'clock' : r < .56 ? 'shield' : r < .63 ? 'star' : r < .72 ? 'boots' : r < .8 ? 'scroll' : r < .87 ? 'lucky' : r < .94 ? 'orb' : 'onigiri';
+  addPick(k, x, z);
+}
+function useItem(kind) {
+  const it = ITEMS[kind]; if (!it) return false;
+  W.buf = W.buf || {};
+  banner(`${it.n}！ ${it.d}`, 'gold'); sfx('evo'); emit(P.x, 1.2, P.z, 24, it.col, 7, .25, .8);
+  if (it.buf) W.buf[kind] = it.buf;
+  if (kind === 'clock') { flashScreen(.35); ringFx(P.x, P.z, 26, 0x74c0fc, .8); for (const e of W.enemies) if (!e.dead && !e.still) { e.slowT = Math.max(e.slowT, 5); e.slow = .97; } }
+  else if (kind === 'scroll') gainXp(Math.max(5, W.need * .6) / Math.max(.01, W.xpMul));
+  else if (kind === 'orb') { const ts = nearestN(16, 20); let px = P.x, pz = P.z; ts.forEach((t, k) => setTimeout(() => { if (!W.on || t.dead) return; boltFx(t.x, t.z, 0xfff27a); beamFx(px, pz, Math.atan2(t.x - px, t.z - pz), Math.hypot(t.x - px, t.z - pz), .3, 0xfff27a); px = t.x; pz = t.z; hitEnemy(t, 60 * stageMul(W.stage), .4, t.x, t.z, 0xfff27a); sfx('zap'); }, k * 70)); }
+  else if (kind === 'onigiri') { const h = Math.round(W.maxHp * .15); P.hp = Math.min(W.maxHp, P.hp + h); floater(P.x, P.z, 1.1, '+' + h, 'heal'); }
+  updBuffs(true); return true;
+}
+let bubbleM = null;
+function updBuffs(force, dt = 0) {
+  W.buf = W.buf || {};
+  for (const k of BUFKEYS) if (W.buf[k] > 0) { W.buf[k] -= dt; if (W.buf[k] <= 0) { W.buf[k] = 0; force = true; } }
+  if (bufOn('onigiri') && P.hp < W.maxHp) P.hp = Math.min(W.maxHp, P.hp + W.maxHp * .02 * dt);
+  // みため
+  const prot = bufOn('shield') || bufOn('star');
+  if (!bubbleM) { bubbleM = new THREE.Mesh(new THREE.SphereGeometry(1.5, 18, 12), new THREE.MeshBasicMaterial({ color: 0x99e9f2, transparent: true, opacity: .22, depthWrite: false })); scene.add(bubbleM); }
+  bubbleM.visible = prot && W.on; if (prot) { bubbleM.position.set(P.x, 1.3, P.z); bubbleM.material.color.setHSL(bufOn('star') ? (W.t * .8) % 1 : .52, .8, .7); bubbleM.scale.setScalar(1 + Math.sin(W.t * 6) * .05); }
+  if (bufOn('star') && Math.random() < dt * 30) emit(P.x + (Math.random() - .5), .3 + Math.random() * 2, P.z + (Math.random() - .5), 1, pick([0xff6b6b, 0xffd43b, 0x69db7c, 0x74c0fc, 0xb197fc]), 1.5, .16, .5, 0, .6);
+  if (bufOn('boots') && Math.random() < dt * 14) emit(P.x, .15, P.z, 1, 0x69db7c, .6, .18, .4, 0, .2);
+  if (bufOn('star')) { W.starT = (W.starT || 0) - dt; if (W.starT <= 0) { W.starT = .2; for (const e of W.enemies) if (!e.dead && !e.still && Math.abs(e.x - P.x) < 1.6 && Math.abs(e.z - P.z) < 1.6) hitEnemy(e, 25 * stageMul(W.stage), .9, P.x, P.z, 0xffd43b); } }
+  if (!force && (W.bufHudT = (W.bufHudT || 0) - dt) > 0) return; W.bufHudT = .25;
+  const el = $('#buffs'); if (!el) return;
+  el.innerHTML = BUFKEYS.filter(bufOn).map(k => { const it = ITEMS[k]; return `<span class="buf" style="--c:#${it.col.toString(16).padStart(6, '0')}"><b>${it.g}</b><i style="width:${Math.max(0, W.buf[k] / it.buf * 100)}%"></i></span>`; }).join('') + (W.keys ? `<span class="buf key" aria-label="かぎ ${W.keys}"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="6" cy="10" r="4" fill="none" stroke="#ffd43b" stroke-width="2.6"/><path d="M10 10h8M15 10v3M18 10v3" stroke="#ffd43b" stroke-width="2.6" stroke-linecap="round"/></svg><b>${W.keys}</b></span>` : '');
+}
+/* ---- かぎ と かぎつき たからばこ ---- */
+function dropLChest(x, z) { addPick('lchest', x, z); }
+function lockedHint() { if (W.t - (W.keyHintT || -9) < 4) return; W.keyHintT = W.t; banner('かぎが ないと あかない！ 漢字ボックスで かぎを ゲット', 'red'); sfx('ng'); }
+/* ---- がめんの はしの やじるし ---- */
+function edgeArrow(el, x, z, label) {
+  if (!el) return; if (x == null) { el.hidden = true; return; }
+  V3b.set(x, 1.5, z).project(cam);
+  const sx = (V3b.x * .5 + .5) * innerWidth, sy = (-V3b.y * .5 + .5) * innerHeight, m = 60;
+  if (V3b.z < 1 && sx > m && sx < innerWidth - m && sy > m + 40 && sy < innerHeight - m) { el.hidden = true; return; }
+  const cx = innerWidth / 2, cy = innerHeight / 2, dx = sx - cx, dy = sy - cy, k = Math.min((cx - m) / Math.abs(dx || 1e-6), (cy - m) / Math.abs(dy || 1e-6));
+  el.hidden = false; el.style.transform = `translate(${cx + dx * k}px,${cy + dy * k}px)`; el.querySelector('svg').style.transform = `rotate(${Math.atan2(dy, dx)}rad)`; el.querySelector('b').textContent = label;
+}
+/* ---- ボスの 結界 ---- */
+let barrierM = null;
+function bossBarrier(e) {
+  e.barrier = true; banner('ボスが {結界|けっかい}を はった！ 漢字で やぶれ！', 'red'); sfx('warn'); W.shake = .6;
+  if (!barrierM) { barrierM = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0xb197fc, transparent: true, opacity: .3, wireframe: true })); scene.add(barrierM); }
+  $('#kBtn').hidden = false;
+}
+function updBarrier() {
+  const e = W.boss; const on = !!(e && e.barrier && !e.dead);
+  if (barrierM) { barrierM.visible = on; if (on) { barrierM.position.set(e.x, 2 * e.s, e.z); barrierM.scale.setScalar(e.s * 2.4); barrierM.rotation.y += .02; barrierM.rotation.x += .01; } }
+  if (!on) $('#kBtn').hidden = true;
+}
+function breakBarrier() {
+  const e = W.boss; $('#kBtn').hidden = true; if (!e || e.dead) return;
+  e.barrier = false; banner('{結界|けっかい}を やぶった！', 'gold'); flashScreen(.8); W.shake = 1; sfx('boom');
+  sphereFx(e.x, 2, e.z, 6, 0xb197fc, .5); ringFx(e.x, e.z, 10, 0xffffff, .6); emit(e.x, 2, e.z, 50, 0xd0bfff, 12, .35, 1);
+  setTimeout(() => { if (W.on && !e.dead) hitEnemy(e, e.max * .12 / Math.max(.2, W.dmgMul), 0, e.x, e.z, 0xffffff); }, 200);
+}
+
+/* ============ がんばりポイント（おうちの人と いっしょに みる） ============ */
+const CERTS = [10, 30, 60, 100, 160, 240, 320, 440];
+const PROMISES = ['こうえんで いっしょに あそぶ', 'すきな 本を いっしょに よむ', 'ばんごはんの メニューを えらぶ', 'かぞくで ボードゲーム', 'ねる まえの よみきかせ 1さつ ふやす', 'いっしょに おかしを つくる', 'すきな ばしょへ おでかけ'];
+const PTRULE = { nw: 3, rv: 1, fx: 1, pre: 1, ms: 3, daily: 2 };
+function kpAward(items, daily) {
+  const a = { pt: 0, nw: 0, rv: 0, fx: 0, pre: 0, ms: 0, newK: [] };
+  for (const it of items) {
+    const k = it.d.k, b = it.before || {}, r = S.kanji[k] || {};
+    if (it.cat === 'pre') { a.pre++; a.pt += PTRULE.pre; }
+    else if (it.first && !it.hint) { if (!(b.c > 0)) { a.nw++; a.pt += PTRULE.nw; a.newK.push(k); r.t0 = r.t0 || Date.now(); } else { a.rv++; a.pt += PTRULE.rv; } }
+    else { a.fx++; a.pt += PTRULE.fx; }
+    if (!b.m && r.m) { a.ms++; a.pt += PTRULE.ms; }
+  }
+  if (daily) a.pt += PTRULE.daily;
+  S.kp = (S.kp || 0) + a.pt;
+  logDay(d => { d.pt = (d.pt || 0) + a.pt; d.nw = (d.nw || 0) + a.nw; d.rv = (d.rv || 0) + a.rv; d.fx = (d.fx || 0) + a.fx; d.pre = (d.pre || 0) + a.pre; d.ms = (d.ms || 0) + a.ms; });
+  return a;
+}
+function certCheck(beforeN, afterN) { S.certs = S.certs || []; const got = CERTS.filter(c => c > beforeN && c <= afterN && !S.certs.includes(c)); got.forEach(c => S.certs.push(c)); return got; }
+function goalOf(o) { const g = o.goal; if (!g || g.done) return null; const have = (o.kp || 0) - g.from; return { ...g, have, left: Math.max(0, g.pt - have), ratio: Math.min(1, have / g.pt) }; }
+function stampDay(d) { return d && ((d.pt || 0) >= 5 || (d.pt == null && (d.k || 0) >= 5)); }
+const HANKO = (txt, cls = '') => `<span class="hanko ${cls}" aria-label="おうちの人の ハンコ">${txt}</span>`;
+function renderGanbari() {
+  const el = $('#ganbari'); if (!el) return;
+  const days = S.days || {}, today = days[dayKey()] || {}, g = goalOf(S);
+  const week = []; for (let i = 6; i >= 0; i--) { const k = dayKey(-i); week.push({ k, d: days[k], h: (S.hanko || {})[k] }); }
+  el.innerHTML = `<div class="gtop"><b>がんばりカード</b><span>きょう <b class="num">${today.pt || 0}</b>pt ／ ぜんぶ <b class="num">${S.kp || 0}</b>pt</span></div>
+    <div class="gweek">${week.map((w, i) => `<div class="gday ${stampDay(w.d) ? 'on' : ''}"><small>${'日月火水木金土'[new Date(w.k + 'T12:00:00').getDay()]}</small><span class="gst">${stampDay(w.d) ? '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L1.4 7.8l6-.7z" fill="#ffc83a" stroke="#151733" stroke-width="1.4" stroke-linejoin="round"/></svg>' : ''}${w.h ? HANKO('よし', 'sm') : ''}</span></div>`).join('')}</div>
+    ${g ? `<div class="gprom"><span>やくそく「${esc(g.text)}」</span><div class="bar"><i style="width:${g.ratio * 100}%"></i></div><small>${g.left ? `あと ${g.left}pt` : 'たっせい！ おうちの人に みせよう！'}</small></div>` : '<div class="gprom"><small>おうちの人と「ごほうびの やくそく」を きめよう（おうちの人の ページで せってい）</small></div>'}
+    ${(S.certs || []).length ? `<div class="gcert">${rb('{認定証|にんていしょう}')} ${S.certs.length}まい</div>` : ''}`;
+}
+/* おうちの人の ページの「いっしょに ふりかえり」 */
+function ppMut(id, fn) { if (id === PROF.cur) { fn(S); save(); } else { const o = Object.assign(DEF(), readSave(id) || {}); fn(o); try { localStorage.setItem(KEY + '.' + id, JSON.stringify(o)); } catch (e) {} } }
+function weekSum(o, off) { const s = { pt: 0, nw: 0, rv: 0, fx: 0, pre: 0, ms: 0, days: 0, k: 0 }; for (let i = 0; i < 7; i++) { const d = (o.days || {})[dayKey(-(i + off))]; if (!d) continue; s.pt += d.pt || 0; s.nw += d.nw || 0; s.rv += d.rv || 0; s.fx += d.fx || 0; s.pre += d.pre || 0; s.ms += d.ms || 0; s.k += d.k || 0; if (stampDay(d)) s.days++; } return s; }
+function praiseIdeas(o, w, lw) {
+  const out = [], K = o.kanji || {}, now = Date.now();
+  const newK = Object.keys(K).filter(k => K[k].t0 && now - K[k].t0 < 7 * 864e5);
+  if (newK.length) out.push(`「${newK.slice(0, 3).join('・')}」を はじめて 書けるように なったね。どうやって おぼえたの？`);
+  if (w.days >= 3) out.push(`この 1しゅうかんで ${w.days}日 れんしゅうしたね。つづける ちからが ついてきたね。`);
+  if (w.fx > 0) out.push(`まちがえても ${w.fx}かい 書きなおして ごうかく できたね。あきらめなかったのが すごいよ。`);
+  if (w.rv > lw.rv && lw.rv > 0) out.push(`せんしゅうより くりかえし れんしゅうが ${w.rv - lw.rv}かい ふえたね。`);
+  if (w.ms > 0) out.push(`${w.ms}字 マスター（なんども いっぱつ ごうかく）できたね。`);
+  const weak = Object.keys(K).filter(k => K[k].w > 0 && K[k].b > 0 && now - K[k].last < 7 * 864e5);
+  if (weak.length) out.push(`まえは にがてだった「${weak.slice(0, 2).join('・')}」が 書けたね。`);
+  if (!out.length) out.push('まずは 1字 いっしょに 書いてみよう。「どの 字が かっこいい？」と きいてみるのも おすすめ。');
+  return out.slice(0, 4);
+}
+function ppReviewHTML(o, p) {
+  const w = weekSum(o, 0), lw = weekSum(o, 7), K = o.kanji || {}, now = Date.now();
+  const newK = Object.keys(K).filter(k => K[k].t0 && now - K[k].t0 < 7 * 864e5);
+  const today = dayKey(), hk = (o.hanko || {})[today], g = goalOf(o);
+  const cal = []; for (let i = 27; i >= 0; i--) { const k = dayKey(-i), d = (o.days || {})[k]; cal.push(`<div class="cd ${stampDay(d) ? 'on' : ''} ${k === today ? 'today' : ''}" title="${k}"><small>${+k.split('-')[2]}</small>${stampDay(d) ? '<i></i>' : ''}${(o.hanko || {})[k] ? HANKO('よし', 'xs') : ''}</div>`); }
+  const diff = (a, b) => b ? `<em class="wcmp ${a >= b ? 'wup' : ''}">せんしゅう ${b}${a > b ? ' ▲' : ''}</em>` : '';
+  return `<div class="ppbox review"><h3>いっしょに ふりかえり（この 7日間）</h3>
+    <div class="ppsum">
+      <div><span>がんばりポイント</span><b>${w.pt}<small> pt</small></b>${diff(w.pt, lw.pt)}</div>
+      <div><span>あたらしく おぼえた</span><b>${w.nw}<small> 字</small></b>${diff(w.nw, lw.nw)}</div>
+      <div><span>くりかえし れんしゅう</span><b>${w.rv + w.fx + w.pre}<small> かい</small></b>${diff(w.rv + w.fx + w.pre, lw.rv + lw.fx + lw.pre)}</div>
+      <div><span>マスター</span><b>${w.ms}<small> 字</small></b></div>
+      <div><span>れんしゅうした 日</span><b>${w.days}<small> / 7日</small></b></div>
+      <div><span>これまでの ポイント</span><b>${o.kp || 0}<small> pt</small></b></div>
+    </div>
+    <p class="hint2">ポイントの きまり：はじめて 書けた字 ${PTRULE.nw}pt、くりかえし ${PTRULE.rv}pt、書きなおして 書けた ${PTRULE.fx}pt、よしゅう ${PTRULE.pre}pt、マスター ＋${PTRULE.ms}pt、その日 はじめての ミッション ＋${PTRULE.daily}pt</p>
+    ${newK.length ? `<div><b class="lab">この 7日間に はじめて 書けた字</b><div class="newk">${newK.map(k => `<span>${esc(k)}</span>`).join('')}</div><p class="hint2">いっしょに よんでみたり、「この 字で ことばを つくると？」と きいてみよう。</p></div>` : ''}
+    <div><b class="lab">ほめポイント（その子の やりかたや どりょくを ほめる ことば）</b><ul class="praise">${praiseIdeas(o, w, lw).map(t => `<li>${esc(t)}</li>`).join('')}</ul></div>
+    <div><b class="lab">がんばりカレンダー</b><div class="cal">${cal.join('')}</div>
+      <div class="wrow"><button class="btn sm ${hk ? 'w' : 'y'}" id="ppHanko" ${hk ? 'disabled' : ''}>${hk ? 'きょうの ハンコは おしました' : 'きょうの がんばりに ハンコを おす'}</button></div>
+      <p class="hint2">★＝その日 5pt いじょう。ハンコは いっしょに ふりかえった しるしです。こどもの がめんにも でます。</p></div>
+    <div><b class="lab">ごほうびの やくそく</b>
+      ${g ? `<div class="gprom"><span>「${esc(g.text)}」まで ${g.have} / ${g.pt}pt</span><div class="bar"><i style="width:${g.ratio * 100}%"></i></div>${g.left ? '' : '<b>たっせい！</b>'}</div>
+        <div class="wrow"><button class="btn sm y" id="ppGoalDone" ${g.left ? 'disabled' : ''}>やくそくを はたした（いっしょに おいわい）</button><button class="btn sm w" id="ppGoalCancel">やくそくを やめる</button></div>`
+      : `<div class="prow"><label for="ppGoalText">なにを する？</label><input id="ppGoalText" class="tin" list="ppGoalList" maxlength="30" placeholder="${esc(PROMISES[0])}"><datalist id="ppGoalList">${PROMISES.map(t => `<option value="${esc(t)}">`).join('')}</datalist></div>
+        <div class="prow"><label>めあて</label><div class="seg" id="ppGoalPt">${[30, 60, 100, 200].map((v, i) => `<button data-v="${v}" aria-pressed="${i === 1}">${v}pt</button>`).join('')}</div></div>
+        <div class="wrow"><button class="btn sm y" id="ppGoalSet">やくそくを きめる</button></div>`}
+      ${(o.goalLog || []).length ? `<p class="hint2">これまでの やくそく：${(o.goalLog || []).slice(-5).map(x => esc(x.text)).join(' ／ ')}</p>` : ''}</div>
+    ${(o.certs || []).length ? `<div><b class="lab">${rb('{認定証|にんていしょう}')}</b><div class="wrow">${o.certs.map(c => `<button class="btn sm" data-cert="${c}">${c}字</button>`).join('')}</div></div>` : ''}
+    <details class="tips"><summary>ごほうびの あげかた（おうちの人へ）</summary>
+      <ul>
+        <li>お金や モノを「〇字 書いたら いくら」と むすびつけると、書くこと そのものの たのしさが へりやすいと いわれています（外発的報酬の アンダーマイニング効果）。</li>
+        <li>おすすめは「いっしょに すごす 時間」や「えらべる 体験」の ごほうび（あそぶ・よむ・つくる・でかける）です。やくそくは こどもと いっしょに きめましょう。</li>
+        <li>ほめる ときは「あたまが いいね」より「なんども 書きなおしたね」「まいにち つづけたね」と、やりかたや どりょくを 具体的に。</li>
+        <li>ポイントは「書いた かず」より「おぼえた・くりかえした」ことに 多く つくように しています。ふりかえりの 会話の きっかけに つかってください。</li>
+      </ul></details>
+  </div>`;
+}
+function ppReviewBind(o, p) {
+  const b = $('#ppHanko'); if (b) b.onclick = () => { ppMut(p.id, s => { s.hanko = s.hanko || {}; s.hanko[dayKey()] = 1; }); sfx('chest'); toast('ハンコを おしました'); renderParentPage(); };
+  const sel = $('#ppGoalPt'); if (sel) sel.querySelectorAll('[data-v]').forEach(x => x.onclick = () => sel.querySelectorAll('[data-v]').forEach(y => y.setAttribute('aria-pressed', y === x)));
+  const set = $('#ppGoalSet'); if (set) set.onclick = () => { const t = ($('#ppGoalText').value || '').trim() || PROMISES[0], v = +$('#ppGoalPt [aria-pressed="true"]').dataset.v; ppMut(p.id, s => { s.goal = { text: t.slice(0, 30), pt: v, from: s.kp || 0, at: Date.now() }; }); toast('やくそくを きめました'); renderParentPage(); };
+  const dn = $('#ppGoalDone'); if (dn) dn.onclick = () => { ppMut(p.id, s => { s.goal.done = true; s.goalLog = s.goalLog || []; s.goalLog.push({ text: s.goal.text, pt: s.goal.pt, t: Date.now() }); s.goal = null; }); sfx('win'); toast('おめでとう！ つぎの やくそくも きめよう'); renderParentPage(); };
+  const cn = $('#ppGoalCancel'); if (cn) cn.onclick = () => { ppMut(p.id, s => { s.goal = null; }); renderParentPage(); };
+  $('#ppWrap').querySelectorAll('[data-cert]').forEach(x => x.onclick = () => showCert(p.name, +x.dataset.cert, o));
+}
+function showCert(name, n, o) {
+  const el = $('#cert'), d = new Date(), tt = titleOf(n);
+  el.innerHTML = `<div class="certbox" id="certBox"><div class="certin">
+    <p class="ct">${rb('{漢字|かんじ}{認定証|にんていしょう}')}</p>
+    <p class="cn">${esc(name)} さん</p>
+    <p class="cbody">あなたは まいにち こつこつ れんしゅうして<br><b>${n}</b>この 漢字を 書けるように なりました。<br>そのがんばりを たたえ ここに しょうします。</p>
+    <p class="cg">${rb('{称号|しょうごう}')}「${rb(tt)}」</p>
+    <p class="cd">${d.getFullYear()}年 ${d.getMonth() + 1}月 ${d.getDate()}日</p>${HANKO('認', 'big')}</div>
+    <div class="wrow noprint"><button class="btn sm y" id="certPrint">いんさつ</button><button class="btn sm" id="certClose">とじる</button></div></div>`;
+  el.hidden = false; sfx('win');
+  $('#certClose').onclick = () => { el.hidden = true; }; $('#certPrint').onclick = () => { document.body.classList.add('printcert'); setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove('printcert'), 500); }, 50); };
+}
+
+function bindLearnUI() { $('#kBtn').onclick = () => { if (W.boss && W.boss.barrier && W.on && !W.paused && !W.susp) { sfx('chest'); openMission('shield'); } }; }
 /* ============ はじまり ============ */
-initGL(); makeSigils(); sgBindUI(); initPreview();
+initGL(); makeSigils(); sgBindUI(); bindLearnUI(); initPreview();
 const cv = $('#gl');
 cv.addEventListener('pointerdown', joyDown); addEventListener('pointermove', joyMove); addEventListener('pointerup', joyUp); addEventListener('pointercancel', joyUp);
 requestAnimationFrame(loop);
