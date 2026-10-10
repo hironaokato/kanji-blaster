@@ -4720,7 +4720,7 @@ function showBlueprint() {
 }
 
 /* ============ 漢字バトル（TPS チーム戦・CPU たいせん） ============ */
-const TPS = { on: false, paused: false, scene: null, cam: null, chars: [], pts: [], obst: [], score: [0, 0], t: 0, dur: 240, goal: 200, lvl: 1, me: null, yaw: Math.PI, pitch: -.12, skill: 'mech', sk: 0, call: null, callT: 8, feed: [], stick: null, look: null, fireHeld: false, auto: true, res: null, mech: null, meteors: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0 };
+const TPS = { on: false, paused: false, scene: null, cam: null, chars: [], pts: [], obst: [], score: [0, 0], t: 0, dur: 240, goal: 200, lvl: 1, me: null, yaw: Math.PI, pitch: -.28, skill: 'mech', sk: 0, call: null, callT: 8, feed: [], stick: null, look: null, fireHeld: false, auto: true, res: null, mech: null, meteors: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0 };
 const TEAMN = ['{蒼|あお}の{騎士団|きしだん}', '{紅|くれない}の{軍団|ぐんだん}'];
 const TCOL = [0x4dabf7, 0xff4d5b], TCSS = ['#4dabf7', '#ff4d5b'];
 const MAPH = 36;
@@ -4730,7 +4730,7 @@ const PT_POS = [[-22, 0], [0, 0], [22, 0]];
 function tpsInit() {
   if (TPS.scene) return;
   const sc = TPS.scene = new THREE.Scene(); sc.background = new THREE.Color(0x9fd8ff); sc.fog = new THREE.Fog(0x9fd8ff, 45, 110);
-  TPS.cam = new THREE.PerspectiveCamera(60, 1, .1, 200);
+  TPS.cam = new THREE.PerspectiveCamera(70, 1, .1, 200);
   sc.add(new THREE.HemisphereLight(0xffffff, 0x556677, .9)); const d = new THREE.DirectionalLight(0xffffff, .75); d.position.set(12, 30, 10); sc.add(d);
   // じめん
   const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
@@ -4738,13 +4738,14 @@ function tpsInit() {
   const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(20, 20); tex.magFilter = THREE.NearestFilter;
   const gm = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshLambertMaterial({ map: tex })); gm.rotation.x = -Math.PI / 2; sc.add(gm);
   // じんち
-  [[0, 30], [1, -30]].forEach(([t, z]) => { const m = new THREE.Mesh(G(16, .06, 8), new THREE.MeshLambertMaterial({ color: TCOL[t] })); m.position.set(0, .03, z); sc.add(m); });
+  [[0, 30], [1, -30]].forEach(([t, z]) => { const m = new THREE.Mesh(G(16, .06, 8), new THREE.MeshLambertMaterial({ color: TCOL[t], transparent: true, opacity: .35, depthWrite: false })); m.position.set(0, .03, z); sc.add(m); });
   // かべ と しょうがいぶつ
   const O = TPS.obst = [];
-  const addO = (x, z, w, d, h, col) => { O.push({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2, h }); const m = new THREE.Mesh(G(w, h, d), M(col)); m.position.set(x, h / 2, z); sc.add(m); if (h > 1.4) { const t = new THREE.Mesh(G(w + .1, .15, d + .1), M(0x495057)); t.position.set(x, h + .07, z); sc.add(t); } };
+  const BX = [], addO = (x, z, w, d, h, col) => { O.push({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2, h }); BX.push({ w, h, d, x, y: h / 2, z, c: col }); if (h > 1.4) BX.push({ w: w + .1, h: .15, d: d + .1, x, y: h + .07, z, c: 0x495057 }); };
   const cols = [0xb07a3c, 0x9da3ad, 0xc9894a, 0x868e96];
   OBST_HALF.forEach(([x, z, w, d, h], i) => { addO(x, z, w, d, h, cols[i % 4]); addO(x, -z, w, d, h, cols[(i + 1) % 4]); });
   [[0, MAPH, 2 * MAPH + 2, 1], [0, -MAPH, 2 * MAPH + 2, 1], [MAPH, 0, 1, 2 * MAPH], [-MAPH, 0, 1, 2 * MAPH]].forEach(([x, z, w, d]) => addO(x, z, w, d, 3, 0x5c6670));
+  sc.add(new THREE.Mesh(mergeBoxes(BX), new THREE.MeshLambertMaterial({ vertexColors: true })));
   // きょてん
   TPS.pts = PT_POS.map(([x, z]) => {
     const ring = new THREE.Mesh(new THREE.RingGeometry(3.7, 4.2, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .9, side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.set(x, .05, z); sc.add(ring);
@@ -4779,9 +4780,9 @@ function tpsChar(team, isMe, idx) {
 function tpsSpawn(c) {
   const z = c.team ? -30 : 30, x = (Math.random() - .5) * 12;
   c.x = x; c.z = z + (Math.random() - .5) * 3; c.y = 0; c.vy = 0; c.hp = c.max; c.alive = true; c.inv = 2.5; c.pm.g.visible = true; c.pm.g.rotation.set(0, 0, 0); c.yaw = c.team ? 0 : Math.PI;
-  if (c.isMe) { TPS.yaw = c.yaw; TPS.pitch = -.12; }
+  if (c.isMe) { TPS.yaw = c.yaw; TPS.pitch = -.28; }
 }
-const tpsLevelStat = L => ({ acc: .14 + .05 * L, react: Math.max(.15, 1.05 - .08 * L), spd: 4.4 + .14 * L, dmg: 7 + .55 * L, strafe: L >= 3, cover: L >= 6 });
+const tpsLevelStat = L => ({ acc: .2 + .05 * L, react: Math.max(.12, .8 - .065 * L), spd: 6.4 + .16 * L, dmg: 8 + .6 * L, strafe: L >= 2, cover: L >= 5 });
 /* ---- はじめる ---- */
 function tpsLobby() {
   hideAll(); $('#tpsLobby').hidden = false; const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 });
@@ -4818,7 +4819,7 @@ function tpsStart() {
   for (let i = 0; i < 4; i++) TPS.chars.push(tpsChar(1, false, i));
   tpsPickKanji().forEach((d, i) => { const p = TPS.pts[i]; p.k = d.k; p.yomi = d.yomi; p.prog = 0; p.owner = 0; ptLabel(p); });
   Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireHeld: false, endT: 0 });
-  TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, TPS.lvl - 1));
+  TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, Math.round(TPS.lvl * .65)));
   $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${rb(TEAMN[0])} しゅつげき！`, 'gold');
 }
 function tpsEnd() { TPS.on = false; TPS.paused = false; ['#tpsHud', '#tpsLobby', '#tpsResult', '#tpsPause'].forEach(s => $(s).hidden = true); if (document.pointerLockElement) document.exitPointerLock(); }
@@ -4879,17 +4880,17 @@ function tpsUpdateMe(dt) {
   let mx = 0, mz = 0; if (TPS.stick) { mx = TPS.stick.x; mz = TPS.stick.y; }
   if (keys.KeyW || keys.ArrowUp) mz -= 1; if (keys.KeyS || keys.ArrowDown) mz += 1; if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1;
   const l = Math.hypot(mx, mz); if (l > 1) { mx /= l; mz /= l; }
-  const fy = TPS.yaw, fx = Math.sin(fy), fz = Math.cos(fy), sp = 6.2;
+  const fy = TPS.yaw, fx = Math.sin(fy), fz = Math.cos(fy), sp = 8.6;
   // まえ = (sin yaw, cos yaw)、みぎ = (-cos yaw, sin yaw)
   const rx = -fz, rz = fx; me.x += (fx * -mz + rx * mx) * sp * dt; me.z += (fz * -mz + rz * mx) * sp * dt; me.moving = l > .1;
-  if ((keys.Space || TPS.jumpReq) && me.y <= 0) { me.vy = 7.5; TPS.jumpReq = false; }
-  me.vy -= 22 * dt; me.y = Math.max(0, me.y + me.vy * dt); if (me.y <= 0) me.vy = 0;
+  if ((keys.Space || TPS.jumpReq) && me.y <= 0) { me.vy = 9.5; TPS.jumpReq = false; }
+  me.vy -= 30 * dt; me.y = Math.max(0, me.y + me.vy * dt); if (me.y <= 0) me.vy = 0;
   collide(me); me.yaw = TPS.yaw;
   // うつ
   me.fireT -= dt; const aim = tpsAim(); TPS.aimC = aim.c;
   const wantFire = TPS.fireHeld || keys.Mouse0 || (TPS.auto && aim.c && Math.hypot(aim.c.x - me.x, aim.c.z - me.z) < 32);
   if (wantFire && me.fireT <= 0) {
-    me.fireT = .13; const tip = me.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(me.x, 1.6, me.z);
+    me.fireT = .11; const tip = me.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(me.x, 1.6, me.z);
     const dmg = 13 * (1 + kanjiPower() * .5) * (.85 + Math.random() * .3);
     if (aim.c && Math.random() < (aim.assist ? .8 : .97)) { tpsHurt(aim.c, dmg, me); tpsHit(false, dmg); }
     tpsShoot(me, V3t.x, V3t.y, V3t.z, aim.x + (Math.random() - .5) * .2, aim.y + (Math.random() - .5) * .2, aim.z, 0xfff3bf); sfx('shoot');
@@ -4918,7 +4919,7 @@ function tpsUpdateAI(c, dt) {
     else { sp *= .55; A.strT -= dt; if (A.strT <= 0) { A.strT = .8 + Math.random() * 1.2; A.str = Math.random() < .5 ? -1 : 1; } if (st.strafe) { const px = -(e.z - c.z) / d, pz = (e.x - c.x) / d; tx = c.x + px * A.str * 4; tz = c.z + pz * A.str * 4; } else { tx = c.x; tz = c.z; } }
     c.fireT -= dt;
     if (A.seenT > st.react && c.fireT <= 0 && d < 32) {
-      c.fireT = .2 + Math.random() * .15; const tip = c.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(c.x, 1.6, c.z);
+      c.fireT = .15 + Math.random() * .1; const tip = c.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(c.x, 1.6, c.z);
       let p = st.acc * (d < 10 ? 1.15 : d < 20 ? 1 : .7) * (e.moving ? .85 : 1); const hit = Math.random() < p;
       const ty = (e.y || 0) + 1.3, mx = hit ? 0 : (Math.random() - .5) * 2.2, my = hit ? 0 : (Math.random() - .5) * 1.4;
       if (hit) { if (e.isMech) tpsMechHurt(st.dmg); else tpsHurt(e, st.dmg * (c.team === 0 ? .9 : 1), c); }
@@ -5009,9 +5010,9 @@ function tpsUpdate(dt) {
   TPS.shM.visible = TPS.shieldT > 0 && TPS.me.alive; if (TPS.shM.visible) { TPS.shM.position.set(TPS.me.x, 1.3, TPS.me.z); TPS.shM.scale.setScalar(1.6); }
   // カメラ
   const me = TPS.me, yaw = TPS.yaw, pit = TPS.pitch, fx = Math.sin(yaw) * Math.cos(pit), fy = Math.sin(pit), fz = Math.cos(yaw) * Math.cos(pit), rx = -Math.cos(yaw), rz = Math.sin(yaw);
-  const hx = me.x + rx * .9, hy = me.y + 2.5, hz = me.z + rz * .9;
-  let dist = 4.6; { const o3 = V3t.set(hx, hy, hz), d3 = V3u.set(-fx, -fy, -fz); for (const o of TPS.obst) { const t = rayBox(o3, d3, { x0: o.x0 - .25, x1: o.x1 + .25, z0: o.z0 - .25, z1: o.z1 + .25, h: o.h + .3 }); if (t != null && t > 0 && t < dist) dist = Math.max(.6, t - .1); } }
-  cam.position.set(hx - fx * dist, hy - fy * dist + .3, hz - fz * dist); TPS.camNear = dist < 2; cam.lookAt(hx + fx * 10, hy + fy * 10, hz + fz * 10);
+  const hx = me.x + rx * .55, hy = me.y + 2.9, hz = me.z + rz * .55;
+  let dist = 8.5; { const o3 = V3t.set(hx, hy, hz), d3 = V3u.set(-fx, -fy, -fz); for (const o of TPS.obst) { const t = rayBox(o3, d3, { x0: o.x0 - .25, x1: o.x1 + .25, z0: o.z0 - .25, z1: o.z1 + .25, h: o.h + .3 }); if (t != null && t > 0 && t < dist) dist = Math.max(1.2, t - .15); } }
+  cam.position.set(hx - fx * dist, hy - fy * dist, hz - fz * dist); TPS.camNear = dist < 2.4; cam.lookAt(hx + fx * 12, hy + fy * 12, hz + fz * 12);
   // こうか
   let n = 0; for (let i = TPS.tr.length - 1; i >= 0; i--) { const t = TPS.tr[i]; t.life -= dt; if (t.life <= 0) { TPS.tr.splice(i, 1); continue; } if (n >= 60) continue; const dx = t.x2 - t.x1, dy = t.y2 - t.y1, dz = t.z2 - t.z1, L = Math.hypot(dx, dy, dz); const q = new THREE.Matrix4().lookAt(new THREE.Vector3(t.x1, t.y1, t.z1), new THREE.Vector3(t.x2, t.y2, t.z2), new THREE.Vector3(0, 1, 0)); q.scale(new THREE.Vector3(.05, .05, L)); q.setPosition((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2, (t.z1 + t.z2) / 2); TPS.trM.setMatrixAt(n, q); C1.setHex(t.col); setCol(TPS.trM, n, C1.r, C1.g, C1.b); n++; }
   flush(TPS.trM, n);
@@ -5080,14 +5081,14 @@ function tpsPDown(e) {
 }
 function tpsPMove(e) {
   if (TPS.stick && e.pointerId === TPS.stick.id) { let dx = e.clientX - TPS.stick.ox, dy = e.clientY - TPS.stick.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } TPS.stick.x = dx / m; TPS.stick.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
-  else if (TPS.look && e.pointerId === TPS.look.id) { const k = 4.2 / innerWidth; TPS.yaw -= (e.clientX - TPS.look.x) * k * 1.4; TPS.pitch = Math.max(-.7, Math.min(.55, TPS.pitch - (e.clientY - TPS.look.y) * k)); TPS.look.x = e.clientX; TPS.look.y = e.clientY; }
+  else if (TPS.look && e.pointerId === TPS.look.id) { const k = 4.2 / innerWidth; TPS.yaw -= (e.clientX - TPS.look.x) * k * 1.4; TPS.pitch = Math.max(-.95, Math.min(.4, TPS.pitch - (e.clientY - TPS.look.y) * k)); TPS.look.x = e.clientX; TPS.look.y = e.clientY; }
 }
 function tpsPUp(e) {
   if (e.pointerType === 'mouse' && e.button === 0) keys.Mouse0 = false;
   if (TPS.stick && e.pointerId === TPS.stick.id) { TPS.stick = null; $('#joy').hidden = true; }
   if (TPS.look && e.pointerId === TPS.look.id) TPS.look = null;
 }
-addEventListener('mousemove', e => { if (!TPS.on || TPS.paused || document.pointerLockElement !== $('#gl')) return; TPS.yaw -= e.movementX * .0028; TPS.pitch = Math.max(-.7, Math.min(.55, TPS.pitch - e.movementY * .0024)); });
+addEventListener('mousemove', e => { if (!TPS.on || TPS.paused || document.pointerLockElement !== $('#gl')) return; TPS.yaw -= e.movementX * .0028; TPS.pitch = Math.max(-.95, Math.min(.4, TPS.pitch - e.movementY * .0024)); });
 addEventListener('keydown', e => { if (!TPS.on || TPS.paused || (e.target && e.target.tagName === 'INPUT')) return; if (e.code === 'KeyE' || e.code === 'KeyQ') tpsSkillUse(); if (e.code === 'Escape' || e.code === 'KeyP') tpsPause(); if (e.code === 'Space') e.preventDefault(); });
 document.addEventListener('pointerlockchange', () => { if (TPS.on && !TPS.paused && !document.pointerLockElement && TPS.mouse) tpsPause(); });
 function tpsRespawnNow() { const me = TPS.me; TPS.wrote++; tpsSpawn(me); me.inv = 3; $('#tpsDead').hidden = true; banner('漢字の ちからで ふっかつ！', 'gold'); sfx('evo'); }
