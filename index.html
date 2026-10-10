@@ -4774,13 +4774,14 @@ function tpsChar(team, isMe, idx) {
   const band = new THREE.Mesh(G(1.08, .2, .6), MB(TCOL[team])); band.position.y = 1.62; pm.inner.add(band);
   const mk = new THREE.Mesh(new THREE.OctahedronGeometry(.28), MB(TCOL[team])); mk.position.y = 3.35; pm.g.add(mk);
   TPS.scene.add(pm.g);
-  const c = { team, isMe, pm, mk, x: 0, z: 0, y: 0, vy: 0, yaw: team ? 0 : Math.PI, hp: 100, max: 100, alive: true, rT: 0, inv: 0, hurtT: 0, fireT: 0, kills: 0, deaths: 0, moving: false, name: isMe ? (curProf().name || 'きみ') : (team ? `CPU${idx + 1}` : `なかま${idx}`), ai: { pt: null, ptT: 0, en: null, seenT: 0, scanT: 0, str: 1, strT: 0, last: [0, 0], stuckT: 0, detT: 0, det: 0, wx: 0, wz: 0 } };
-  tpsSpawn(c); return c;
+  const c = { team, isMe, pm, mk, si, x: 0, z: 0, y: 0, vy: 0, yaw: team ? 0 : Math.PI, hp: 100, max: 100, alive: true, rT: 0, inv: 0, hurtT: 0, fireT: 0, kills: 0, deaths: 0, moving: false, name: isMe ? (curProf().name || 'きみ') : (team ? `CPU${idx + 1}` : `なかま${idx}`), ai: { pt: null, ptT: 0, en: null, seenT: 0, scanT: 0, str: 1, strT: 0, last: [0, 0], stuckT: 0, detT: 0, det: 0, wx: 0, wz: 0 } };
+  tpsRig(c); tpsSpawn(c); return c;
 }
 function tpsSpawn(c) {
   const z = c.team ? -30 : 30, x = (Math.random() - .5) * 12;
   c.x = x; c.z = z + (Math.random() - .5) * 3; c.y = 0; c.vy = 0; c.hp = c.max; c.alive = true; c.inv = 2.5; c.pm.g.visible = true; c.pm.g.rotation.set(0, 0, 0); c.yaw = c.team ? 0 : Math.PI;
   if (c.isMe) { TPS.yaw = c.yaw; TPS.pitch = -.28; }
+  tpsOnSpawn(c);
 }
 const tpsLevelStat = L => ({ acc: .2 + .05 * L, react: Math.max(.12, .8 - .065 * L), spd: 6.4 + .16 * L, dmg: 8 + .6 * L, strafe: L >= 2, cover: L >= 5 });
 /* ---- はじめる ---- */
@@ -4813,6 +4814,7 @@ function tpsPickKanji() {
 function tpsStart() {
   tpsInit(); hideAll(); endRun();
   for (const c of TPS.chars) TPS.scene.remove(c.pm.g); TPS.chars = [];
+  for (const d of TPS.deb || []) TPS.scene.remove(d.m); TPS.deb = []; for (const b of TPS.beams || []) TPS.scene.remove(b.m); TPS.beams = [];
   if (TPS.mech) { TPS.scene.remove(TPS.mech.g); TPS.mech = null; }
   TPS.me = tpsChar(0, true, 0); TPS.chars.push(TPS.me);
   for (let i = 1; i <= 3; i++) TPS.chars.push(tpsChar(0, false, i));
@@ -4847,10 +4849,10 @@ const canSee = (a, b) => !segHit(a.x, a.z, b.x, b.z);
 function tpsHurt(c, d, by) {
   if (!c.alive || c.inv > 0) return;
   if (c.team === 0 && TPS.shieldT > 0) d *= .3;
-  c.hp -= d; c.hurtT = 4;
+  c.hp -= d; c.hurtT = 4; if (c.hp > 0) tpsOnHit(c, by);
   if (c.isMe) { const h = $('#hurt'); h.style.opacity = .8; clearTimeout(tpsHurt.t); tpsHurt.t = setTimeout(() => h.style.opacity = 0, 140); sfx('hurt'); }
   if (c.hp <= 0) {
-    c.alive = false; c.hp = 0; c.deaths++; c.rT = 5; tpsSpark(c.x, 1.4, c.z, 18, TCOL[c.team]);
+    c.alive = false; c.hp = 0; c.deaths++; c.rT = 5; tpsOnDeath(c, by);
     if (by) { by.kills++; TPS.score[by.team] += 2; if (by.isMe || by.isMech) { TPS.sk = Math.min(100, TPS.sk + 14); sfx('kill'); tpsHit(true); TPS.killT = 1.5; } }
     tpsFeed(`${by ? esc(by.name) : ''} → ${esc(c.name)}`, by ? by.team : 1 - c.team);
     if (c.isMe) { $('#tpsDead').hidden = false; }
@@ -4893,7 +4895,7 @@ function tpsUpdateMe(dt) {
     me.fireT = .11; const tip = me.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(me.x, 1.6, me.z);
     const dmg = 13 * (1 + kanjiPower() * .5) * (.85 + Math.random() * .3);
     if (aim.c && Math.random() < (aim.assist ? .8 : .97)) { tpsHurt(aim.c, dmg, me); tpsHit(false, dmg); }
-    tpsShoot(me, V3t.x, V3t.y, V3t.z, aim.x + (Math.random() - .5) * .2, aim.y + (Math.random() - .5) * .2, aim.z, 0xfff3bf); sfx('shoot');
+    tpsShoot(me, V3t.x, V3t.y, V3t.z, aim.x + (Math.random() - .5) * .2, aim.y + (Math.random() - .5) * .2, aim.z, 0xfff3bf); sfx('shoot'); tpsOnShot(me);
   }
 }
 function tpsHit(kill, dmg) { const h = $('#tpsHit'); h.className = kill ? 'kill' : 'hit'; void h.offsetWidth; h.classList.add('on'); if (dmg) { const n = $('#tpsDmg'); n.textContent = Math.round(dmg); n.classList.remove('on'); void n.offsetWidth; n.classList.add('on'); } }
@@ -4923,7 +4925,7 @@ function tpsUpdateAI(c, dt) {
       let p = st.acc * (d < 10 ? 1.15 : d < 20 ? 1 : .7) * (e.moving ? .85 : 1); const hit = Math.random() < p;
       const ty = (e.y || 0) + 1.3, mx = hit ? 0 : (Math.random() - .5) * 2.2, my = hit ? 0 : (Math.random() - .5) * 1.4;
       if (hit) { if (e.isMech) tpsMechHurt(st.dmg); else tpsHurt(e, st.dmg * (c.team === 0 ? .9 : 1), c); }
-      tpsShoot(c, V3t.x, V3t.y, V3t.z, e.x + mx, ty + my, e.z + mx * .5, c.team ? 0xffa8a8 : 0xa5d8ff);
+      tpsShoot(c, V3t.x, V3t.y, V3t.z, e.x + mx, ty + my, e.z + mx * .5, c.team ? 0xffa8a8 : 0xa5d8ff); tpsOnShot(c);
     }
   } else { const dp = Math.hypot(tx - c.x, tz - c.z); if (dp < 1.5) { A.wx = (Math.random() - .5) * 5; A.wz = (Math.random() - .5) * 5; } }
   // いどう（よける・つまったら まわりこむ）
@@ -5000,10 +5002,10 @@ function tpsUpdate(dt) {
   if (!TPS.endT) { tpsUpdateMe(dt); for (const c of TPS.chars) if (!c.isMe) tpsUpdateAI(c, dt); tpsUpdateMech(dt); tpsUpdatePoints(dt); }
   for (const c of TPS.chars) {
     c.inv -= dt; c.hurtT -= dt; if (c.alive && c.hurtT <= 0 && c.hp < c.max) c.hp = Math.min(c.max, c.hp + 10 * dt);
-    const g = c.pm.g; g.visible = c.alive || c.rT > 4; g.position.set(c.x, c.y, c.z); g.rotation.y = c.yaw;
-    if (!c.alive) { g.rotation.x = Math.min(Math.PI / 2, (5 - c.rT) * 4); } else { g.rotation.x = 0; animPlayer(c.pm, TPS.t + c.x, c.moving, !!(c.isMe ? TPS.aimC || TPS.fireHeld : c.ai.en)); if (c.isMe) { animGear(c.pm, TPS.t, dt); if (c.pm.face) setFace(c.pm, c.hurtT > 3.5 ? 'hurt' : TPS.killT > 0 ? 'happy' : TPS.mech || TPS.shieldT > 0 ? 'wow' : 'normal', (TPS.t % 3.3) < .11); } }
+    const g = c.pm.g; tpsAnimate(c, dt); g.visible = c.alive || !c.broken; g.position.set(c.x, c.y, c.z); g.rotation.y = c.yaw;
+    if (c.alive) { if (c.isMe) { animGear(c.pm, TPS.t, dt); if (c.pm.face) setFace(c.pm, c.hurtT > 3.5 ? 'hurt' : TPS.killT > 0 ? 'happy' : TPS.mech || TPS.shieldT > 0 ? 'wow' : 'normal', (TPS.t % 3.3) < .11); } }
     c.pm.inner.visible = !(c.inv > 0 && Math.floor(TPS.t * 16) % 2) && !(c.isMe && TPS.camNear);
-    c.mk.rotation.y += dt * 2; c.mk.visible = !c.isMe;
+    c.mk.rotation.y += dt * 2;
   }
   // いんせき
   for (let i = TPS.meteors.length - 1; i >= 0; i--) { const m = TPS.meteors[i]; m.y -= 34 * dt; m.m.visible = true; m.m.position.set(m.x, m.y, m.z); m.m.rotation.x += dt * 5; if (m.y <= 0) { m.m.visible = false; TPS.meteors.splice(i, 1); tpsSpark(m.x, .5, m.z, 26, 0xff922b); sfx('boom'); for (const c of TPS.chars) if (c.team === 1 && c.alive && Math.hypot(c.x - m.x, c.z - m.z) < 4.5) tpsHurt(c, 60, TPS.me); } }
@@ -5014,9 +5016,10 @@ function tpsUpdate(dt) {
   let dist = 8.5; { const o3 = V3t.set(hx, hy, hz), d3 = V3u.set(-fx, -fy, -fz); for (const o of TPS.obst) { const t = rayBox(o3, d3, { x0: o.x0 - .25, x1: o.x1 + .25, z0: o.z0 - .25, z1: o.z1 + .25, h: o.h + .3 }); if (t != null && t > 0 && t < dist) dist = Math.max(1.2, t - .15); } }
   cam.position.set(hx - fx * dist, hy - fy * dist, hz - fz * dist); TPS.camNear = dist < 2.4; cam.lookAt(hx + fx * 12, hy + fy * 12, hz + fz * 12);
   // こうか
+  tpsDebris(dt); tpsBeams(dt);
   let n = 0; for (let i = TPS.tr.length - 1; i >= 0; i--) { const t = TPS.tr[i]; t.life -= dt; if (t.life <= 0) { TPS.tr.splice(i, 1); continue; } if (n >= 60) continue; const dx = t.x2 - t.x1, dy = t.y2 - t.y1, dz = t.z2 - t.z1, L = Math.hypot(dx, dy, dz); const q = new THREE.Matrix4().lookAt(new THREE.Vector3(t.x1, t.y1, t.z1), new THREE.Vector3(t.x2, t.y2, t.z2), new THREE.Vector3(0, 1, 0)); q.scale(new THREE.Vector3(.05, .05, L)); q.setPosition((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2, (t.z1 + t.z2) / 2); TPS.trM.setMatrixAt(n, q); C1.setHex(t.col); setCol(TPS.trM, n, C1.r, C1.g, C1.b); n++; }
   flush(TPS.trM, n);
-  n = 0; for (let i = TPS.sp.length - 1; i >= 0; i--) { const s = TPS.sp[i]; s.life -= dt; if (s.life <= 0) { TPS.sp.splice(i, 1); continue; } s.vy -= 14 * dt; s.x += s.vx * dt; s.y = Math.max(.05, s.y + s.vy * dt); s.z += s.vz * dt; const k = s.life * .5; setRY(TPS.spM, n, s.x, s.y, s.z, s.life * 8, k, k, k); C1.setHex(s.col); setCol(TPS.spM, n, C1.r, C1.g, C1.b); n++; }
+  n = 0; for (let i = TPS.sp.length - 1; i >= 0; i--) { const s = TPS.sp[i]; s.life -= dt; if (s.life <= 0) { TPS.sp.splice(i, 1); continue; } if (!s.ng) s.vy -= 14 * dt; s.x += s.vx * dt; s.y = Math.max(.05, s.y + s.vy * dt); s.z += s.vz * dt; const k = s.s ? s.s * Math.min(1, s.life * 3) : s.life * .5; setRY(TPS.spM, n, s.x, s.y, s.z, s.life * 8, k, k, k); C1.setHex(s.col); setCol(TPS.spM, n, C1.r, C1.g, C1.b); n++; }
   flush(TPS.spM, n);
   for (const f of TPS.feed) f.life -= dt; TPS.feed = TPS.feed.filter(f => f.life > 0);
   // おわり
@@ -5187,6 +5190,107 @@ function photoThumb(file) {
   return new Promise((res, rej) => { const img = new Image(), u = URL.createObjectURL(file); img.onload = () => { const s = Math.min(1, 360 / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', .72)); }; img.onerror = () => { URL.revokeObjectURL(u); rej(); }; img.src = u; });
 }
 
+
+/* ============ 漢字バトル：キャラクターの うごき ============ */
+const HIPY = .95;
+function tpsRig(c) {
+  const pm = c.pm, up = new THREE.Group(); up.position.y = HIPY;
+  for (const ch of pm.inner.children.slice()) { if (ch === pm.lL || ch === pm.lR) continue; pm.inner.remove(ch); ch.position.y -= HIPY; if (pm.bob && pm.bob.includes(ch)) ch.userData.by -= HIPY; up.add(ch); }
+  pm.inner.add(up); pm.up = up; pm.g.rotation.order = 'YXZ';
+  if (pm.tip) { const mf = new THREE.Mesh(new THREE.OctahedronGeometry(.3), new THREE.MeshBasicMaterial({ color: 0xfff3bf, transparent: true, opacity: .95, depthWrite: false, blending: THREE.AdditiveBlending })); mf.visible = false; pm.tip.add(mf); c.mf = mf; }
+  Object.assign(c, { px: 0, pz: 0, spd: 0, ph: 0, stepI: 0, rc: 0, mfT: 0, fl: 0, flS: 0, aimT: 0, land: 0, air: false, spawnT: 0, dT: 0, fallA: 0, fallV: 0, fx: 1, fz: 0, kbx: 0, kbz: 0, broken: false });
+}
+function tpsOnSpawn(c) { c.spawnT = .6; c.dT = 0; c.broken = false; c.fallA = c.fallV = 0; c.px = c.x; c.pz = c.z; c.pm.g.visible = true; c.pm.g.rotation.x = c.pm.g.rotation.z = 0; c.pm.g.scale.setScalar(.2); tpsBeam(c.x, c.z, TCOL[c.team]); }
+function tpsOnShot(c) { c.rc = 1; c.mfT = .05; c.aimT = .8; if (c.pm.tip) { c.pm.tip.getWorldPosition(V3t); const rx = -Math.cos(c.yaw), rz = Math.sin(c.yaw); for (let i = 0; i < 1; i++) TPS.sp.length < 300 && TPS.sp.push({ x: V3t.x - Math.sin(c.yaw) * .5, y: V3t.y, z: V3t.z - Math.cos(c.yaw) * .5, vx: rx * (2 + Math.random() * 1.5), vy: 2.5 + Math.random() * 1.5, vz: rz * (2 + Math.random() * 1.5), life: .5, col: 0xd4a017, s: .12 }); TPS.sp.length < 300 && TPS.sp.push({ x: V3t.x, y: V3t.y, z: V3t.z, vx: 0, vy: .8, vz: 0, life: .25, col: 0xdee2e6, s: .25, ng: 1 }); } }
+function tpsKbDir(c, by) { if (!by) return [Math.sin(c.yaw + Math.PI), Math.cos(c.yaw + Math.PI)]; const dx = c.x - by.x, dz = c.z - by.z, l = Math.hypot(dx, dz) || 1; return [dx / l, dz / l]; }
+function tpsOnHit(c, by) {
+  const [kx, kz] = tpsKbDir(c, by), fwd = kx * Math.sin(c.yaw) + kz * Math.cos(c.yaw);
+  c.fl = 1; c.flS = fwd >= 0 ? 1 : -1; c.x += kx * .18; c.z += kz * .18;
+  tpsSpark(c.x, (c.y || 0) + 1.5, c.z, 4, 0xffffff);
+}
+function tpsOnDeath(c, by) {
+  const [kx, kz] = tpsKbDir(c, by), f = kx * Math.sin(c.yaw) + kz * Math.cos(c.yaw), s = kx * Math.cos(c.yaw) - kz * Math.sin(c.yaw);
+  c.dT = 0; c.fallA = 0; c.fallV = 2.5; c.fx = f; c.fz = s; c.kbx = kx * 4; c.kbz = kz * 4; c.broken = false; c.mf && (c.mf.visible = false);
+  tpsSpark(c.x, 1.4, c.z, 12, TCOL[c.team]); tpsSpark(c.x, 1.4, c.z, 6, 0xffffff);
+}
+/* ---- ばらばら（Roblox ふう） ---- */
+function tpsBreak(c) {
+  const pm = c.pm, sk = SKINS[c.si] || SKINS[0]; pm.g.updateMatrixWorld(true);
+  const parts = [[pm.up.children.find(m => m.geometry && m.position.y > .3 && m.position.y < .6) || pm.up, 1, 1, .52, sk.shirt], [pm.head, .74, .74, .74, sk.skin], [pm.aL, .42, .95, .42, sk.arm || sk.skin], [pm.aR, .42, .95, .42, sk.arm || sk.skin], [pm.lL, .46, .9, .46, sk.pants], [pm.lR, .46, .9, .46, sk.pants]];
+  for (const [o, w, h, d, col] of parts) {
+    o.getWorldPosition(V3t); const m = new THREE.Mesh(G(w, h, d), M(col)); m.position.copy(V3t); if (o === pm.aL || o === pm.aR || o === pm.lL || o === pm.lR) m.position.y -= .4; m.position.y = Math.max(h / 2, m.position.y); m.quaternion.copy(pm.g.quaternion); TPS.scene.add(m);
+    TPS.deb.push({ m, vx: c.kbx * .4 + (Math.random() - .5) * 4, vy: 2 + Math.random() * 4, vz: c.kbz * .4 + (Math.random() - .5) * 4, ax: (Math.random() - .5) * 10, ay: (Math.random() - .5) * 10, az: (Math.random() - .5) * 10, h, life: 2.6 });
+  }
+  pm.g.visible = false; c.broken = true; tpsSpark(c.x, 1, c.z, 10, 0xdee2e6); sfx('hit');
+}
+function tpsDebris(dt) {
+  TPS.deb = TPS.deb || [];
+  for (let i = TPS.deb.length - 1; i >= 0; i--) {
+    const d = TPS.deb[i], m = d.m; d.life -= dt;
+    if (d.life <= 0) { TPS.scene.remove(m); TPS.deb.splice(i, 1); continue; }
+    d.vy -= 22 * dt; m.position.x += d.vx * dt; m.position.y += d.vy * dt; m.position.z += d.vz * dt;
+    const floor = d.h * .3; if (m.position.y < floor) { m.position.y = floor; if (Math.abs(d.vy) > 1.5) { d.vy = -d.vy * .35; } else d.vy = 0; d.vx *= .7; d.vz *= .7; d.ax *= .6; d.ay *= .6; d.az *= .6; }
+    m.rotation.x += d.ax * dt; m.rotation.y += d.ay * dt; m.rotation.z += d.az * dt;
+    if (d.life < .5) m.scale.setScalar(Math.max(.01, d.life / .5));
+  }
+}
+/* ---- ふっかつの ひかり ---- */
+function tpsBeam(x, z, col) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 12, 16, 1, true), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .45, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending }));
+  m.position.set(x, 6, z); TPS.scene.add(m); (TPS.beams = TPS.beams || []).push({ m, life: .8 });
+  for (let i = 0; i < 10; i++) TPS.sp.length < 300 && TPS.sp.push({ x: x + (Math.random() - .5) * 1.6, y: .2, z: z + (Math.random() - .5) * 1.6, vx: 0, vy: 4 + Math.random() * 4, vz: 0, life: .7, col, ng: 1 });
+}
+function tpsBeams(dt) { for (let i = (TPS.beams || []).length - 1; i >= 0; i--) { const b = TPS.beams[i]; b.life -= dt; b.m.material.opacity = Math.max(0, b.life / .8 * .45); b.m.scale.x = b.m.scale.z = 1 + (.8 - b.life); if (b.life <= 0) { TPS.scene.remove(b.m); b.m.geometry.dispose(); b.m.material.dispose(); TPS.beams.splice(i, 1); } } }
+/* ---- まいフレームの うごき ---- */
+function tpsAnimate(c, dt) {
+  const pm = c.pm, g = pm.g, up = pm.up;
+  // やられ
+  if (!c.alive) {
+    c.dT += dt; if (c.mk) c.mk.visible = false;
+    if (!c.broken) {
+      c.fallV += 16 * dt; c.fallA += c.fallV * dt; if (c.fallA > 1.45) { c.fallA = 1.45; c.fallV = -c.fallV * .3; if (Math.abs(c.fallV) < .4) c.fallV = 0; }
+      const L = Math.hypot(c.fx, c.fz) || 1; g.rotation.x = c.fallA * (c.fx / L); g.rotation.z = -c.fallA * (c.fz / L) * .8;
+      c.x += c.kbx * dt; c.z += c.kbz * dt; c.kbx *= Math.pow(.02, dt); c.kbz *= Math.pow(.02, dt); collide(c);
+      const e = Math.min(1, c.dT * 3); pm.aL.rotation.set(-.4 * e, 0, -1.3 * e); pm.aR.rotation.set(-.3 * e, 0, 1.2 * e); pm.lL.rotation.set(.25 * e, 0, -.2 * e); pm.lR.rotation.set(-.15 * e, 0, .25 * e); up.rotation.set(-.2 * e, 0, 0);
+      if (c.dT > .75) tpsBreak(c);
+    }
+    return;
+  }
+  // はやさ
+  const vx = dt > 0 ? (c.x - c.px) / dt : 0, vz = dt > 0 ? (c.z - c.pz) / dt : 0; c.px = c.x; c.pz = c.z;
+  let sp = Math.hypot(vx, vz); if (sp > 25) sp = 0; c.spd += (sp - c.spd) * Math.min(1, dt * 12);
+  const fx = Math.sin(c.yaw), fz = Math.cos(c.yaw), fwd = sp > .2 ? (vx * fx + vz * fz) / sp : 1, side = sp > .2 ? (vx * -fz + vz * fx) / sp : 0;
+  const amp = Math.min(1, c.spd / 7.5); c.ph += dt * c.spd * 2.4 * (fwd < -.3 ? -1 : 1);
+  const s = Math.sin(c.ph), t = TPS.t + c.x * .1;
+  const aiming = c.isMe ? (TPS.aimC || TPS.fireHeld || c.aimT > 0) : !!c.ai.en, aimP = c.isMe ? TPS.pitch + .28 : 0;
+  c.aimT -= dt; c.rc = Math.max(0, c.rc - dt * 9); c.fl = Math.max(0, c.fl - dt * 7); c.mfT -= dt; c.land = Math.max(0, c.land - dt * 5);
+  // ジャンプ・ちゃくち
+  const air = c.y > .05; if (c.air && !air) { c.land = 1; tpsDust(c, 4); } c.air = air;
+  // あし
+  if (air) { pm.lL.rotation.set(-.9, 0, 0); pm.lR.rotation.set(.35, 0, 0); }
+  else { const fa = Math.abs(fwd), sa = side; pm.lL.rotation.set(s * .85 * amp * (.35 + .65 * fa), 0, s * .3 * amp * sa); pm.lR.rotation.set(-s * .85 * amp * (.35 + .65 * fa), 0, -s * .3 * amp * sa); }
+  // からだ
+  const bob = air ? 0 : Math.abs(Math.cos(c.ph)) * .09 * amp, breathe = Math.sin(t * 2.3) * .015 * (1 - amp);
+  pm.inner.position.set(0, bob - c.land * .12, -c.rc * .06);
+  pm.inner.scale.set(1 + c.land * .08, 1 - c.land * .12, 1 + c.land * .08);
+  up.position.y = HIPY + breathe;
+  up.rotation.set(.15 * amp * fwd - c.rc * .07 - c.fl * .3 * c.flS * -1 + aimP * .25, aiming ? .22 : s * .14 * amp, -side * .08 * amp);
+  // うで
+  if (aiming) {
+    const k = c.rc * .38, sw = Math.sin(t * 1.7) * .02;
+    pm.aR.rotation.set(-1.57 - aimP * .9 - k + sw, -.12, 0); pm.aL.rotation.set(-1.32 - aimP * .9 - k * .6 + sw, .1, .62);
+  } else if (air) { pm.aR.rotation.set(-2.2, 0, .3); pm.aL.rotation.set(-2.2, 0, -.3); }
+  else { pm.aR.rotation.set(-s * .8 * amp + Math.sin(t * 2.3) * .03 * (1 - amp), 0, .06); pm.aL.rotation.set(s * .8 * amp + Math.sin(t * 2.3 + 1) * .03 * (1 - amp), 0, -.06); }
+  // マズルフラッシュ
+  if (c.mf) { c.mf.visible = c.mfT > 0; if (c.mf.visible) { c.mf.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6); c.mf.scale.setScalar(.7 + Math.random() * .6); } }
+  // あしおと
+  const st = Math.floor(c.ph / Math.PI); if (st !== c.stepI) { c.stepI = st; if (amp > .45 && !air) tpsDust(c, 2); }
+  // ふっかつ
+  if (c.spawnT > 0) { c.spawnT -= dt; const k = 1 - Math.max(0, c.spawnT) / .6; g.scale.setScalar(.2 + .8 * (1 - Math.pow(1 - k, 3))); } else g.scale.setScalar(1);
+  g.rotation.x = 0; g.rotation.z = 0;
+  if (c.mk) c.mk.visible = !c.isMe;
+}
+function tpsDust(c, n) { for (let i = 0; i < n && TPS.sp.length < 300; i++) TPS.sp.push({ x: c.x + (Math.random() - .5) * .6, y: .1, z: c.z + (Math.random() - .5) * .6, vx: (Math.random() - .5) * 1.2, vy: .6 + Math.random() * .6, vz: (Math.random() - .5) * 1.2, life: .45, col: 0xe9ecdf, s: .2, ng: 1 }); }
 
 /* ============ はじまり ============ */
 initGL(); makeSigils(); sgBindUI(); bindLearnUI(); initPreview();
