@@ -230,6 +230,56 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 /* ---------- ゲームHUD ---------- */
 #hud{position:fixed;inset:0;pointer-events:none;touch-action:none}
 #modFx{position:absolute;inset:0;pointer-events:none}
+#tpsHud{position:fixed;inset:0;pointer-events:none;z-index:2;font-family:var(--body)}
+.tscore{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);display:grid;grid-template-columns:1fr auto 1fr;gap:4px 10px;align-items:center;width:min(92vw,560px);background:rgba(21,23,51,.72);border:2px solid var(--ink);border-radius:14px;padding:6px 10px}
+.tscore .tb{color:#a5d8ff;font-weight:900;font-size:.8rem;text-align:left}.tscore .tr{color:#ffa8a8;font-weight:900;font-size:.8rem;text-align:right}.tscore b{font-family:var(--display);font-weight:400;font-size:1.4rem;color:#fff}
+.tscore .tt{font-family:var(--display);font-size:1.1rem}
+.tbar{grid-column:1/-1;height:8px;background:rgba(255,255,255,.15);border-radius:6px;position:relative;overflow:hidden}.tbar i{position:absolute;top:0;bottom:0}.tbar i:first-child{left:0;background:#4dabf7}.tbar i:last-child{right:0;background:#ff4d5b}
+.tpts{grid-column:1/-1;display:flex;justify-content:center;gap:10px}.tpts span{position:relative;width:46px;height:46px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;background:rgba(21,23,51,.8);overflow:hidden}
+.tpts span i{position:absolute;left:0;bottom:0;height:5px;opacity:.9}.tpts b{font-family:var(--kyo);font-size:1.6rem;font-weight:700;line-height:1}
+#tpsCall{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 132px);transform:translateX(-50%);background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:14px;padding:6px 16px;font-weight:900;font-size:1.15rem;opacity:0;transition:opacity .3s;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+#tpsCall small{display:block;font-size:.65rem;color:#c92a2a}#tpsCall.on{opacity:1}
+#tpsMap{position:absolute;right:10px;top:calc(env(safe-area-inset-top,0px) + 10px);width:118px;height:118px;border:2px solid var(--ink);border-radius:12px}
+#tpsFeed{position:absolute;right:10px;top:calc(env(safe-area-inset-top,0px) + 136px);display:flex;flex-direction:column;gap:3px;align-items:flex-end}#tpsFeed div{background:rgba(21,23,51,.75);border-left:4px solid;padding:2px 8px;border-radius:6px;font-size:.72rem;font-weight:900}
+.thp{position:absolute;left:12px;top:calc(env(safe-area-inset-top,0px) + 12px);width:min(36vw,240px)}.thp .hp{height:20px}
+#tpsPauseB{position:absolute;left:12px;top:calc(env(safe-area-inset-top,0px) + 40px);pointer-events:auto}
+#tpsCross{position:absolute;left:50%;top:50%;width:0;height:0}#tpsCross i{position:absolute;background:#fff;box-shadow:0 0 0 1.5px rgba(21,23,51,.7)}
+#tpsCross i:nth-child(1){left:-14px;top:-1px;width:9px;height:2px}#tpsCross i:nth-child(2){left:5px;top:-1px;width:9px;height:2px}#tpsCross i:nth-child(3){left:-1px;top:-14px;width:2px;height:9px}#tpsCross i:nth-child(4){left:-1px;top:5px;width:2px;height:9px}
+#tpsCross.on i{background:#ff6b6b}
+#tpsHit{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;opacity:0;background:linear-gradient(45deg,transparent 45%,#fff 45% 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,#fff 45% 55%,transparent 55%)}
+#tpsHit.kill{background:linear-gradient(45deg,transparent 42%,#ff4d5b 42% 58%,transparent 58%),linear-gradient(-45deg,transparent 42%,#ff4d5b 42% 58%,transparent 58%);width:44px;height:44px;margin:-22px 0 0 -22px}
+#tpsHit.on{animation:thit .25s ease-out}@keyframes thit{0%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(1)}}
+#tpsDmg{position:absolute;left:calc(50% + 18px);top:calc(50% - 30px);font-family:var(--display);color:#fff3bf;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;opacity:0}#tpsDmg.on{animation:tdmg .5s ease-out}@keyframes tdmg{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
+#tpsFire,#tpsJump,#tpsSk{position:absolute;pointer-events:auto;border:4px solid var(--ink);border-radius:50%;font-family:var(--display);color:var(--ink);box-shadow:0 5px 0 var(--ink);touch-action:none;-webkit-user-select:none;user-select:none}
+#tpsFire{right:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:112px;height:112px;background:#ff6b6b;font-size:1.2rem}
+#tpsJump{right:146px;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);width:72px;height:72px;background:var(--sky);font-size:.72rem}
+#tpsSk{right:40px;bottom:calc(env(safe-area-inset-bottom,0px) + 152px);width:84px;height:84px;background:#3b2a6b;color:#fff;overflow:hidden;font-size:.78rem;line-height:1.1}
+#tpsSk i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#ffe066,#ff922b)}#tpsSk span{position:relative;text-shadow:0 2px 0 var(--ink)}#tpsSk.ready{animation:canpulse .8s ease-in-out infinite}
+#tpsDead{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;background:rgba(21,23,51,.85);border:3px solid var(--ink);border-radius:16px;padding:14px 18px;pointer-events:auto}#tpsDead>b{font-family:var(--display);font-size:1.6rem;color:#ff6b6b}
+.trs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:8px 0}.trs span{background:var(--navy2);border:2px solid var(--ink);border-radius:10px;padding:6px;font-size:.7rem;font-weight:900;display:flex;flex-direction:column;align-items:center}.trs b{font-family:var(--display);font-weight:400;font-size:1.3rem}
+@media (max-width:560px){.trs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+#tpsLobby .panel{margin:10px 0}#tpsLobby .mtitle,#tpsLobby .mtitle h2,#tpsLobby .mtitle p{color:var(--paper-ink)}#tpsLobby .seg{flex-wrap:wrap}
+.hangar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:12px}@media (max-width:700px){.hangar{grid-template-columns:1fr}}
+.hview{display:flex;flex-direction:column;gap:6px}#hcv{width:100%;aspect-ratio:1;background:radial-gradient(circle at 50% 40%,#36418f,#1d2456);border:3px solid var(--ink);border-radius:16px}
+.hname{display:flex;gap:8px;align-items:center}.hname small{white-space:nowrap;color:var(--muted);font-weight:900}
+.hside{display:flex;flex-direction:column;gap:8px}.hslot b{font-size:.85rem}.hopts{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.hopt{border:2px solid var(--ink);border-radius:10px;background:var(--panel2);padding:5px 9px;font-weight:900;font-size:.78rem}.hopt[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}.hopt:disabled{opacity:.5}
+.hcol{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);font-size:.7rem}.hcol[aria-pressed="true"]{outline:3px solid #fff;outline-offset:1px}.hcol:disabled{opacity:.45}
+.reward .rlist{display:flex;flex-direction:column;gap:8px}.rcard{display:flex;gap:10px;border:3px solid var(--ink);border-radius:14px;background:var(--panel2);padding:8px;align-items:stretch}
+.rtier{writing-mode:vertical-rl;background:var(--tc);color:var(--ink);font-family:var(--display);border-radius:8px;padding:6px 3px;font-size:.66rem;text-align:center;letter-spacing:-.05em}
+.rbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.rbody .bar{height:10px}.rbody small{color:var(--muted);font-weight:900;font-size:.72rem}
+.rprize{font-size:.85rem;font-weight:900}.rprize .go{color:var(--yellow)}.rprize img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid var(--ink);vertical-align:middle;margin-right:6px}
+.rcard.done{box-shadow:0 0 0 3px var(--yellow) inset}.rcard.given{opacity:.85}
+.exrow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px dashed rgba(255,255,255,.2)}.exrow small{color:var(--muted)}
+.kyu{flex:0 0 auto;width:52px;height:52px;border-radius:50%;border:3px solid var(--muted);display:grid;place-items:center;font-family:var(--display);font-size:.85rem}.kyu.pass{border-color:var(--yellow);color:var(--yellow);background:rgba(255,200,58,.12)}
+.exres{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.exres span{display:flex;flex-direction:column;align-items:center;border:2px solid var(--ink);border-radius:10px;background:#fff;color:var(--ink);padding:4px 8px;font-weight:900}.exres b{font-family:var(--kyo);font-size:1.8rem}.exres .x{background:#ffe3e3}
+.ppbox .seg button{color:#fff}.ppbox .seg button[aria-pressed="true"]{color:var(--ink)}
+.rset{border-top:2px dashed #d8d0c0;padding-top:10px;display:flex;flex-direction:column;gap:6px}.rhead{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.rhead small{color:#6b6257;font-weight:900}
+.rtag{border-radius:6px;padding:1px 6px;font-weight:900;font-size:.7rem;color:var(--ink)}.rphoto{width:120px;border-radius:10px;border:2px solid var(--ink)}
+.bpv{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.bpv figure{margin:0;display:flex;flex-direction:column;align-items:center}.bpv img{max-width:240px;width:100%;border:2px solid #4263eb;border-radius:6px}.bpv figcaption{font-weight:900;font-size:.85rem}
+.bpc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-weight:900}.bpc i{display:inline-block;width:16px;height:16px;border:2px solid #151733;border-radius:3px;vertical-align:middle;margin-right:3px}
+#tpsBtn{margin-top:6px}
+
 #wxFx{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
 #wxFx.rain,#wxFx.storm{background:repeating-linear-gradient(104deg,transparent 0 22px,rgba(210,225,255,.22) 22px 24px,transparent 24px 61px),linear-gradient(rgba(30,40,80,.18),rgba(30,40,80,.1));background-size:240px 240px,100% 100%;animation:wxrain .32s linear infinite}
 #wxFx.storm{background-color:rgba(10,15,40,.12)}
@@ -568,6 +618,8 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
       <button class="tab" role="tab" data-tab="weapons" aria-selected="true">ぶき</button>
       <button class="tab" role="tab" data-tab="skins" aria-selected="false">きがえ</button>
       <button class="tab" role="tab" data-tab="ups" aria-selected="false">きょうか</button>
+      <button class="tab" role="tab" data-tab="mech" aria-selected="false">メカ</button>
+      <button class="tab" role="tab" data-tab="reward" aria-selected="false">ごほうび</button>
       <button class="tab" role="tab" data-tab="note" aria-selected="false">漢字ノート</button>
       <button class="tab" role="tab" data-tab="dex" aria-selected="false">ずかん</button>
       <button class="tab" role="tab" data-tab="settings" aria-selected="false">せってい</button>
@@ -601,6 +653,10 @@ details summary{cursor:pointer;font-weight:900;font-size:.85rem}
 <div id="bossIntro" hidden></div>
 <div id="kbArrow" class="edgearrow" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 12 L38 22 L8 32 L15 22 Z" fill="#ff6b6b" stroke="#151733" stroke-width="3" stroke-linejoin="round"/></svg><b></b></div>
 <div id="cert" class="modal" hidden></div>
+<div id="tpsHud" hidden></div>
+<section id="tpsLobby" class="screen" hidden></section>
+<div id="tpsResult" class="modal" hidden></div>
+<div id="tpsPause" class="modal" hidden></div>
 <div id="sigArrow" hidden><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 12 L38 22 L8 32 L15 22 Z" fill="#d0bfff" stroke="#151733" stroke-width="3" stroke-linejoin="round"/></svg><b></b></div>
 
 <div id="lvup" class="modal" hidden><div class="mbox lvbox" id="lvBox"></div></div>
@@ -2320,9 +2376,9 @@ addEventListener('keyup', e => { keys[e.code] = false; });
 addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 const joy = { id: null, ox: 0, oy: 0, x: 0, y: 0 };
 const joyR = () => Math.min(innerWidth, innerHeight) >= 700 ? 72 : 50;
-function joyDown(e) { if (SG.on) { sgPanDown(e); return; } if (!W.on || W.paused || joy.id !== null) return; joy.id = e.pointerId; joy.ox = e.clientX; joy.oy = e.clientY; joy.x = joy.y = 0; const j = $('#joy'); j.hidden = false; j.style.left = joy.ox + 'px'; j.style.top = joy.oy + 'px'; $('#joyKnob').style.transform = ''; }
-function joyMove(e) { if (SG.on) { sgPanMove(e); return; } if (e.pointerId !== joy.id) return; let dx = e.clientX - joy.ox, dy = e.clientY - joy.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } joy.x = dx / m; joy.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
-function joyUp(e) { if (SG.on) { sgPanUp(e); return; } if (e.pointerId !== joy.id) return; joy.id = null; joy.x = joy.y = 0; $('#joy').hidden = true; }
+function joyDown(e) { if (TPS.on) { tpsPDown(e); return; } if (SG.on) { sgPanDown(e); return; } if (!W.on || W.paused || joy.id !== null) return; joy.id = e.pointerId; joy.ox = e.clientX; joy.oy = e.clientY; joy.x = joy.y = 0; const j = $('#joy'); j.hidden = false; j.style.left = joy.ox + 'px'; j.style.top = joy.oy + 'px'; $('#joyKnob').style.transform = ''; }
+function joyMove(e) { if (TPS.on) { tpsPMove(e); return; } if (SG.on) { sgPanMove(e); return; } if (e.pointerId !== joy.id) return; let dx = e.clientX - joy.ox, dy = e.clientY - joy.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } joy.x = dx / m; joy.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
+function joyUp(e) { if (TPS.on) { tpsPUp(e); return; } if (SG.on) { sgPanUp(e); return; } if (e.pointerId !== joy.id) return; joy.id = null; joy.x = joy.y = 0; $('#joy').hidden = true; }
 function moveVec() {
   let mx = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
   let mz = (keys.KeyS || keys.ArrowDown ? 1 : 0) - (keys.KeyW || keys.ArrowUp ? 1 : 0);
@@ -2960,6 +3016,7 @@ function loop(t) {
   const dt = Math.min(.05, (t - lastT) / 1000 || 0); lastT = t;
   if (!(W.on && (W.paused || W.susp))) TIME.value += dt * (W.on ? W.ts : 1);
   if (!$('#home').hidden) renderPreview(dt);
+  if (TPS.on) { if (!TPS.paused) tpsUpdate(dt); R.render(TPS.scene, TPS.cam); return; }
   if (!W.on || W.susp) return;
   if (!W.paused) { update(dt); updFloaters(dt); }
   else if (W.lvFx) { updParticles(dt * .2); updFx(dt * .2); }
@@ -3069,9 +3126,9 @@ function renderSlots() {
 let MS = null;
 const SPEC = { stage: ['new', 'new', 'rev', 'rev', 'rev', 'pre'], revive: ['rev'], box: ['rev'] };
 function openMission(kind, evoI) {
-  if (['revive', 'box', 'evo', 'bonus', 'shield'].includes(kind)) { W.susp = true; } else endRun();
+  if (['revive', 'box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn'].includes(kind)) { W.susp = true; } else endRun();
   hideAll();
-  const spec = ['box', 'evo', 'bonus', 'shield'].includes(kind) ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
+  const spec = ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn'].includes(kind) ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
   MS = { kind, evoI, items: pickKanji(spec).map(({ d, cat }) => ({ d, cat, hint: false, first: null, ok: false, comment: '', reveal: false, strokes: [], before: S.kanji[d.k] ? { ...S.kanji[d.k] } : null })), blob: null, url: null, stage: 'pad', status: '', statusCls: '' };
   $('#mission').hidden = false; $('#mission').scrollTop = 0; renderMission();
 }
@@ -3082,24 +3139,24 @@ function renderMission() {
   const W2 = $('#mWrap');
   if (MS.stage === 'done') { W2.innerHTML = MS.doneHTML; bindDone(); return; }
   const left = todo();
-  const title = MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'bonus' ? '漢字チャンス！' : MS.kind === 'shield' ? rb('{結界|けっかい}を やぶれ！') : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
-  const sub = MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'bonus' ? '1こ 書けたら レベルアップで 2つ えらべる！ ゲームは とまっているよ。' : MS.kind === 'shield' ? '1こ 書けたら ボスの けっかいが われて 大ダメージ！ ゲームは とまっているよ。' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら かぎ ＋ トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
+  const title = MS.kind === 'exam' ? `${KYU[MS.g]} もぎしけん` : MS.kind === 'tskill' ? '漢字スキル はつどう！' : MS.kind === 'trespawn' ? '漢字で ふっかつ！' : MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'bonus' ? '漢字チャンス！' : MS.kind === 'shield' ? rb('{結界|けっかい}を やぶれ！') : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
+  const sub = MS.kind === 'exam' ? `${MS.g}年生の 漢字 10もん。ヒントは ないよ。1かいだけ はんていして、8もん いじょうで ごうかく！` : MS.kind === 'tskill' ? '1こ 書けたら スキル はつどう！ バトルは とまっているよ。' : MS.kind === 'trespawn' ? '1こ 書けたら すぐに ふっかつ！ バトルは とまっているよ。' : MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'bonus' ? '1こ 書けたら レベルアップで 2つ えらべる！ ゲームは とまっているよ。' : MS.kind === 'shield' ? '1こ 書けたら ボスの けっかいが われて 大ダメージ！ ゲームは とまっているよ。' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら かぎ ＋ トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
   const pad = MS.stage === 'pad';
   W2.innerHTML = `
-    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
+    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : MS.kind === 'exam' ? 'やめる' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
     <div class="mtitle"><span class="eyebrow">漢字ミッション</span><h2>${title}</h2><p>${sub}</p></div>
     ${left.length && pad ? `<div class="mguide">□の 上の ひらがなが よみかただよ。マスの なかに 大きく 1こずつ 書いてね。${S.check === 'auto' && S.order ? '<br><small style="font-weight:700">かきじゅんも みているよ。わからない ときは「かきじゅん」ボタン。</small>' : ''}</div>` : ''}
     <div class="mcards">${MS.items.map((it, i) => cardHTML(it, i)).join('')}</div>
     ${left.length && pad ? `<div class="mact"><button class="btn big g" id="mCheck">これで チェック！</button></div>
-      <div class="mact"><button class="btn sm w" id="mPhoto">紙に 書いて しゃしんを とる（おうちの人が チェック）</button></div>` : ''}
+      ${MS.kind === 'exam' ? '' : '<div class="mact"><button class="btn sm w" id="mPhoto">紙に 書いて しゃしんを とる（おうちの人が チェック）</button></div>'}` : ''}
     ${MS.stage === 'photo' ? `<div class="mguide">紙に ${left.map(numOf).join(' ')} の じゅんばんで、ばんごうも いっしょに 大きく 書いてね。</div>
       <div class="mact"><label class="btn big y" for="mCam" tabindex="0">しゃしんを とる</label><input type="file" id="mCam" accept="image/*" capture="environment">
       <label class="btn w" for="mFile" tabindex="0">アルバムから えらぶ</label><input type="file" id="mFile" accept="image/*"><button class="btn s" id="mBackPad">がめんに 書く</button></div>` : ''}
     <div id="mPrev" class="mpreview" ${MS.stage !== 'parent' || !MS.url ? 'hidden' : ''}>${MS.url ? `<img src="${MS.url}" alt="おくる しゃしん">` : ''}</div>
     <div id="mParent" class="parent" ${MS.stage !== 'parent' ? 'hidden' : ''}></div>
     <div class="mstatus ${MS.statusCls}" id="mStatus">${MS.status}</div>`;
-  $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'box' || k === 'shield') { resumeRun(); return; } if (k === 'bonus') { resumeRun(true); if (W.pendLv) setTimeout(showLevelUp, 300); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
-  if (pad) { MS.items.forEach((it, i) => { if (!it.ok) bindPad(it, i); }); if ($('#mCheck')) { $('#mCheck').onclick = checkAll; $('#mPhoto').onclick = () => { MS.stage = 'photo'; MS.status = ''; renderMission(); }; } }
+  $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'tskill' || k === 'trespawn') { tpsResume(); return; } if (k === 'box' || k === 'shield') { resumeRun(); return; } if (k === 'bonus') { resumeRun(true); if (W.pendLv) setTimeout(showLevelUp, 300); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
+  if (pad) { MS.items.forEach((it, i) => { if (!it.ok) bindPad(it, i); }); if ($('#mCheck')) { $('#mCheck').onclick = checkAll; if ($('#mPhoto')) $('#mPhoto').onclick = () => { MS.stage = 'photo'; MS.status = ''; renderMission(); }; } }
   if (MS.stage === 'photo') {
     const onFile = async ev => { const f = ev.target.files && ev.target.files[0]; if (!f) return; try { const blob = await downscale(f); setPhoto(blob); MS.stage = 'parent'; renderMission(); } catch (e) { setStatus('しゃしんが よみこめなかったよ。べつの しゃしんで ためしてね。', 'err'); } };
     $('#mCam').onchange = onFile; $('#mFile').onchange = onFile; $('#mBackPad').onclick = () => { MS.stage = 'pad'; renderMission(); };
@@ -3109,7 +3166,7 @@ function renderMission() {
 }
 function cardHTML(it, i) {
   const rec = it.before;
-  const tag = it.cat === 'pre' ? '<span class="tag pre">よしゅう</span>' : !rec ? '<span class="tag new">あたらしい</span>' : (rec.p && !rec.c) ? '<span class="tag rev">2かいめ</span>' : rec.b === 0 ? '<span class="tag weak">にがて</span>' : '<span class="tag rev">ふくしゅう</span>';
+  const tag = MS.kind === 'exam' ? '<span class="tag rev">しけん</span>' : it.cat === 'pre' ? '<span class="tag pre">よしゅう</span>' : !rec ? '<span class="tag new">あたらしい</span>' : (rec.p && !rec.c) ? '<span class="tag rev">2かいめ</span>' : rec.b === 0 ? '<span class="tag weak">にがて</span>' : '<span class="tag rev">ふくしゅう</span>';
   const head = `<span class="num">${CIRC[i]}</span>${tag}<div class="bun">${bunHTML(it.d, 'blank')}</div>`;
   if (it.ok) return `<div class="mcard">${head}<div class="masu"><span class="model">${esc(it.d.k)}</span></div><div class="stamp">${HANAMARU}</div><div class="mres ok">${esc(it.comment || 'よく書けたね！')}</div></div>`;
   const msg = it.first === false || it.comment ? `<div class="mres ng">${esc(it.comment || 'もういちど 書いてみよう')}</div>` : it.cat === 'pre' ? '<div class="mres" style="color:#2f6fd6">うすい お手本を なぞって 書こう</div>' : '<div class="mres"></div>';
@@ -3117,7 +3174,7 @@ function cardHTML(it, i) {
   return `<div class="mcard ${it.first === false ? 'retry' : ''}">${head}
     <div class="padbox" id="pb${i}"><canvas class="guide" width="320" height="320"></canvas><canvas class="ink" width="320" height="320"></canvas></div>
     ${msg}
-    <div class="padrow"><button class="btn sm w" data-undo="${i}">1かく もどす</button><button class="btn sm w" data-clear="${i}">けす</button>${it.cat === 'pre' || it.reveal ? `<button class="btn sm s" data-anim="${i}">かきじゅん</button>` : `<button class="btn sm s" data-hint="${i}">${it.hint ? 'かきじゅん' : 'ヒント'}</button>`}</div></div>`;
+    <div class="padrow"><button class="btn sm w" data-undo="${i}">1かく もどす</button><button class="btn sm w" data-clear="${i}">けす</button>${MS.kind === 'exam' ? '' : it.cat === 'pre' || it.reveal ? `<button class="btn sm s" data-anim="${i}">かきじゅん</button>` : `<button class="btn sm s" data-hint="${i}">${it.hint ? 'かきじゅん' : 'ヒント'}</button>`}</div></div>`;
 }
 let penSeen = false;
 function bindPad(it, i) {
@@ -3188,6 +3245,7 @@ function drawGuide(g, k, done, fade) {
   requestAnimationFrame(step);
 }
 function checkAll() {
+  if (MS.kind === 'exam') { examCheck(); return; }
   const items = todo();
   const empty = items.filter(it => !it.strokes.length);
   if (empty.length) { setStatus(`${empty.map(numOf).join(' ')} が まだ 書いてないよ`, 'err'); sfx('ng'); return; }
@@ -3271,13 +3329,13 @@ function finishMission() {
       ${newSkins.length ? `<div class="newskin">あたらしい すがた「${esc(SKINS[newSkins[newSkins.length - 1]].n)}」に へんしん！</div>` : nextSkin ? `<p>あと ${nextSkin.need - afterN}こ おぼえると「${esc(nextSkin.n)}」に なれる！</p>` : ''}
       ${newW.length ? `<p style="color:#c0392b">あたらしい ぶき「${esc(newW.map(w => w.n).join('・'))}」が かいほう できるよ！</p>` : ''}
       <div class="mact" style="width:100%">
-        <button class="btn big y" id="dGo">${MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'bonus' ? 'レベルアップへ（2つ えらべる）' : MS.kind === 'shield' ? 'けっかいを やぶる！' : MS.kind === 'box' ? 'かぎと トリプル たからばこ！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
+        <button class="btn big y" id="dGo">${MS.kind === 'tskill' ? 'スキル はつどう！' : MS.kind === 'trespawn' ? 'ふっかつ！' : MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'bonus' ? 'レベルアップへ（2つ えらべる）' : MS.kind === 'shield' ? 'けっかいを やぶる！' : MS.kind === 'box' ? 'かぎと トリプル たからばこ！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
         ${MS.kind === 'stage' ? '<button class="btn w" id="dHome">きちへ もどる</button>' : ''}
       </div></div>`;
   renderMission(); $('#mission').scrollTop = 0;
 }
 function bindDone() {
-  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'revive') revive(); else if (k === 'bonus') { resumeRun(true); W.pendLv++; setTimeout(showLevelUp, 300); } else if (k === 'shield') { resumeRun(true); breakBarrier(); } else if (k === 'box') { resumeRun(true); W.keys = (W.keys || 0) + 1; updBuffs(true); toast('かぎを 1こ ゲット！ かぎつきの たからばこが あけられる'); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
+  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'exam') { goHome(); return; } if (k === 'tskill') { tpsResume(); tpsSkill(); return; } if (k === 'trespawn') { tpsResume(); tpsRespawnNow(); return; } if (k === 'revive') revive(); else if (k === 'bonus') { resumeRun(true); W.pendLv++; setTimeout(showLevelUp, 300); } else if (k === 'shield') { resumeRun(true); breakBarrier(); } else if (k === 'box') { resumeRun(true); W.keys = (W.keys || 0) + 1; updBuffs(true); toast('かぎを 1こ ゲット！ かぎつきの たからばこが あけられる'); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
   const h = $('#dHome'); if (h) h.onclick = () => { MS = null; goHome(); };
   const dc = $('#dCert'); if (dc) dc.onclick = () => showCert(curProf().name, +dc.dataset.n, S);
 }
@@ -3303,8 +3361,8 @@ function renderPreview(dt) {
 }
 
 /* ============ 基地 ============ */
-function hideAll() { ['#home', '#mission', '#quiz', '#result', '#pause', '#lvup', '#chest', '#who', '#parentPage', '#fate'].forEach(s => $(s).hidden = true); $('#hud').hidden = true; $('#kbArrow').hidden = true; $('#chapter').hidden = true; $('#bossIntro').hidden = true; $('#joy').hidden = true; joy.id = null; joy.x = joy.y = 0; FL.forEach(f => { f.life = 0; f.s.style.opacity = 0; }); }
-function goHome() { endRun(); hideAll(); $('#home').hidden = false; renderHome(); }
+function hideAll() { ['#home', '#mission', '#quiz', '#result', '#pause', '#lvup', '#chest', '#who', '#parentPage', '#fate'].forEach(s => $(s).hidden = true); $('#hud').hidden = true; $('#kbArrow').hidden = true; ['#tpsHud', '#tpsLobby', '#tpsResult', '#tpsPause'].forEach(x => $(x).hidden = true); $('#chapter').hidden = true; $('#bossIntro').hidden = true; $('#joy').hidden = true; joy.id = null; joy.x = joy.y = 0; FL.forEach(f => { f.life = 0; f.s.style.opacity = 0; }); }
+function goHome() { if (TPS.on) tpsEnd(); endRun(); hideAll(); $('#home').hidden = false; renderHome(); }
 function renderHome() {
   const { n, m } = stats();
   if (!skinUnlocked(S.skin)) S.skin = 0;
@@ -3325,8 +3383,9 @@ function renderHome() {
     ${nx ? `<div class="nextskin"><span>つぎの すがた「${esc(nx.n)}」まで あと ${nx.need - n}こ</span></div><div class="bar"><i style="width:${Math.min(100, n / nx.need * 100)}%"></i></div>` : '<div class="nextskin">すべての すがたを かいほうした！</div>'}
     ${S.best ? `<div class="note">${STAR} マスター ${m}こ ／ さいこう レベル ${S.bestLv || 0} ／ たおした てき ${S.kills}たい</div>` : ''}`;
   $('#goBtn').onclick = () => { sfx('click'); pending ? openMission('stage') : openFate(); };
+  { const tb = document.createElement('button'); tb.className = 'btn big s'; tb.id = 'tpsBtn'; tb.innerHTML = `${rb('{漢字|かんじ}バトル')}（チーム戦）`; $('#goBtn').after(tb); tb.onclick = () => { sfx('click'); tpsLobby(); }; }
   { const pr = curProf(), nt = nextTitle(n); $('#pChip').innerHTML = `<span class="av sm" style="background:${pr.col}">${esc([...pr.name][0] || '?')}</span>${esc(pr.name)}<small>きりかえ</small>`; $('#pChip').onclick = () => { sfx('click'); renderWho(); }; }
-  renderGanbari();
+  renderGanbari(); setTimeout(rewardCelebrate, 400);
   if (S.missions === 0 && S.best === 0) $('#howto').open = true;
   renderTab();
 }
@@ -3334,8 +3393,10 @@ $('#tabs').addEventListener('click', e => { const t = e.target.closest('[data-ta
 function renderTab() {
   document.querySelectorAll('#tabs [data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === curTab));
   const B = $('#tabBody');
-  B.innerHTML = curTab === 'weapons' ? weaponsHTML() : curTab === 'skins' ? skinsHTML() : curTab === 'ups' ? upsHTML() : curTab === 'note' ? noteHTML() : curTab === 'dex' ? dexHTML() : settingsHTML();
+  B.innerHTML = curTab === 'mech' ? hangarHTML() : curTab === 'reward' ? rewardHTML() : curTab === 'weapons' ? weaponsHTML() : curTab === 'skins' ? skinsHTML() : curTab === 'ups' ? upsHTML() : curTab === 'note' ? noteHTML() : curTab === 'dex' ? dexHTML() : settingsHTML();
   if (curTab === 'dex') fillThumbs();
+  if (curTab === 'mech') bindHangar();
+  if (curTab === 'reward') bindReward();
 }
 function weaponsHTML() {
   return `<div class="panel"><h3>ぶき ずかん</h3><p class="hint">★（漢字スター）で ぶきを かいほうすると、ゲーム中の レベルアップで えらべるように なるよ。「さいしょの ぶき」は ステージの はじめから もっている ぶき。</p><div class="wlist">${WEAPONS.map((w, i) => {
@@ -3663,6 +3724,7 @@ function renderParentPage() {
   W2.innerHTML = `<div class="mtop"><button class="btn sm" id="ppBack">もどる</button><span style="font-weight:900">がくしゅうの きろく</span></div>
     <div class="seg pptabs">${PROF.list.map(x => `<button data-pp="${esc(x.id)}" aria-pressed="${x.id === p.id}"><span class="av sm" style="background:${x.col}">${esc([...x.name][0] || '?')}</span>${esc(x.name)}</button>`).join('')}</div>
     ${ppReviewHTML(o, p)}
+    ${ppRewardHTML(o, p)}
     <div class="ppsum">
       <div><span>おぼえた 字</span><b>${learned}<small> / 440</small></b></div><div><span>マスター</span><b>${master}</b></div>
       <div><span>にがて</span><b>${weak.length}</b></div><div><span>よしゅう ずみ</span><b>${pre}</b></div>
@@ -3678,7 +3740,7 @@ function renderParentPage() {
       <div class="prow"><label for="ppName">なまえ</label><input id="ppName" class="tin" maxlength="8" value="${esc(p.name)}"><button class="btn sm" id="ppRename">かえる</button></div>
       <p class="hint2">バックアップ コード（べつの きかいに うつすときに つかいます）</p><textarea id="ppCode" readonly>${esc(btoa(unescape(encodeURIComponent(JSON.stringify(o)))))}</textarea>
       <div class="wrow"><button class="btn sm" id="ppCopy">コードを コピー</button><button class="btn sm r" id="ppDel">${PP.delArm === p.id ? 'ほんとうに けす？ もういちど おす' : 'この こどもの きろくを けす'}</button></div></div>`;
-  $('#ppBack').onclick = leaveParent; ppReviewBind(o, p);
+  $('#ppBack').onclick = leaveParent; ppReviewBind(o, p); ppRewardBind(o, p);
   W2.querySelectorAll('[data-pp]').forEach(b => b.onclick = () => { PP.sel = b.dataset.pp; PP.delArm = null; renderParentPage(); });
   const tip = $('#ctip');
   W2.querySelectorAll('.cb').forEach(b => { const show = () => { tip.textContent = b.dataset.tip; tip.hidden = false; const r = b.getBoundingClientRect(), c = b.closest('.chart').getBoundingClientRect(); tip.style.left = Math.max(0, Math.min(c.width - 200, r.left - c.left + r.width / 2 - 100)) + 'px'; }; b.onpointerenter = show; b.onclick = show; b.onpointerleave = () => tip.hidden = true; });
@@ -4538,6 +4600,593 @@ function showCert(name, n, o) {
 }
 
 function bindLearnUI() { $('#kBtn').onclick = () => { if (W.boss && W.boss.barrier && W.on && !W.paused && !W.susp) { sfx('chest'); openMission('shield'); } }; }
+/* ============ マイメカ（マスターした 漢字で パーツが ふえる） ============ */
+const MECH_SLOTS = [['body', 'どう'], ['legs', 'あし'], ['arms', 'ぶき'], ['top', 'あたま'], ['wings', 'つばさ']];
+const MECH_PARTS = {
+  body: [{ id: 'cube', n: 'キューブ', need: 0 }, { id: 'tank', n: 'タンク', need: 4 }, { id: 'jet', n: 'ジェット', need: 12 }, { id: 'robo', n: 'ロボ', need: 25 }, { id: 'ufo', n: 'ユーフォー', need: 45 }, { id: 'dragon', n: 'ドラゴン', need: 80 }],
+  legs: [{ id: 'wheels', n: 'タイヤ', need: 0 }, { id: 'treads', n: 'キャタピラ', need: 6 }, { id: 'legs', n: 'ロボあし', need: 15 }, { id: 'hover', n: 'ホバー', need: 35 }, { id: 'thrust', n: 'スラスター', need: 60 }],
+  arms: [{ id: 'cannon', n: 'キャノン', need: 0 }, { id: 'drill', n: 'ドリル', need: 3 }, { id: 'missile', n: 'ミサイル', need: 9 }, { id: 'laser', n: 'レーザー', need: 20 }, { id: 'saw', n: 'チェーンソー', need: 40 }, { id: 'kanji', n: '漢字ほう', need: 100 }],
+  top: [{ id: 'cockpit', n: 'コックピット', need: 0 }, { id: 'antenna', n: 'アンテナ', need: 2 }, { id: 'horns', n: 'ツノ', need: 8 }, { id: 'radar', n: 'レーダー', need: 18 }, { id: 'crown', n: 'かんむり', need: 50 }],
+  wings: [{ id: 'none', n: 'なし', need: 0 }, { id: 'small', n: 'ちいさい つばさ', need: 5 }, { id: 'big', n: 'おおきい つばさ', need: 22 }, { id: 'rocket', n: 'ロケット', need: 30 }, { id: 'angel', n: 'ひかりの つばさ', need: 120 }],
+};
+const MECH_COLS = [{ c: 0xff8b3d, need: 0 }, { c: 0x5ec8ff, need: 0 }, { c: 0x4fd67f, need: 1 }, { c: 0xff4d5b, need: 7 }, { c: 0xb38cff, need: 14 }, { c: 0xffc83a, need: 28 }, { c: 0xf8f9fa, need: 50 }, { c: 0x343a40, need: 70 }];
+const MECH_DEF = { body: 'cube', legs: 'wheels', arms: 'cannon', top: 'cockpit', wings: 'none', col: 0xff8b3d, name: '' };
+const mechCfg = () => Object.assign({}, MECH_DEF, S.mech || {});
+const masteredN = () => stats().m;
+const partOk = (slot, id) => { const p = MECH_PARTS[slot].find(x => x.id === id); return p && masteredN() >= p.need; };
+function mechBoxes(cfg) {
+  const c = cfg.col, k = 0x343a40, a = 0xffd43b, gl = 0x74c0fc, B = [];
+  const add = (w, h, d, x, y, z, col, o = {}) => B.push(Object.assign({ w, h, d, x, y, z, c: col }, o));
+  const mir = (w, h, d, x, y, z, col, o = {}) => { add(w, h, d, -x, y, z, col, o.rz ? Object.assign({}, o, { rz: -o.rz }) : o); add(w, h, d, x, y, z, col, o); };
+  // あし
+  let base = 1.2;
+  switch (cfg.legs) {
+    case 'wheels': add(2.2, .4, 2.6, 0, 1, 0, c); [[1, 1], [1, -1]].forEach(([s, z]) => { mir(.5, 1, 1, 1.15, .5, z * .95, k); mir(.52, .4, .4, 1.16, .5, z * .95, a); }); break;
+    case 'treads': add(2, .4, 2.4, 0, 1, 0, c); mir(.72, 1, 3, .95, .5, 0, k); [-1, 0, 1].forEach(z => mir(.74, .32, .32, .95, .5, z, 0x868e96)); break;
+    case 'legs': base = 1.6; mir(.6, .8, .6, .6, 1.25, 0, k); mir(.7, .8, .7, .6, .55, 0, c); mir(.85, .25, 1.15, .6, .12, .15, k); break;
+    case 'hover': add(2.4, .45, 2.4, 0, .85, 0, c); mir(.7, .1, .7, .75, .58, .75, gl); mir(.7, .1, .7, .75, .58, -.75, gl); break;
+    case 'thrust': base = 1.9; mir(.55, .9, .55, .6, 1.05, 0, k); mir(.32, .45, .32, .6, .45, 0, 0xff922b); break;
+  }
+  // どう
+  let top = base + 1.6, bw = 2;
+  switch (cfg.body) {
+    case 'cube': add(2, 1.6, 1.8, 0, base + .8, 0, c); add(1.2, .6, .05, 0, base + .9, .92, a); break;
+    case 'tank': bw = 2.6; add(2.6, 1.2, 2.4, 0, base + .6, 0, c); add(1.6, .6, 1.6, 0, base + 1.5, 0, c); top = base + 1.8; break;
+    case 'jet': bw = 1.4; add(1.4, 1.2, 3, 0, base + .6, 0, c); add(.9, .8, .8, 0, base + .6, 1.8, c); add(.7, .3, .05, 0, base + .9, 2.21, gl); add(.15, 1, .8, 0, base + 1.6, -1.2, c); top = base + 1.2; break;
+    case 'robo': bw = 2.2; add(1.4, .6, 1.2, 0, base + .3, 0, k); add(2.2, 1.6, 1.4, 0, base + 1.4, 0, c); add(.6, .6, .05, 0, base + 1.5, .72, gl); mir(.7, .5, 1.5, 1.35, base + 2, 0, c); top = base + 2.2; break;
+    case 'ufo': bw = 3.2; add(3.2, .5, 3.2, 0, base + .6, 0, c); add(2.2, .3, 2.2, 0, base + .25, 0, k); add(1.6, .8, 1.6, 0, base + 1.2, 0, gl); [-1, 1].forEach(s => { add(.25, .2, .25, s * 1.4, base + .6, 0, a); add(.25, .2, .25, 0, base + .6, s * 1.4, a); }); top = base + 1.6; break;
+    case 'dragon': bw = 2; add(2, 1.4, 2.6, 0, base + .7, 0, c); add(1, 1, 1.2, 0, base + 1.6, 1.6, c); add(.9, .3, .8, 0, base + 1.05, 1.9, k); mir(.2, .2, .05, .3, base + 1.75, 2.21, a); add(.6, .6, 1.6, 0, base + .4, -2, c); add(.3, .3, .8, 0, base + .4, -3, c); mir(.15, .5, .15, .3, base + 2.3, 1.4, a, { rz: .3 }); top = base + 1.4; break;
+  }
+  // あたま
+  switch (cfg.top) {
+    case 'cockpit': add(1.2, .7, 1, 0, top + .35, 0, k); add(1, .45, .05, 0, top + .4, .52, gl); break;
+    case 'antenna': add(.9, .6, .9, 0, top + .3, 0, c); mir(.15, .15, .05, .2, top + .35, .46, gl); add(.08, 1, .08, .3, top + 1, 0, k); add(.2, .2, .2, .3, top + 1.55, 0, 0xff4d5b); break;
+    case 'horns': add(.9, .6, .9, 0, top + .3, 0, c); mir(.15, .15, .05, .2, top + .35, .46, 0xff4d5b); mir(.18, .7, .18, .35, top + .9, 0, a, { rz: .3 }); break;
+    case 'radar': add(.5, .4, .5, 0, top + .2, 0, k); add(1.4, .1, 1.4, 0, top + .65, 0, 0xdee2e6, { rx: .5 }); add(.12, .5, .12, 0, top + .8, .3, k); break;
+    case 'crown': add(.9, .6, .9, 0, top + .3, 0, c); mir(.15, .15, .05, .2, top + .35, .46, gl); add(1, .2, 1, 0, top + .7, 0, a); [-.35, 0, .35].forEach(x => add(.16, .35, .16, x, top + .95, 0, a)); break;
+  }
+  // ぶき（りょうがわ）
+  const ax = bw / 2 + .35, ay = base + 1.1;
+  switch (cfg.arms) {
+    case 'cannon': mir(.5, .5, 1.8, ax, ay, .5, k); mir(.62, .62, .2, ax, ay, 1.4, a); break;
+    case 'drill': mir(.6, .6, .6, ax, ay, 0, c); mir(.7, .7, .5, ax, ay, .6, 0xadb5bd); mir(.5, .5, .5, ax, ay, 1, 0xadb5bd); mir(.3, .3, .5, ax, ay, 1.4, 0xadb5bd); break;
+    case 'missile': mir(.8, .8, 1, ax, ay, .2, c); [[-.18, -.18], [.18, -.18], [-.18, .18], [.18, .18]].forEach(([dx, dy]) => mir(.2, .2, .3, ax + dx, ay + dy, .8, 0xff4d5b)); break;
+    case 'laser': mir(.3, .3, 2.2, ax, ay, .7, 0xe9ecef); mir(.36, .36, .3, ax, ay, 1.8, 0xe599f7); break;
+    case 'saw': mir(.4, .4, 1, ax, ay, .3, k); mir(.1, 1.3, 1.3, ax, ay, 1.2, 0xdee2e6); break;
+    case 'kanji': mir(.8, .8, .8, ax, ay, .3, 0xc92a2a); mir(.9, .9, .15, ax, ay, .75, a); mir(.5, .5, .8, ax, ay, 1.2, 0xc92a2a); break;
+  }
+  // つばさ
+  const wy = base + 1.4;
+  switch (cfg.wings) {
+    case 'small': mir(1.4, .12, .7, bw / 2 + .7, wy, -.6, c); break;
+    case 'big': mir(2.4, .14, 1.1, bw / 2 + 1.2, wy + .2, -.7, c); mir(.4, .16, 1.1, bw / 2 + 2.3, wy + .2, -.7, a); break;
+    case 'rocket': mir(.6, 1.6, .6, .6, wy, -1.3, 0xdee2e6); mir(.4, .4, .4, .6, wy - 1, -1.3, 0xff922b); break;
+    case 'angel': [0, 1, 2].forEach(i => mir(1.6 - i * .3, .12, .5, bw / 2 + .8 + i * .2, wy + .5 - i * .35, -.8 - i * .1, 0xfff3bf, { rz: .35 - i * .2 })); break;
+  }
+  return { boxes: B, height: top + 1.2 };
+}
+function buildMech(cfg) {
+  const { boxes, height } = mechBoxes(cfg);
+  const m = new THREE.Mesh(mergeBoxes(boxes.map(b => ({ ...b, p: 0 }))), new THREE.MeshLambertMaterial({ vertexColors: true }));
+  const g = new THREE.Group(); g.add(m); g.userData = { blocks: boxes.length, height };
+  return g;
+}
+/* ---- ハンガー（基地の タブ） ---- */
+let HG = null;
+function hangarHTML() {
+  const cfg = mechCfg(), mn = masteredN();
+  const slot = ([s, n]) => `<div class="hslot"><b>${n}</b><div class="hopts">${MECH_PARTS[s].map(p => { const ok = mn >= p.need; return `<button class="hopt" data-s="${s}" data-p="${p.id}" aria-pressed="${cfg[s] === p.id}" ${ok ? '' : 'disabled'}>${ok ? esc(p.n) : `🔒 ${p.need}`}</button>`; }).join('')}</div></div>`;
+  const nxt = [].concat(...MECH_SLOTS.map(([s]) => MECH_PARTS[s].map(p => ({ ...p, s })))).filter(p => p.need > mn).sort((a, b) => a.need - b.need)[0];
+  return `<div class="hangar"><div class="hview"><canvas id="hcv" aria-label="マイメカ"></canvas><div class="hname"><input id="hName" class="tin" maxlength="10" placeholder="メカの なまえ" value="${esc(cfg.name || '')}"><small>ブロック ${mechBoxes(cfg).boxes.length}こ</small></div></div>
+    <div class="hside"><p class="hint">マスターした 漢字 <b>${mn}</b>こ。${nxt ? `あと <b>${nxt.need - mn}</b>こ マスターで「${esc(nxt.n)}」が つかえる！` : 'ぜんぶの パーツが つかえるよ！'}</p>
+      ${MECH_SLOTS.map(slot).join('')}
+      <div class="hslot"><b>いろ</b><div class="hopts">${MECH_COLS.map(o => `<button class="hcol" data-c="${o.c}" style="background:#${o.c.toString(16).padStart(6, '0')}" aria-pressed="${cfg.col === o.c}" ${mn >= o.need ? '' : 'disabled'} aria-label="いろ">${mn >= o.need ? '' : '🔒'}</button>`).join('')}</div></div>
+      <div class="wrow"><button class="btn sm y" id="hPrint">レゴで つくる せっけいず</button></div>
+      <p class="hint2">バトルで 漢字スキル「メカ しょうかん」を えらぶと、この メカが いっしょに たたかうよ。</p></div></div>`;
+}
+function bindHangar() {
+  const set = (k, v) => { S.mech = Object.assign(mechCfg(), { [k]: v }); save(); renderTab(); sfx('click'); };
+  $('#tabBody').querySelectorAll('.hopt').forEach(b => b.onclick = () => set(b.dataset.s, b.dataset.p));
+  $('#tabBody').querySelectorAll('.hcol').forEach(b => b.onclick = () => set('col', +b.dataset.c));
+  $('#hName').onchange = e => { S.mech = Object.assign(mechCfg(), { name: e.target.value.trim().slice(0, 10) }); save(); };
+  $('#hPrint').onclick = () => showBlueprint();
+  const cv = $('#hcv');
+  if (!HG) { HG = { r: new THREE.WebGLRenderer({ antialias: true, alpha: true }), sc: new THREE.Scene(), cm: new THREE.PerspectiveCamera(32, 1, .1, 100), t: 0 }; HG.sc.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1)); const d = new THREE.DirectionalLight(0xffffff, .7); d.position.set(4, 8, 6); HG.sc.add(d); HG.r.setPixelRatio(Math.min(2, devicePixelRatio || 1)); }
+  cv.replaceWith(HG.r.domElement); HG.r.domElement.id = 'hcv';
+  if (HG.m) HG.sc.remove(HG.m); HG.m = buildMech(mechCfg()); HG.sc.add(HG.m);
+  const h = HG.m.userData.height; HG.cm.position.set(0, h * .7, h * 2.3); HG.cm.lookAt(0, h * .45, 0);
+  if (!HG.loop) { HG.loop = true; const step = () => { if (!document.body.contains(HG.r.domElement)) { HG.loop = false; return; } requestAnimationFrame(step); const el = HG.r.domElement, w = el.clientWidth, hh = el.clientHeight; if (!w) return; if (el.width !== Math.round(w * HG.r.getPixelRatio())) { HG.r.setSize(w, hh, false); HG.cm.aspect = w / hh; HG.cm.updateProjectionMatrix(); } HG.t += .016; HG.m.rotation.y = HG.t * .6; HG.m.position.y = Math.sin(HG.t * 2) * .05; HG.r.render(HG.sc, HG.cm); }; step(); }
+}
+function showBlueprint() {
+  const cfg = mechCfg(), { boxes, height } = mechBoxes(cfg), el = $('#cert');
+  const draw = (view) => {
+    const c = document.createElement('canvas'), S2 = 34, W2 = 9 * S2, H2 = Math.ceil(height + 1) * S2; c.width = W2; c.height = H2; const x = c.getContext('2d');
+    x.fillStyle = '#eaf2ff'; x.fillRect(0, 0, W2, H2); x.strokeStyle = '#c3d4f0'; x.lineWidth = 1;
+    for (let i = 0; i <= W2; i += S2 / 2) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H2); x.stroke(); } for (let j = 0; j <= H2; j += S2 / 2) { x.beginPath(); x.moveTo(0, j); x.lineTo(W2, j); x.stroke(); }
+    const sorted = boxes.slice().sort((a, b) => view === 'front' ? a.z - b.z : -a.x + b.x);
+    for (const b of sorted) { const u = view === 'front' ? b.x : b.z, wu = view === 'front' ? b.w : b.d, px = W2 / 2 + (u - wu / 2) * S2, py = H2 - (b.y + b.h / 2) * S2; x.fillStyle = '#' + b.c.toString(16).padStart(6, '0'); x.strokeStyle = '#151733'; x.lineWidth = 2; x.fillRect(px, py, wu * S2, b.h * S2); x.strokeRect(px, py, wu * S2, b.h * S2); }
+    return c.toDataURL();
+  };
+  const cnt = {}; boxes.forEach(b => { const k = '#' + b.c.toString(16).padStart(6, '0'); cnt[k] = (cnt[k] || 0) + 1; });
+  el.innerHTML = `<div class="certbox bp"><div class="certin" style="min-height:0">
+    <p class="ct" style="font-size:1.6rem">${esc(cfg.name || 'マイメカ')} の せっけいず</p>
+    <div class="bpv"><figure><img src="${draw('front')}" alt="まえから"><figcaption>まえから</figcaption></figure><figure><img src="${draw('side')}" alt="よこから"><figcaption>よこから</figcaption></figure></div>
+    <p class="cbody" style="font-size:.95rem">ブロック ${boxes.length}こ（1マス ＝ レゴの ポッチ 2こ ぶん）</p>
+    <div class="bpc">${Object.entries(cnt).map(([k, n]) => `<span><i style="background:${k}"></i>×${n}</span>`).join('')}</div>
+    <p class="hint2">おうちの レゴで、せっけいずを みながら いっしょに つくってみよう！ しゃしんを とって おうちの人の ページに のこせるよ。</p></div>
+    <div class="wrow noprint"><button class="btn sm y" id="certPrint">いんさつ</button><button class="btn sm" id="certClose">とじる</button></div></div>`;
+  el.hidden = false; sfx('chest');
+  $('#certClose').onclick = () => { el.hidden = true; }; $('#certPrint').onclick = () => { document.body.classList.add('printcert'); setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove('printcert'), 500); }, 50); };
+}
+
+/* ============ 漢字バトル（TPS チーム戦・CPU たいせん） ============ */
+const TPS = { on: false, paused: false, scene: null, cam: null, chars: [], pts: [], obst: [], score: [0, 0], t: 0, dur: 240, goal: 200, lvl: 1, me: null, yaw: Math.PI, pitch: -.12, skill: 'mech', sk: 0, call: null, callT: 8, feed: [], stick: null, look: null, fireHeld: false, auto: true, res: null, mech: null, meteors: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0 };
+const TEAMN = ['{蒼|あお}の{騎士団|きしだん}', '{紅|くれない}の{軍団|ぐんだん}'];
+const TCOL = [0x4dabf7, 0xff4d5b], TCSS = ['#4dabf7', '#ff4d5b'];
+const MAPH = 36;
+// しょうがいぶつ（はんぶんを かいて z で はんてん）
+const OBST_HALF = [[-8, 8, 2, 2, 2], [8, 8, 2, 2, 2], [0, 13, 7, 1, 1.6], [-14, 15, 2.4, 2.4, 2.4], [14, 15, 2.4, 2.4, 2.4], [-24, 7, 2, 4, 3.5], [24, 7, 2, 4, 3.5], [-5, 4, 3, 1, 1.1], [5, 4, 3, 1, 1.1], [-27, 20, 6, 5, 4], [27, 20, 6, 5, 4], [-16, 24, 5, 1, 1.6], [16, 24, 5, 1, 1.6], [-31, 4, 2, 2, 2], [31, 4, 2, 2, 2], [-11, 2, 1, 3, 2.2], [11, 2, 1, 3, 2.2]];
+const PT_POS = [[-22, 0], [0, 0], [22, 0]];
+function tpsInit() {
+  if (TPS.scene) return;
+  const sc = TPS.scene = new THREE.Scene(); sc.background = new THREE.Color(0x9fd8ff); sc.fog = new THREE.Fog(0x9fd8ff, 45, 110);
+  TPS.cam = new THREE.PerspectiveCamera(60, 1, .1, 200);
+  sc.add(new THREE.HemisphereLight(0xffffff, 0x556677, .9)); const d = new THREE.DirectionalLight(0xffffff, .75); d.position.set(12, 30, 10); sc.add(d);
+  // じめん
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { x.fillStyle = (i + j) % 2 ? '#7ccf7a' : '#73c471'; x.fillRect(i * 64, j * 64, 64, 64); x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 2; x.strokeRect(i * 64 + 1, j * 64 + 1, 62, 62); }
+  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(20, 20); tex.magFilter = THREE.NearestFilter;
+  const gm = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshLambertMaterial({ map: tex })); gm.rotation.x = -Math.PI / 2; sc.add(gm);
+  // じんち
+  [[0, 30], [1, -30]].forEach(([t, z]) => { const m = new THREE.Mesh(G(16, .06, 8), new THREE.MeshLambertMaterial({ color: TCOL[t] })); m.position.set(0, .03, z); sc.add(m); });
+  // かべ と しょうがいぶつ
+  const O = TPS.obst = [];
+  const addO = (x, z, w, d, h, col) => { O.push({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2, h }); const m = new THREE.Mesh(G(w, h, d), M(col)); m.position.set(x, h / 2, z); sc.add(m); if (h > 1.4) { const t = new THREE.Mesh(G(w + .1, .15, d + .1), M(0x495057)); t.position.set(x, h + .07, z); sc.add(t); } };
+  const cols = [0xb07a3c, 0x9da3ad, 0xc9894a, 0x868e96];
+  OBST_HALF.forEach(([x, z, w, d, h], i) => { addO(x, z, w, d, h, cols[i % 4]); addO(x, -z, w, d, h, cols[(i + 1) % 4]); });
+  [[0, MAPH, 2 * MAPH + 2, 1], [0, -MAPH, 2 * MAPH + 2, 1], [MAPH, 0, 1, 2 * MAPH], [-MAPH, 0, 1, 2 * MAPH]].forEach(([x, z, w, d]) => addO(x, z, w, d, 3, 0x5c6670));
+  // きょてん
+  TPS.pts = PT_POS.map(([x, z]) => {
+    const ring = new THREE.Mesh(new THREE.RingGeometry(3.7, 4.2, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .9, side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.set(x, .05, z); sc.add(ring);
+    const disc = new THREE.Mesh(new THREE.CircleGeometry(3.7, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .18, depthWrite: false })); disc.rotation.x = -Math.PI / 2; disc.position.set(x, .04, z); sc.add(disc);
+    const pole = new THREE.Mesh(G(.2, 5, .2), M(0xdee2e6)); pole.position.set(x, 2.5, z); sc.add(pole);
+    const cv = document.createElement('canvas'); cv.width = cv.height = 128; const st = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false })); st.scale.set(3.4, 3.4, 1); st.position.set(x, 6.6, z); st.renderOrder = 5; sc.add(st);
+    return { x, z, r: 4, prog: 0, owner: 0, ring, disc, cv, st, k: '', yomi: '' };
+  });
+  // こうか
+  TPS.trM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 60); sc.add(TPS.trM); TPS.tr = [];
+  TPS.spM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 300); sc.add(TPS.spM); TPS.sp = [];
+  TPS.metM = []; for (let i = 0; i < 8; i++) { const m = new THREE.Mesh(G(1.4, 1.4, 1.4), MB(0xff922b)); m.visible = false; sc.add(m); TPS.metM.push(m); }
+  TPS.shM = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: 0x99e9f2, transparent: true, opacity: .25, depthWrite: false })); TPS.shM.visible = false; sc.add(TPS.shM);
+}
+function ptLabel(p) {
+  const x = p.cv.getContext('2d'), col = p.owner ? TCSS[p.owner - 1] : '#ffffff';
+  x.clearRect(0, 0, 128, 128); x.fillStyle = 'rgba(21,23,51,.75)'; x.beginPath(); x.arc(64, 64, 60, 0, 7); x.fill(); x.strokeStyle = col; x.lineWidth = 8; x.stroke();
+  x.fillStyle = col; x.font = '900 76px "Klee One", serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(p.k, 64, 70); p.st.material.map.needsUpdate = true;
+  p.ring.material.color.setHex(p.owner ? TCOL[p.owner - 1] : 0xffffff); p.disc.material.color.setHex(p.owner ? TCOL[p.owner - 1] : 0xffffff);
+}
+/* ---- キャラクター ---- */
+function tpsChar(team, isMe, idx) {
+  const si = isMe ? (skinUnlocked(S.skin) ? S.skin : 0) : (team ? [2, 1, 4, 6][idx % 4] : [0, 3, 5, 1][idx % 4]) % SKINS.length;
+  const pm = buildPlayer(si, 0);
+  if (isMe && S.build && S.build.weps) buildGear(pm, S.build.weps, S.build.pas || {}, S.build.lv || 1);
+  const band = new THREE.Mesh(G(1.08, .2, .6), MB(TCOL[team])); band.position.y = 1.62; pm.inner.add(band);
+  const mk = new THREE.Mesh(new THREE.OctahedronGeometry(.28), MB(TCOL[team])); mk.position.y = 3.35; pm.g.add(mk);
+  TPS.scene.add(pm.g);
+  const c = { team, isMe, pm, mk, x: 0, z: 0, y: 0, vy: 0, yaw: team ? 0 : Math.PI, hp: 100, max: 100, alive: true, rT: 0, inv: 0, hurtT: 0, fireT: 0, kills: 0, deaths: 0, moving: false, name: isMe ? (curProf().name || 'きみ') : (team ? `CPU${idx + 1}` : `なかま${idx}`), ai: { pt: null, ptT: 0, en: null, seenT: 0, scanT: 0, str: 1, strT: 0, last: [0, 0], stuckT: 0, detT: 0, det: 0, wx: 0, wz: 0 } };
+  tpsSpawn(c); return c;
+}
+function tpsSpawn(c) {
+  const z = c.team ? -30 : 30, x = (Math.random() - .5) * 12;
+  c.x = x; c.z = z + (Math.random() - .5) * 3; c.y = 0; c.vy = 0; c.hp = c.max; c.alive = true; c.inv = 2.5; c.pm.g.visible = true; c.pm.g.rotation.set(0, 0, 0); c.yaw = c.team ? 0 : Math.PI;
+  if (c.isMe) { TPS.yaw = c.yaw; TPS.pitch = -.12; }
+}
+const tpsLevelStat = L => ({ acc: .14 + .05 * L, react: Math.max(.15, 1.05 - .08 * L), spd: 4.4 + .14 * L, dmg: 7 + .55 * L, strafe: L >= 3, cover: L >= 6 });
+/* ---- はじめる ---- */
+function tpsLobby() {
+  hideAll(); $('#tpsLobby').hidden = false; const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 });
+  const lv = Math.min(T.max, TPS.lvl || T.max), sk = TPS.skill || 'mech';
+  $('#tpsLobby').innerHTML = `<div class="wrap"><div class="mtop"><button class="btn sm" id="tlBack">きちへ もどる</button></div>
+    <div class="mtitle"><span class="eyebrow">CPU たいせん</span><h2>${rb('{漢字|かんじ}バトル')}（4 たい 4）</h2>
+    <p>${rb(TEAMN[0])} と ${rb(TEAMN[1])} の たたかい。3つの きょてん を とりあって、さきに ${TPS.goal}てんで かち！<br>きょてんの なまえは <b>漢字</b>。たいちょうの「ひらがな」の めいれいを よんで、その 漢字の きょてんへ いそごう！</p></div>
+    <div class="panel"><h3>てきの つよさ（CPU レベル）</h3><div class="seg" id="tlLv">${Array.from({ length: 10 }, (_, i) => i + 1).map(i => `<button data-v="${i}" aria-pressed="${i === lv}" ${i > T.max ? 'disabled' : ''}>${i > T.max ? '🔒' : 'Lv' + i}</button>`).join('')}</div>
+      <p class="hint">かつと つぎの レベルが あそべるよ。${T.max >= 10 ? 'さいこう レベル かいほう ずみ！' : ''}</p></div>
+    <div class="panel"><h3>漢字スキル（ゲージが たまったら 漢字を 1こ 書いて はつどう）</h3><div class="seg" id="tlSk">
+      <button data-v="mech" aria-pressed="${sk === 'mech'}">メカ しょうかん</button><button data-v="meteor" aria-pressed="${sk === 'meteor'}">${rb('{流星|りゅうせい}')}</button><button data-v="shield" aria-pressed="${sk === 'shield'}">${rb('{結界|けっかい}')}</button></div>
+      <p class="hint" id="tlSkD"></p></div>
+    <div class="panel"><h3>そうさ</h3><p class="hint">iPad：ひだりで あるく、みぎを なぞって ねらう、うつ ボタン（ねらうと じどうでも うつ）。<br>パソコン：W A S D と マウス、クリックで うつ、E で スキル、スペースで ジャンプ。</p>
+      <label class="hint"><input type="checkbox" id="tlAuto" ${TPS.auto ? 'checked' : ''}> ねらったら じどうで うつ</label></div>
+    <div class="mact"><button class="btn big y" id="tlGo">しゅつげき！</button></div></div>`;
+  const desc = { mech: `マイメカ「${esc(mechCfg().name || 'マイメカ')}」が 20びょう いっしょに たたかう`, meteor: 'ねらった ばしょに いんせきが ふりそそぐ', shield: '10びょう なかま ぜんいんの ダメージが へって HP かいふく' };
+  const sel = (id, f) => $(id).querySelectorAll('[data-v]').forEach(b => b.onclick = () => { if (b.disabled) return; $(id).querySelectorAll('[data-v]').forEach(x => x.setAttribute('aria-pressed', x === b)); f(b.dataset.v); });
+  sel('#tlLv', v => TPS.lvl = +v); sel('#tlSk', v => { TPS.skill = v; $('#tlSkD').textContent = desc[v]; }); TPS.lvl = lv; TPS.skill = sk; $('#tlSkD').textContent = desc[sk];
+  $('#tlAuto').onchange = e => TPS.auto = e.target.checked;
+  $('#tlBack').onclick = () => goHome(); $('#tlGo').onclick = () => { sfx('evo'); tpsStart(); };
+}
+function tpsPickKanji() {
+  const L = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0), base = L.length >= 3 ? L : KG[1];
+  const out = []; const pool = shuffle(base.slice());
+  for (const d of pool) { if (out.length >= 3) break; if (!out.some(o => o.yomi === d.yomi)) out.push(d); }
+  return out;
+}
+function tpsStart() {
+  tpsInit(); hideAll(); endRun();
+  for (const c of TPS.chars) TPS.scene.remove(c.pm.g); TPS.chars = [];
+  if (TPS.mech) { TPS.scene.remove(TPS.mech.g); TPS.mech = null; }
+  TPS.me = tpsChar(0, true, 0); TPS.chars.push(TPS.me);
+  for (let i = 1; i <= 3; i++) TPS.chars.push(tpsChar(0, false, i));
+  for (let i = 0; i < 4; i++) TPS.chars.push(tpsChar(1, false, i));
+  tpsPickKanji().forEach((d, i) => { const p = TPS.pts[i]; p.k = d.k; p.yomi = d.yomi; p.prog = 0; p.owner = 0; ptLabel(p); });
+  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireHeld: false, endT: 0 });
+  TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, TPS.lvl - 1));
+  $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${rb(TEAMN[0])} しゅつげき！`, 'gold');
+}
+function tpsEnd() { TPS.on = false; TPS.paused = false; ['#tpsHud', '#tpsLobby', '#tpsResult', '#tpsPause'].forEach(s => $(s).hidden = true); if (document.pointerLockElement) document.exitPointerLock(); }
+function tpsResume() { hideAll(); $('#tpsHud').hidden = false; TPS.paused = false; TPS.stick = TPS.look = null; TPS.fireHeld = false; }
+/* ---- あたりはんてい ---- */
+function segHit(x1, z1, x2, z2, minH = 1.4) {
+  for (const o of TPS.obst) {
+    if (o.h < minH) continue; let t0 = 0, t1 = 1; const dx = x2 - x1, dz = z2 - z1;
+    for (const [p, d, lo, hi] of [[x1, dx, o.x0, o.x1], [z1, dz, o.z0, o.z1]]) { if (Math.abs(d) < 1e-9) { if (p < lo || p > hi) { t0 = 2; break; } } else { let a = (lo - p) / d, b = (hi - p) / d; if (a > b) [a, b] = [b, a]; t0 = Math.max(t0, a); t1 = Math.min(t1, b); if (t0 > t1) break; } }
+    if (t0 <= t1 && t0 <= 1) return true;
+  }
+  return false;
+}
+function rayBox(o, d, b) { let t0 = 0, t1 = 1e9; for (const [p, v, lo, hi] of [[o.x, d.x, b.x0, b.x1], [o.y, d.y, 0, b.h], [o.z, d.z, b.z0, b.z1]]) { if (Math.abs(v) < 1e-9) { if (p < lo || p > hi) return null; } else { let a = (lo - p) / v, c = (hi - p) / v; if (a > c) [a, c] = [c, a]; t0 = Math.max(t0, a); t1 = Math.min(t1, c); if (t0 > t1) return null; } } return t0; }
+function rayChar(o, d, c) {
+  const ox = o.x - c.x, oz = o.z - c.z, a = d.x * d.x + d.z * d.z, b = 2 * (ox * d.x + oz * d.z), cc = ox * ox + oz * oz - .5 * .5, disc = b * b - 4 * a * cc; if (disc < 0 || a < 1e-9) return null;
+  const t = (-b - Math.sqrt(disc)) / (2 * a); if (t < 0) return null; const y = o.y + d.y * t; return y >= c.y && y <= c.y + 2.8 ? t : null;
+}
+function collide(c, r = .5) {
+  for (const o of TPS.obst) { const nx = Math.max(o.x0, Math.min(c.x, o.x1)), nz = Math.max(o.z0, Math.min(c.z, o.z1)), dx = c.x - nx, dz = c.z - nz, d2 = dx * dx + dz * dz; if (d2 < r * r && c.y < o.h - .2) { if (d2 > 1e-8) { const d = Math.sqrt(d2); c.x = nx + dx / d * r; c.z = nz + dz / d * r; } else { const l = c.x - o.x0, rr = o.x1 - c.x, f = c.z - o.z0, bk = o.z1 - c.z, m = Math.min(l, rr, f, bk); if (m === l) c.x = o.x0 - r; else if (m === rr) c.x = o.x1 + r; else if (m === f) c.z = o.z0 - r; else c.z = o.z1 + r; } } }
+  c.x = Math.max(-MAPH + 1, Math.min(MAPH - 1, c.x)); c.z = Math.max(-MAPH + 1, Math.min(MAPH - 1, c.z));
+}
+const canSee = (a, b) => !segHit(a.x, a.z, b.x, b.z);
+/* ---- ダメージ ---- */
+function tpsHurt(c, d, by) {
+  if (!c.alive || c.inv > 0) return;
+  if (c.team === 0 && TPS.shieldT > 0) d *= .3;
+  c.hp -= d; c.hurtT = 4;
+  if (c.isMe) { const h = $('#hurt'); h.style.opacity = .8; clearTimeout(tpsHurt.t); tpsHurt.t = setTimeout(() => h.style.opacity = 0, 140); sfx('hurt'); }
+  if (c.hp <= 0) {
+    c.alive = false; c.hp = 0; c.deaths++; c.rT = 5; tpsSpark(c.x, 1.4, c.z, 18, TCOL[c.team]);
+    if (by) { by.kills++; TPS.score[by.team] += 2; if (by.isMe || by.isMech) { TPS.sk = Math.min(100, TPS.sk + 14); sfx('kill'); tpsHit(true); TPS.killT = 1.5; } }
+    tpsFeed(`${by ? esc(by.name) : ''} → ${esc(c.name)}`, by ? by.team : 1 - c.team);
+    if (c.isMe) { $('#tpsDead').hidden = false; }
+  }
+}
+function tpsShoot(from, ox, oy, oz, tx, ty, tz, col) {
+  TPS.tr.push({ x1: ox, y1: oy, z1: oz, x2: tx, y2: ty, z2: tz, life: .07, col }); tpsSpark(tx, ty, tz, 3, col);
+}
+function tpsSpark(x, y, z, n, col) { for (let i = 0; i < n && TPS.sp.length < 300; i++) TPS.sp.push({ x, y, z, vx: (Math.random() - .5) * 6, vy: Math.random() * 5, vz: (Math.random() - .5) * 6, life: .4 + Math.random() * .3, col }); }
+function tpsFeed(t, team) { TPS.feed.unshift({ t, team, life: 4 }); TPS.feed.length = Math.min(4, TPS.feed.length); }
+/* ---- じぶん ---- */
+const V3t = new THREE.Vector3(), V3u = new THREE.Vector3();
+function tpsAim() {
+  const cam = TPS.cam; const o = cam.position, d = V3u.set(0, 0, -1).applyQuaternion(cam.quaternion).normalize();
+  let best = null, bt = 80;
+  for (const b of TPS.obst) { const t = rayBox(o, d, b); if (t != null && t > 0 && t < bt) { bt = t; best = null; } }
+  for (const c of TPS.chars) { if (!c.alive || c.team === 0) continue; const t = rayChar(o, d, c); if (t != null && t < bt) { bt = t; best = c; } }
+  if (!best) { // ねらい ほせい
+    const lim = TPS.mouse ? .045 : .11; let ba = lim;
+    for (const c of TPS.chars) { if (!c.alive || c.team === 0) continue; const vx = c.x - o.x, vy = c.y + 1.4 - o.y, vz = c.z - o.z, L = Math.hypot(vx, vy, vz); if (L > 45) continue; const a = Math.acos(Math.max(-1, Math.min(1, (vx * d.x + vy * d.y + vz * d.z) / L))); if (a < ba && !segHit(TPS.me.x, TPS.me.z, c.x, c.z)) { ba = a; best = c; bt = L; } }
+    if (best) return { c: best, x: best.x, y: best.y + 1.4, z: best.z, assist: true };
+  }
+  return { c: best, x: o.x + d.x * bt, y: o.y + d.y * bt, z: o.z + d.z * bt };
+}
+function tpsUpdateMe(dt) {
+  const me = TPS.me; if (!me.alive) { me.rT -= dt; $('#tpsDeadT').textContent = Math.ceil(Math.max(0, me.rT)); if (me.rT <= 0) { tpsSpawn(me); $('#tpsDead').hidden = true; } return; }
+  let mx = 0, mz = 0; if (TPS.stick) { mx = TPS.stick.x; mz = TPS.stick.y; }
+  if (keys.KeyW || keys.ArrowUp) mz -= 1; if (keys.KeyS || keys.ArrowDown) mz += 1; if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1;
+  const l = Math.hypot(mx, mz); if (l > 1) { mx /= l; mz /= l; }
+  const fy = TPS.yaw, fx = Math.sin(fy), fz = Math.cos(fy), sp = 6.2;
+  // まえ = (sin yaw, cos yaw)、みぎ = (-cos yaw, sin yaw)
+  const rx = -fz, rz = fx; me.x += (fx * -mz + rx * mx) * sp * dt; me.z += (fz * -mz + rz * mx) * sp * dt; me.moving = l > .1;
+  if ((keys.Space || TPS.jumpReq) && me.y <= 0) { me.vy = 7.5; TPS.jumpReq = false; }
+  me.vy -= 22 * dt; me.y = Math.max(0, me.y + me.vy * dt); if (me.y <= 0) me.vy = 0;
+  collide(me); me.yaw = TPS.yaw;
+  // うつ
+  me.fireT -= dt; const aim = tpsAim(); TPS.aimC = aim.c;
+  const wantFire = TPS.fireHeld || keys.Mouse0 || (TPS.auto && aim.c && Math.hypot(aim.c.x - me.x, aim.c.z - me.z) < 32);
+  if (wantFire && me.fireT <= 0) {
+    me.fireT = .13; const tip = me.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(me.x, 1.6, me.z);
+    const dmg = 13 * (1 + kanjiPower() * .5) * (.85 + Math.random() * .3);
+    if (aim.c && Math.random() < (aim.assist ? .8 : .97)) { tpsHurt(aim.c, dmg, me); tpsHit(false, dmg); }
+    tpsShoot(me, V3t.x, V3t.y, V3t.z, aim.x + (Math.random() - .5) * .2, aim.y + (Math.random() - .5) * .2, aim.z, 0xfff3bf); sfx('shoot');
+  }
+}
+function tpsHit(kill, dmg) { const h = $('#tpsHit'); h.className = kill ? 'kill' : 'hit'; void h.offsetWidth; h.classList.add('on'); if (dmg) { const n = $('#tpsDmg'); n.textContent = Math.round(dmg); n.classList.remove('on'); void n.offsetWidth; n.classList.add('on'); } }
+/* ---- CPU ---- */
+function tpsUpdateAI(c, dt) {
+  const A = c.ai, st = c.team ? TPS.st : TPS.stA;
+  if (!c.alive) { c.rT -= dt; if (c.rT <= 0) tpsSpawn(c); return; }
+  // もくひょう きょてん
+  A.ptT -= dt; if (A.ptT <= 0 || !A.pt) {
+    A.ptT = 3 + Math.random() * 2; const mine = c.team + 1;
+    const need = TPS.pts.filter(p => p.owner !== mine || Math.abs(p.prog) < 100), list = need.length ? need : TPS.pts;
+    const idx = TPS.chars.filter(x => x.team === c.team && !x.isMe).indexOf(c);
+    list.sort((a, b) => Math.hypot(a.x - c.x, a.z - c.z) - Math.hypot(b.x - c.x, b.z - c.z));
+    A.pt = list[(idx % 2 === 1 && list.length > 1) ? 1 : 0]; A.wx = (Math.random() - .5) * 4; A.wz = (Math.random() - .5) * 4;
+  }
+  // てき さがし
+  A.scanT -= dt; if (A.scanT <= 0) { A.scanT = .25; let best = null, bd = 30; for (const o of TPS.chars) { if (!o.alive || o.team === c.team) continue; const d = Math.hypot(o.x - c.x, o.z - c.z); if (d < bd && canSee(c, o)) { bd = d; best = o; } } if (TPS.mech && TPS.mech.alive && c.team === 1) { const d = Math.hypot(TPS.mech.x - c.x, TPS.mech.z - c.z); if (d < bd && canSee(c, TPS.mech)) best = TPS.mech; } if (best !== A.en) A.seenT = 0; A.en = best; }
+  let tx = A.pt.x + A.wx, tz = A.pt.z + A.wz, sp = st.spd;
+  if (A.en && A.en.alive !== false) {
+    const e = A.en, d = Math.hypot(e.x - c.x, e.z - c.z); A.seenT += dt; c.yaw = Math.atan2(e.x - c.x, e.z - c.z);
+    if (st.cover && c.hp < 35) { tx = c.x - (e.x - c.x); tz = c.z - (e.z - c.z); }
+    else if (d > 20) { tx = e.x; tz = e.z; } else if (d < 7) { tx = c.x - (e.x - c.x); tz = c.z - (e.z - c.z); sp *= .7; }
+    else { sp *= .55; A.strT -= dt; if (A.strT <= 0) { A.strT = .8 + Math.random() * 1.2; A.str = Math.random() < .5 ? -1 : 1; } if (st.strafe) { const px = -(e.z - c.z) / d, pz = (e.x - c.x) / d; tx = c.x + px * A.str * 4; tz = c.z + pz * A.str * 4; } else { tx = c.x; tz = c.z; } }
+    c.fireT -= dt;
+    if (A.seenT > st.react && c.fireT <= 0 && d < 32) {
+      c.fireT = .2 + Math.random() * .15; const tip = c.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(c.x, 1.6, c.z);
+      let p = st.acc * (d < 10 ? 1.15 : d < 20 ? 1 : .7) * (e.moving ? .85 : 1); const hit = Math.random() < p;
+      const ty = (e.y || 0) + 1.3, mx = hit ? 0 : (Math.random() - .5) * 2.2, my = hit ? 0 : (Math.random() - .5) * 1.4;
+      if (hit) { if (e.isMech) tpsMechHurt(st.dmg); else tpsHurt(e, st.dmg * (c.team === 0 ? .9 : 1), c); }
+      tpsShoot(c, V3t.x, V3t.y, V3t.z, e.x + mx, ty + my, e.z + mx * .5, c.team ? 0xffa8a8 : 0xa5d8ff);
+    }
+  } else { const dp = Math.hypot(tx - c.x, tz - c.z); if (dp < 1.5) { A.wx = (Math.random() - .5) * 5; A.wz = (Math.random() - .5) * 5; } }
+  // いどう（よける・つまったら まわりこむ）
+  let dx = tx - c.x, dz = tz - c.z; const dl = Math.hypot(dx, dz);
+  if (dl > .4) {
+    dx /= dl; dz /= dl;
+    for (const o of TPS.obst) { const ax = c.x + dx * 1.8, az = c.z + dz * 1.8, cx = Math.max(o.x0, Math.min(ax, o.x1)), cz = Math.max(o.z0, Math.min(az, o.z1)), ex = ax - cx, ez = az - cz; if (ex * ex + ez * ez < 1.2) { const ox = (o.x0 + o.x1) / 2 - c.x, oz = (o.z0 + o.z1) / 2 - c.z, s = (dx * oz - dz * ox) > 0 ? -1 : 1; const px = -dz * s, pz = dx * s; dx += px * 1.1; dz += pz * 1.1; } }
+    for (const o of TPS.chars) { if (o === c || !o.alive) continue; const ox = c.x - o.x, oz = c.z - o.z, d2 = ox * ox + oz * oz; if (d2 < 2.5 && d2 > 1e-4) { dx += ox / d2 * .6; dz += oz / d2 * .6; } }
+    if (A.detT > 0) { A.detT -= dt; const r = A.det; const ndx = dx * Math.cos(r) - dz * Math.sin(r), ndz = dx * Math.sin(r) + dz * Math.cos(r); dx = ndx; dz = ndz; }
+    const l2 = Math.hypot(dx, dz) || 1; c.x += dx / l2 * sp * dt; c.z += dz / l2 * sp * dt; c.moving = true;
+    if (!A.en) c.yaw = Math.atan2(dx, dz);
+    A.stuckT += dt; if (A.stuckT > .8) { const mv = Math.hypot(c.x - A.last[0], c.z - A.last[1]); if (mv < .35 && A.detT <= 0) { A.detT = 1.1; A.det = (Math.random() < .5 ? 1 : -1) * (1.2 + Math.random() * .6); } A.last = [c.x, c.z]; A.stuckT = 0; }
+  } else c.moving = false;
+  collide(c);
+}
+/* ---- 漢字スキル ---- */
+function tpsSkillUse() {
+  if (TPS.sk < 100 || !TPS.me.alive || TPS.paused) { if (TPS.sk < 100) sfx('ng'); return; }
+  TPS.paused = true; sfx('chest'); openMission('tskill');
+}
+function tpsSkill() {
+  TPS.sk = 0; TPS.wrote++; const me = TPS.me;
+  if (TPS.skill === 'mech') {
+    if (TPS.mech) TPS.scene.remove(TPS.mech.g);
+    const g = buildMech(mechCfg()); g.scale.setScalar(.85); TPS.scene.add(g);
+    TPS.mech = { g, x: me.x + 2.5, z: me.z, y: 0, hp: 600, max: 600, alive: true, isMech: true, team: 0, life: 20, fireT: 0, name: mechCfg().name || 'マイメカ', yaw: TPS.yaw };
+    banner(`メカ しょうかん！「${esc(TPS.mech.name)}」`, 'gold'); tpsSpark(TPS.mech.x, 2, TPS.mech.z, 40, 0xffd43b); sfx('evo');
+  } else if (TPS.skill === 'meteor') {
+    const a = tpsAim(); for (let i = 0; i < 6; i++) TPS.meteors.push({ x: a.x + (Math.random() - .5) * 7, z: a.z + (Math.random() - .5) * 7, y: 30 + i * 6, m: TPS.metM[i] });
+    banner('{流星|りゅうせい}よ ふりそそげ！', 'gold'); sfx('warn');
+  } else {
+    TPS.shieldT = 10; for (const c of TPS.chars) if (c.team === 0 && c.alive) c.hp = Math.min(c.max, c.hp + c.max * .5);
+    banner('{結界|けっかい}！ なかまを まもれ！', 'gold'); sfx('evo');
+  }
+}
+function tpsMechHurt(d) { const m = TPS.mech; if (!m || !m.alive) return; m.hp -= d; if (m.hp <= 0) { m.alive = false; tpsSpark(m.x, 2, m.z, 50, 0xff922b); sfx('boom'); TPS.scene.remove(m.g); TPS.mech = null; } }
+function tpsUpdateMech(dt) {
+  const m = TPS.mech; if (!m) return; m.life -= dt; if (m.life <= 0) { tpsSpark(m.x, 2, m.z, 30, 0xffffff); TPS.scene.remove(m.g); TPS.mech = null; return; }
+  let best = null, bd = 34; for (const o of TPS.chars) { if (!o.alive || o.team === 0) continue; const d = Math.hypot(o.x - m.x, o.z - m.z); if (d < bd && canSee(m, o)) { bd = d; best = o; } }
+  const me = TPS.me; let tx = me.x + Math.sin(TPS.yaw + 1.2) * 3, tz = me.z + Math.cos(TPS.yaw + 1.2) * 3;
+  if (best) { m.yaw = Math.atan2(best.x - m.x, best.z - m.z); if (bd > 14) { tx = best.x; tz = best.z; } m.fireT -= dt; if (m.fireT <= 0) { m.fireT = .3; tpsHurt(best, 24, m); tpsShoot(m, m.x, 2.4, m.z, best.x, 1.4, best.z, 0xffd43b); sfx('shoot'); } }
+  const dx = tx - m.x, dz = tz - m.z, l = Math.hypot(dx, dz); if (l > 1) { m.x += dx / l * 5 * dt; m.z += dz / l * 5 * dt; if (!best) m.yaw = Math.atan2(dx, dz); }
+  collide(m, 1.3); m.g.position.set(m.x, Math.sin(TPS.t * 3) * .1, m.z); m.g.rotation.y = m.yaw;
+}
+/* ---- きょてん・てんすう ---- */
+function tpsUpdatePoints(dt) {
+  for (const p of TPS.pts) {
+    let b = 0, r = 0; for (const c of TPS.chars) if (c.alive && Math.hypot(c.x - p.x, c.z - p.z) < p.r) c.team ? r++ : b++;
+    if (TPS.mech && Math.hypot(TPS.mech.x - p.x, TPS.mech.z - p.z) < p.r) b++;
+    const before = p.owner;
+    if (b && !r) p.prog = Math.min(100, p.prog + 20 * Math.min(3, b) * dt); else if (r && !b) p.prog = Math.max(-100, p.prog - 20 * Math.min(3, r) * dt);
+    if (p.prog >= 100) p.owner = 1; else if (p.prog <= -100) p.owner = 2; else if ((p.owner === 1 && p.prog <= 0) || (p.owner === 2 && p.prog >= 0)) p.owner = 0;
+    if (p.owner !== before) { ptLabel(p); if (p.owner === 1) { TPS.caps++; TPS.sk = Math.min(100, TPS.sk + 12); banner(`「${p.k}」の きょてんを とった！`, 'gold'); sfx('chest'); } else if (p.owner === 2) { banner(`「${p.k}」が とられた！`, 'red'); sfx('warn'); } TPS.callT = Math.min(TPS.callT, 1.5); }
+    if (p.owner) TPS.score[p.owner - 1] += dt;
+    p.ring.scale.setScalar(1 + Math.sin(TPS.t * 3) * .03); p.disc.material.opacity = .12 + Math.abs(p.prog) / 100 * .22;
+    if (TPS.call && TPS.call.p === p && TPS.me.alive && Math.hypot(TPS.me.x - p.x, TPS.me.z - p.z) < p.r) { TPS.readOK++; TPS.score[0] += 5; banner(`ナイス！「${p.k}」が よめたね ＋5`, 'gold'); sfx('ok'); TPS.call = null; $('#tpsCall').classList.remove('on'); }
+  }
+  // たいちょうの めいれい（よみがなで）
+  TPS.callT -= dt;
+  if (TPS.callT <= 0) {
+    TPS.callT = 18 + Math.random() * 6;
+    const cand = TPS.pts.filter(p => p.owner !== 1).concat(TPS.pts.filter(p => p.owner === 1 && p.prog < 70));
+    const p = cand.length ? cand[Math.floor(Math.random() * cand.length)] : null;
+    if (p) { TPS.call = { p, t: 25, txt: p.owner === 1 ? `「${p.yomi}」の きょてんが あぶない！ まもれ！` : `「${p.yomi}」の きょてんを とれ！` }; const el = $('#tpsCall'); el.innerHTML = `<small>たいちょう</small>${esc(TPS.call.txt)}`; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); sfx('warn'); }
+  }
+  if (TPS.call) { TPS.call.t -= dt; if (TPS.call.t <= 0) { TPS.call = null; $('#tpsCall').classList.remove('on'); } }
+}
+/* ---- まいフレーム ---- */
+function tpsUpdate(dt) {
+  if (TPS.endT > 0) { TPS.endT -= dt; if (TPS.endT <= 0) tpsFinish(); }
+  else TPS.t += dt;
+  const cam = TPS.cam; if (cam.aspect !== innerWidth / innerHeight) { cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); }
+  TPS.sk = Math.min(100, TPS.sk + dt * 1.8); TPS.shieldT -= dt; TPS.killT = (TPS.killT || 0) - dt;
+  if (!TPS.endT) { tpsUpdateMe(dt); for (const c of TPS.chars) if (!c.isMe) tpsUpdateAI(c, dt); tpsUpdateMech(dt); tpsUpdatePoints(dt); }
+  for (const c of TPS.chars) {
+    c.inv -= dt; c.hurtT -= dt; if (c.alive && c.hurtT <= 0 && c.hp < c.max) c.hp = Math.min(c.max, c.hp + 10 * dt);
+    const g = c.pm.g; g.visible = c.alive || c.rT > 4; g.position.set(c.x, c.y, c.z); g.rotation.y = c.yaw;
+    if (!c.alive) { g.rotation.x = Math.min(Math.PI / 2, (5 - c.rT) * 4); } else { g.rotation.x = 0; animPlayer(c.pm, TPS.t + c.x, c.moving, !!(c.isMe ? TPS.aimC || TPS.fireHeld : c.ai.en)); if (c.isMe) { animGear(c.pm, TPS.t, dt); if (c.pm.face) setFace(c.pm, c.hurtT > 3.5 ? 'hurt' : TPS.killT > 0 ? 'happy' : TPS.mech || TPS.shieldT > 0 ? 'wow' : 'normal', (TPS.t % 3.3) < .11); } }
+    c.pm.inner.visible = !(c.inv > 0 && Math.floor(TPS.t * 16) % 2) && !(c.isMe && TPS.camNear);
+    c.mk.rotation.y += dt * 2; c.mk.visible = !c.isMe;
+  }
+  // いんせき
+  for (let i = TPS.meteors.length - 1; i >= 0; i--) { const m = TPS.meteors[i]; m.y -= 34 * dt; m.m.visible = true; m.m.position.set(m.x, m.y, m.z); m.m.rotation.x += dt * 5; if (m.y <= 0) { m.m.visible = false; TPS.meteors.splice(i, 1); tpsSpark(m.x, .5, m.z, 26, 0xff922b); sfx('boom'); for (const c of TPS.chars) if (c.team === 1 && c.alive && Math.hypot(c.x - m.x, c.z - m.z) < 4.5) tpsHurt(c, 60, TPS.me); } }
+  TPS.shM.visible = TPS.shieldT > 0 && TPS.me.alive; if (TPS.shM.visible) { TPS.shM.position.set(TPS.me.x, 1.3, TPS.me.z); TPS.shM.scale.setScalar(1.6); }
+  // カメラ
+  const me = TPS.me, yaw = TPS.yaw, pit = TPS.pitch, fx = Math.sin(yaw) * Math.cos(pit), fy = Math.sin(pit), fz = Math.cos(yaw) * Math.cos(pit), rx = -Math.cos(yaw), rz = Math.sin(yaw);
+  const hx = me.x + rx * .9, hy = me.y + 2.5, hz = me.z + rz * .9;
+  let dist = 4.6; { const o3 = V3t.set(hx, hy, hz), d3 = V3u.set(-fx, -fy, -fz); for (const o of TPS.obst) { const t = rayBox(o3, d3, { x0: o.x0 - .25, x1: o.x1 + .25, z0: o.z0 - .25, z1: o.z1 + .25, h: o.h + .3 }); if (t != null && t > 0 && t < dist) dist = Math.max(.6, t - .1); } }
+  cam.position.set(hx - fx * dist, hy - fy * dist + .3, hz - fz * dist); TPS.camNear = dist < 2; cam.lookAt(hx + fx * 10, hy + fy * 10, hz + fz * 10);
+  // こうか
+  let n = 0; for (let i = TPS.tr.length - 1; i >= 0; i--) { const t = TPS.tr[i]; t.life -= dt; if (t.life <= 0) { TPS.tr.splice(i, 1); continue; } if (n >= 60) continue; const dx = t.x2 - t.x1, dy = t.y2 - t.y1, dz = t.z2 - t.z1, L = Math.hypot(dx, dy, dz); const q = new THREE.Matrix4().lookAt(new THREE.Vector3(t.x1, t.y1, t.z1), new THREE.Vector3(t.x2, t.y2, t.z2), new THREE.Vector3(0, 1, 0)); q.scale(new THREE.Vector3(.05, .05, L)); q.setPosition((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2, (t.z1 + t.z2) / 2); TPS.trM.setMatrixAt(n, q); C1.setHex(t.col); setCol(TPS.trM, n, C1.r, C1.g, C1.b); n++; }
+  flush(TPS.trM, n);
+  n = 0; for (let i = TPS.sp.length - 1; i >= 0; i--) { const s = TPS.sp[i]; s.life -= dt; if (s.life <= 0) { TPS.sp.splice(i, 1); continue; } s.vy -= 14 * dt; s.x += s.vx * dt; s.y = Math.max(.05, s.y + s.vy * dt); s.z += s.vz * dt; const k = s.life * .5; setRY(TPS.spM, n, s.x, s.y, s.z, s.life * 8, k, k, k); C1.setHex(s.col); setCol(TPS.spM, n, C1.r, C1.g, C1.b); n++; }
+  flush(TPS.spM, n);
+  for (const f of TPS.feed) f.life -= dt; TPS.feed = TPS.feed.filter(f => f.life > 0);
+  // おわり
+  if (!TPS.endT && (TPS.score[0] >= TPS.goal || TPS.score[1] >= TPS.goal || TPS.t >= TPS.dur)) { TPS.endT = 2.2; const win = TPS.score[0] >= TPS.score[1]; banner(win ? 'しょうり！' : 'まけちゃった…', win ? 'gold' : 'red'); sfx(win ? 'win' : 'lose'); TPS.fireHeld = false; }
+  TPS.hudT = (TPS.hudT || 0) - dt; if (TPS.hudT <= 0) { TPS.hudT = .1; tpsHud(); }
+}
+/* ---- がめん ---- */
+function tpsHudBuild() {
+  $('#tpsHud').innerHTML = `<div class="tscore"><span class="tb">${rb(TEAMN[0])} <b id="tsB">0</b></span><span class="tt" id="tsT">4:00</span><span class="tr"><b id="tsR">0</b> ${rb(TEAMN[1])}</span><div class="tbar"><i id="tsBB"></i><i id="tsRB"></i></div><div class="tpts" id="tsP"></div></div>
+    <div id="tpsCall"></div><canvas id="tpsMap" width="240" height="240"></canvas><div id="tpsFeed"></div>
+    <div class="thp"><div class="hp"><i id="tpsHpF"></i><span id="tpsHpT"></span></div></div>
+    <div id="tpsCross"><i></i><i></i><i></i><i></i></div><div id="tpsHit"></div><div id="tpsDmg"></div>
+    <button id="tpsFire" aria-label="うつ">うつ</button><button id="tpsJump" aria-label="ジャンプ">ジャンプ</button><button id="tpsSk" aria-label="漢字スキル"><i id="tpsSkF"></i><span>漢字<br>スキル</span></button>
+    <button class="btn sm w" id="tpsPauseB" aria-label="ポーズ">II</button>
+    <div id="tpsDead" hidden><b>やられた！</b><span><b id="tpsDeadT">5</b>びょうで ふっかつ</span><button class="btn y" id="tpsRevive">漢字を 1こ 書いて すぐ ふっかつ</button></div>`;
+  const hold = (id, on, off) => { const b = $(id); b.onpointerdown = e => { e.preventDefault(); e.stopPropagation(); on(); }; b.onpointerup = b.onpointercancel = b.onpointerleave = e => { if (off) off(); }; };
+  hold('#tpsFire', () => TPS.fireHeld = true, () => TPS.fireHeld = false);
+  hold('#tpsJump', () => TPS.jumpReq = true);
+  hold('#tpsSk', () => tpsSkillUse());
+  $('#tpsPauseB').onclick = () => tpsPause();
+  $('#tpsRevive').onclick = () => { if (TPS.me.alive) return; TPS.paused = true; openMission('trespawn'); };
+}
+function tpsHud() {
+  const m = Math.max(0, TPS.dur - TPS.t), sb = Math.floor(TPS.score[0]), sr = Math.floor(TPS.score[1]);
+  $('#tsB').textContent = sb; $('#tsR').textContent = sr; $('#tsT').textContent = fmtT(m);
+  $('#tsBB').style.width = Math.min(50, sb / TPS.goal * 50) + '%'; $('#tsRB').style.width = Math.min(50, sr / TPS.goal * 50) + '%';
+  $('#tsP').innerHTML = TPS.pts.map(p => `<span style="border-color:${p.owner ? TCSS[p.owner - 1] : '#fff'};color:${p.owner ? TCSS[p.owner - 1] : '#fff'}"><i style="width:${Math.abs(p.prog)}%;background:${p.prog > 0 ? TCSS[0] : TCSS[1]}"></i><b>${esc(p.k)}</b></span>`).join('');
+  const me = TPS.me; $('#tpsHpF').style.width = (me.hp / me.max * 100) + '%'; $('#tpsHpT').textContent = `HP ${Math.ceil(me.hp)}`;
+  $('#tpsSkF').style.height = TPS.sk + '%'; $('#tpsSk').classList.toggle('ready', TPS.sk >= 100);
+  $('#tpsCross').classList.toggle('on', !!TPS.aimC);
+  $('#tpsFeed').innerHTML = TPS.feed.map(f => `<div style="border-color:${TCSS[f.team]}">${f.t}</div>`).join('');
+  // ミニマップ
+  const c = $('#tpsMap'), g = c.getContext('2d'), S2 = c.width, X = v => (v + MAPH) / (2 * MAPH) * S2;
+  g.clearRect(0, 0, S2, S2); g.fillStyle = 'rgba(21,23,51,.7)'; g.fillRect(0, 0, S2, S2); g.fillStyle = 'rgba(255,255,255,.25)'; for (const o of TPS.obst) if (o.x1 - o.x0 < 20 && o.z1 - o.z0 < 20) g.fillRect(X(o.x0), X(o.z0), X(o.x1) - X(o.x0), X(o.z1) - X(o.z0));
+  for (const p of TPS.pts) { g.fillStyle = p.owner ? TCSS[p.owner - 1] : '#fff'; g.font = '900 28px "Klee One",serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = .9; g.beginPath(); g.arc(X(p.x), X(p.z), 18, 0, 7); g.fill(); g.fillStyle = '#151733'; g.fillText(p.k, X(p.x), X(p.z) + 2); g.globalAlpha = 1; }
+  for (const o of TPS.chars) { if (!o.alive || o.isMe) continue; if (o.team === 1 && !(TPS.chars.some(a => a.team === 0 && a.alive && Math.hypot(a.x - o.x, a.z - o.z) < 22 && canSee(a, o)))) continue; g.fillStyle = TCSS[o.team]; g.beginPath(); g.arc(X(o.x), X(o.z), 6, 0, 7); g.fill(); }
+  if (TPS.mech) { g.fillStyle = '#ffd43b'; g.fillRect(X(TPS.mech.x) - 7, X(TPS.mech.z) - 7, 14, 14); }
+  g.save(); g.translate(X(me.x), X(me.z)); g.rotate(-TPS.yaw + Math.PI); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(0, -12); g.lineTo(8, 9); g.lineTo(-8, 9); g.closePath(); g.fill(); g.restore();
+}
+function tpsPause() { if (TPS.paused) return; TPS.paused = true; if (document.pointerLockElement) document.exitPointerLock(); const el = $('#tpsPause'); el.hidden = false; el.innerHTML = `<div class="mbox"><h2>ポーズ</h2><p>${rb(TEAMN[0])} ${Math.floor(TPS.score[0])} － ${Math.floor(TPS.score[1])} ${rb(TEAMN[1])}</p><div class="col"><button class="btn big y" id="tpR">つづける</button><button class="btn" id="tpQ">やめて きちへ</button></div></div>`; $('#tpR').onclick = () => { el.hidden = true; TPS.paused = false; }; $('#tpQ').onclick = () => { tpsEnd(); goHome(); }; }
+function tpsFinish() {
+  const win = TPS.score[0] >= TPS.score[1], me = TPS.me, T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 });
+  const coins = 15 + TPS.lvl * 8 + (win ? 30 + TPS.lvl * 6 : 0) + TPS.readOK * 5; S.coins += coins;
+  let unlocked = false; if (win) { T.wins[TPS.lvl] = (T.wins[TPS.lvl] || 0) + 1; if (TPS.lvl >= T.max && T.max < 10) { T.max = TPS.lvl + 1; unlocked = true; } T.best = Math.max(T.best, TPS.lvl); }
+  logDay(d => { d.tb = (d.tb || 0) + 1; }); save();
+  TPS.paused = true; if (document.pointerLockElement) document.exitPointerLock(); $('#tpsHud').hidden = true;
+  const el = $('#tpsResult'); el.hidden = false;
+  el.innerHTML = `<div class="mbox"><h2>${win ? 'しょうり！' : 'まけちゃった…'}</h2><p class="bigline">${Math.floor(TPS.score[0])} － ${Math.floor(TPS.score[1])}</p>
+    <div class="trs"><span>たおした<b>${me.kills}</b></span><span>やられた<b>${me.deaths}</b></span><span>とった きょてん<b>${TPS.caps}</b></span><span>よめた めいれい<b>${TPS.readOK}</b></span><span>書いた 漢字<b>${TPS.wrote}</b></span></div>
+    <p><span class="coin"></span> +${coins}${unlocked ? `　<b style="color:var(--yellow)">CPU Lv${T.max} が あそべるように なった！</b>` : ''}</p>
+    ${!win ? '<p class="hint2">ひらがなの めいれいを よんで、その 漢字の きょてんに いくと ＋5てん！</p>' : ''}
+    <div class="col"><button class="btn big y" id="trA">もういちど</button><button class="btn" id="trH">きちへ もどる</button></div></div>`;
+  $('#trA').onclick = () => { el.hidden = true; if (unlocked) TPS.lvl = T.max; tpsLobby(); }; $('#trH').onclick = () => { tpsEnd(); goHome(); };
+}
+/* ---- にゅうりょく ---- */
+function tpsPDown(e) {
+  if (TPS.paused) return;
+  if (e.pointerType === 'mouse') { TPS.mouse = true; if (!document.pointerLockElement) { try { $('#gl').requestPointerLock(); } catch (er) {} } if (e.button === 0) keys.Mouse0 = true; return; }
+  TPS.mouse = false;
+  if (e.clientX < innerWidth * .45 && !TPS.stick) { TPS.stick = { id: e.pointerId, ox: e.clientX, oy: e.clientY, x: 0, y: 0 }; const j = $('#joy'); j.hidden = false; j.style.left = e.clientX + 'px'; j.style.top = e.clientY + 'px'; $('#joyKnob').style.transform = ''; }
+  else if (!TPS.look) TPS.look = { id: e.pointerId, x: e.clientX, y: e.clientY };
+}
+function tpsPMove(e) {
+  if (TPS.stick && e.pointerId === TPS.stick.id) { let dx = e.clientX - TPS.stick.ox, dy = e.clientY - TPS.stick.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } TPS.stick.x = dx / m; TPS.stick.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
+  else if (TPS.look && e.pointerId === TPS.look.id) { const k = 4.2 / innerWidth; TPS.yaw -= (e.clientX - TPS.look.x) * k * 1.4; TPS.pitch = Math.max(-.7, Math.min(.55, TPS.pitch - (e.clientY - TPS.look.y) * k)); TPS.look.x = e.clientX; TPS.look.y = e.clientY; }
+}
+function tpsPUp(e) {
+  if (e.pointerType === 'mouse' && e.button === 0) keys.Mouse0 = false;
+  if (TPS.stick && e.pointerId === TPS.stick.id) { TPS.stick = null; $('#joy').hidden = true; }
+  if (TPS.look && e.pointerId === TPS.look.id) TPS.look = null;
+}
+addEventListener('mousemove', e => { if (!TPS.on || TPS.paused || document.pointerLockElement !== $('#gl')) return; TPS.yaw -= e.movementX * .0028; TPS.pitch = Math.max(-.7, Math.min(.55, TPS.pitch - e.movementY * .0024)); });
+addEventListener('keydown', e => { if (!TPS.on || TPS.paused || (e.target && e.target.tagName === 'INPUT')) return; if (e.code === 'KeyE' || e.code === 'KeyQ') tpsSkillUse(); if (e.code === 'Escape' || e.code === 'KeyP') tpsPause(); if (e.code === 'Space') e.preventDefault(); });
+document.addEventListener('pointerlockchange', () => { if (TPS.on && !TPS.paused && !document.pointerLockElement && TPS.mouse) tpsPause(); });
+function tpsRespawnNow() { const me = TPS.me; TPS.wrote++; tpsSpawn(me); me.inv = 3; $('#tpsDead').hidden = true; banner('漢字の ちからで ふっかつ！', 'gold'); sfx('evo'); }
+
+/* ============ ほんものの ごほうび（レゴ）と もぎしけん ============ */
+const KYU = { 1: '10級', 2: '9級', 3: '8級' };
+const TIERN = { 1: 'ブロンズ', 2: 'シルバー', 3: 'レジェンド' };
+const TIERC = { 1: '#d9895b', 2: '#c9d3e0', 3: '#ffc83a' };
+function rewardMiles(o) {
+  const G = Math.max(1, Math.min(3, (o || S).grade || 2)), L = [];
+  if (G >= 2) L.push({ id: `g${G - 1}all`, g: G - 1, need: 'all', tier: 1, yen: 2000 });
+  L.push({ id: `g${G}half`, g: G, need: 'half', tier: 1, yen: 2000 });
+  L.push({ id: `g${G}all`, g: G, need: 'all', exam: true, tier: G + 1 <= 3 ? 2 : 3, yen: G + 1 <= 3 ? 3000 : 10000 });
+  if (G + 1 <= 3) { L.push({ id: `g${G + 1}half`, g: G + 1, need: 'half', tier: 2, yen: 3000 }); L.push({ id: `g${G + 1}all`, g: G + 1, need: 'all', exam: true, tier: 3, yen: 10000 }); }
+  return L;
+}
+function mileState(m, o) {
+  o = o || S; const K = o.kanji || {}, L = KG[m.g], n = L.filter(d => K[d.k] && K[d.k].m).length, tgt = m.need === 'all' ? L.length : Math.ceil(L.length / 2);
+  const ex = (o.exams || {})[m.g], examOK = !m.exam || !!(ex && ex.pass), done = n >= tgt && examOK, cfg = (o.rw || {})[m.id] || {};
+  return { n, tgt, ratio: Math.min(1, n / tgt), examOK, done, cfg, given: !!cfg.given };
+}
+const mileTitle = m => `${m.g}年生の 漢字 ${m.need === 'all' ? 'ぜんぶ' : 'はんぶん'} マスター${m.exam ? ` ＋ ${KYU[m.g]} もぎしけん ごうかく` : ''}`;
+function examState(g, o) { o = o || S; const K = o.kanji || {}, L = KG[g], lr = L.filter(d => K[d.k] && K[d.k].c > 0).length, ex = (o.exams || {})[g] || {}; const ready = lr >= Math.ceil(L.length * .8), today = ex.last === todayStr() && !ex.pass; return { lr, n: L.length, ready, pass: !!ex.pass, best: ex.best || 0, wait: today }; }
+/* ---- こどもの タブ ---- */
+function rewardHTML() {
+  const G = S.grade || 2, miles = rewardMiles(S);
+  const card = m => { const st = mileState(m); const nm = st.cfg.name && !st.cfg.hide ? esc(st.cfg.name) : st.cfg.name ? '？？？（ひみつ）' : 'おうちの人が きめるよ';
+    return `<div class="rcard ${st.done ? 'done' : ''} ${st.given ? 'given' : ''}" style="--tc:${TIERC[m.tier]}"><div class="rtier">${TIERN[m.tier]}</div>
+      <div class="rbody"><b>${esc(mileTitle(m))}</b><div class="bar"><i style="width:${st.ratio * 100}%"></i></div>
+      <small>マスター ${st.n} / ${st.tgt}${m.exam ? `　しけん ${st.examOK ? 'ごうかく ✓' : 'まだ'}` : ''}</small>
+      <div class="rprize">${st.given ? (st.cfg.photo ? `<img src="${st.cfg.photo}" alt="もらった ごほうび">` : '') + `<span>もらった！「${esc(st.cfg.name || '')}」</span>` : st.done ? `<span class="go">たっせい！ おうちの人に みせよう → ${nm}</span>` : `<span>ごほうび：${nm}</span>`}</div></div></div>`; };
+  const exams = [1, 2, 3].filter(g => g >= G - 1).map(g => { const e = examState(g); return `<div class="exrow"><span class="kyu ${e.pass ? 'pass' : ''}">${KYU[g]}</span><span>${g}年生の 漢字 もぎしけん（10もん・ヒント なし）<br><small>${e.pass ? `ごうかく！（さいこう ${e.best}/10）` : e.ready ? (e.wait ? 'きょうは おしまい。あした また ちょうせん！' : 'ちょうせん できるよ！ 8もん いじょうで ごうかく') : `${g}年生の 字を あと ${Math.ceil(e.n * .8) - e.lr}こ おぼえると ちょうせん できる`}</small></span>${e.ready && !e.pass && !e.wait ? `<button class="btn sm y" data-exam="${g}">ちょうせん</button>` : ''}</div>`; }).join('');
+  return `<div class="reward"><div class="panel"><h3>ほんものの ごほうび</h3><p class="hint">これは「ポイントで かう」ものでは ないよ。漢字を ほんとうに マスターできた ときの <b>おいわい</b>。いっしょに がんばろう！</p>
+      <div class="rlist">${miles.map(card).join('')}</div></div>
+    <div class="panel"><h3>もぎしけん（${rb('{級|きゅう}')}）</h3><p class="hint">ほんものの「漢字検定（漢検）」の ${KYU[G]}・${KYU[Math.min(3, G + 1)]} と おなじ はんいの れんしゅうだよ。ごうかく できたら、ほんものにも ちょうせん してみよう！</p>${exams}</div></div>`;
+}
+function bindReward() { $('#tabBody').querySelectorAll('[data-exam]').forEach(b => b.onclick = () => openExam(+b.dataset.exam)); }
+function rewardCelebrate() {
+  S.rwSeen = S.rwSeen || {};
+  for (const m of rewardMiles(S)) { const st = mileState(m); if (st.done && !S.rwSeen[m.id]) { S.rwSeen[m.id] = 1; save(); const el = $('#cert');
+    el.innerHTML = `<div class="certbox"><div class="certin" style="min-height:0"><p class="ct" style="font-size:1.8rem">${TIERN[m.tier]} たっせい！</p><p class="cbody">${esc(mileTitle(m))}<br>を やりとげたね！</p><p class="cbody" style="font-size:1rem">おうちの人に この がめんを みせよう。<br>やくそくの ごほうび${st.cfg.name && !st.cfg.hide ? `「${esc(st.cfg.name)}」` : ''}が まっているよ。</p>${HANKO('祝', 'big')}</div><div class="wrow noprint"><button class="btn sm y" id="certClose">やったー！</button></div></div>`;
+    el.hidden = false; sfx('win'); $('#certClose').onclick = () => { el.hidden = true; }; return; } }
+}
+/* ---- もぎしけん ---- */
+function openExam(g) {
+  hideAll(); endRun(); const pool = shuffle(KG[g].slice()).slice(0, 10);
+  MS = { kind: 'exam', g, items: pool.map(d => ({ d, cat: 'rev', hint: false, first: null, ok: false, comment: '', reveal: false, strokes: [], before: S.kanji[d.k] ? { ...S.kanji[d.k] } : null })), blob: null, url: null, stage: 'pad', status: '', statusCls: '' };
+  $('#mission').hidden = false; $('#mission').scrollTop = 0; renderMission();
+}
+function examCheck() {
+  const empty = MS.items.filter(it => !it.strokes.length);
+  if (empty.length) { setStatus(`${empty.map(numOf).join(' ')} が まだ 書いてないよ`, 'err'); sfx('ng'); return; }
+  let sc = 0; for (const it of MS.items) { const r = HW.grade(it.d.k, it.strokes.map(s => s.pts), { order: S.order, level: S.level === 'easy' ? 'normal' : S.level }); it.ok = true; it.first = r.ok; it.examOK = r.ok; it.comment = r.ok ? '○' : '×'; if (r.ok) sc++; }
+  const g = MS.g, pass = sc >= 8; S.exams = S.exams || {}; const ex = S.exams[g] || (S.exams[g] = {}); ex.last = todayStr(); ex.best = Math.max(ex.best || 0, sc); if (pass) { ex.pass = true; ex.at = Date.now(); }
+  S.kp = (S.kp || 0) + sc; logDay(d => { d.pt = (d.pt || 0) + sc; d.ex = (d.ex || 0) + 1; }); save();
+  sfx(pass ? 'win' : 'ng');
+  MS.stage = 'done';
+  MS.doneHTML = `<div class="celebrate"><h2>${KYU[g]} もぎしけん ${pass ? 'ごうかく！' : 'ざんねん…'}</h2><div class="gain">10もん ちゅう ${sc}もん</div>
+    <div class="exres">${MS.items.map(it => `<span class="${it.examOK ? 'o' : 'x'}"><b>${esc(it.d.k)}</b>${it.examOK ? '○' : '×'}</span>`).join('')}</div>
+    ${pass ? `<div class="newskin">カンジブラスター ${KYU[g]} ごうかく！ ほんものの 漢字検定にも ちょうせん してみよう！</div>` : '<p>×の 字を れんしゅうして、あした また ちょうせん しよう！</p>'}
+    <div class="mact" style="width:100%"><button class="btn big y" id="dGo">きちへ もどる</button></div></div>`;
+  renderMission(); $('#mission').scrollTop = 0;
+}
+/* ---- おうちの人の ページ ---- */
+function ppRewardHTML(o, p) {
+  const miles = rewardMiles(o);
+  const row = m => { const st = mileState(m, o), c = st.cfg;
+    return `<div class="rset" data-mid="${m.id}"><div class="rhead"><span class="rtag" style="background:${TIERC[m.tier]}">${TIERN[m.tier]}</span><b>${esc(mileTitle(m))}</b><small>マスター ${st.n}/${st.tgt}${m.exam ? `・しけん ${st.examOK ? 'ごうかく' : 'まだ'}` : ''}${st.given ? '・わたしずみ' : st.done ? '・<b style="color:#c92a2a">たっせい！</b>' : ''}</small></div>
+      <div class="prow"><label>ごほうび</label><input class="tin" data-f="name" maxlength="40" placeholder="れい：レゴ クリエイター 3in1 の のりもの" value="${esc(c.name || '')}"></div>
+      <div class="prow"><label>めやす</label><div class="seg" data-f="yen">${[2000, 3000, 5000, 10000].map(v => `<button data-v="${v}" aria-pressed="${(c.yen || m.yen) === v}">${v.toLocaleString()}円</button>`).join('')}</div></div>
+      <div class="prow"><label>リンク</label><input class="tin" data-f="url" type="url" placeholder="https://www.amazon.co.jp/..." value="${esc(c.url || '')}">${c.url ? `<a class="btn sm w" href="${esc(c.url)}" target="_blank" rel="noopener">ひらく</a>` : ''}</div>
+      <label class="hint2"><input type="checkbox" data-f="hide" ${c.hide ? 'checked' : ''}> こどもには なまえを ひみつに する</label>
+      ${st.done && !st.given ? `<div class="wrow"><label class="btn sm y">わたした（しゃしんを のこす）<input type="file" accept="image/*" data-f="photo" hidden></label><button class="btn sm" data-f="given">しゃしん なしで わたした</button></div>` : ''}
+      ${st.given && c.photo ? `<img class="rphoto" src="${c.photo}" alt="ごほうびの しゃしん">` : ''}</div>`; };
+  return `<div class="ppbox"><h3>ほんものの ごほうび（レゴ など）</h3>
+    <p class="hint2">「ポイント ○○で かえる」では なく、<b>学年の 漢字を マスターした（＋もぎしけん ごうかく）</b>という できた しるしの おいわい として わたす しくみです。こどもの がめんには じょうけんと すすみぐあいが でます。</p>
+    ${miles.map(row).join('')}
+    <details class="tips"><summary>やる気を そこなわない わたしかた</summary><ul>
+      <li>「○字で いくら」の ような こまかい ひきかえは さけ、大きな ふしめの おいわいに しています（モノの ための 勉強に なりにくい）。</li>
+      <li>わたす ときは「ずっと つづけたね」「にがてな 字も あきらめなかったね」と、どりょくの 中身を ことばに しましょう。</li>
+      <li>レゴは いっしょに つくる 時間 そのものが ごほうびに なります。「マイメカ」の せっけいずを みて、手もちの ブロックで つくるのも おすすめです。</li>
+      <li>さいごの 大きな もくひょうは、ほんものの 漢字検定（${KYU[Math.min(3, (o.grade || 2) + 1)]}）に ちょうせん することも かんがえて みてください。学校や ゲームの そとで みとめられる たっせい感は、とても 大きな じしんに なります。</li></ul></details></div>`;
+}
+function ppRewardBind(o, p) {
+  const W2 = $('#ppWrap');
+  W2.querySelectorAll('.rset').forEach(r => {
+    const id = r.dataset.mid, mut = fn => ppMut(p.id, s => { s.rw = s.rw || {}; s.rw[id] = s.rw[id] || {}; fn(s.rw[id]); });
+    r.querySelectorAll('input.tin').forEach(inp => inp.onchange = () => { const v = inp.value.trim().slice(0, inp.dataset.f === 'url' ? 400 : 40); if (inp.dataset.f === 'url' && v && !/^https:\/\//.test(v)) { toast('https:// から はじまる リンクを いれてね'); return; } mut(c => c[inp.dataset.f] = v); toast('ほぞんしました'); });
+    r.querySelectorAll('[data-f="yen"] [data-v]').forEach(b => b.onclick = () => { mut(c => c.yen = +b.dataset.v); renderParentPage(); });
+    const hd = r.querySelector('[data-f="hide"]'); if (hd) hd.onchange = () => mut(c => c.hide = hd.checked);
+    const gv = r.querySelector('button[data-f="given"]'); if (gv) gv.onclick = () => { mut(c => c.given = Date.now()); sfx('win'); renderParentPage(); };
+    const ph = r.querySelector('input[data-f="photo"]'); if (ph) ph.onchange = async () => { const f = ph.files && ph.files[0]; if (!f) return; try { const url = await photoThumb(f); mut(c => { c.given = Date.now(); c.photo = url; }); sfx('win'); renderParentPage(); } catch (e) { toast('しゃしんが よみこめませんでした'); } };
+  });
+}
+function photoThumb(file) {
+  return new Promise((res, rej) => { const img = new Image(), u = URL.createObjectURL(file); img.onload = () => { const s = Math.min(1, 360 / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', .72)); }; img.onerror = () => { URL.revokeObjectURL(u); rej(); }; img.src = u; });
+}
+
+
 /* ============ はじまり ============ */
 initGL(); makeSigils(); sgBindUI(); bindLearnUI(); initPreview();
 const cv = $('#gl');
