@@ -279,6 +279,7 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 #tpsWep{right:150px;bottom:calc(env(safe-area-inset-bottom,0px) + 104px);width:86px;height:86px;background:var(--wc,#4dabf7);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1.05;font-size:.62rem;padding:0;text-shadow:0 1px 0 rgba(0,0,0,.5)}
 #tpsWep .wic{font-family:var(--kyo);font-size:1.5rem;font-weight:900}#tpsWep b{font-size:.62rem}#tpsWep small{font-size:.6rem}
 #tpsWep.boost{background:#ffd43b;color:#151733;text-shadow:none;animation:wpb .5s infinite alternate}@keyframes wpb{to{box-shadow:0 0 0 7px rgba(255,212,59,.45),0 5px 0 var(--ink)}}
+.tmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.tmc{background:#fffbf0;color:#1f1d1a;border:3px solid var(--ink);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;box-shadow:0 4px 0 var(--ink);font-family:inherit;cursor:pointer}.tmc .wic{width:46px;height:46px;border-radius:50%;background:var(--wc);color:#fff;display:grid;place-items:center;font-family:var(--kyo);font-size:1.6rem;font-weight:900;border:3px solid var(--ink);text-shadow:0 1px 0 rgba(0,0,0,.6)}.tmc b{font-size:.95rem}.tmc small{font-size:.72rem;color:#555;line-height:1.3}.tmc.on{outline:4px solid #ffd43b;outline-offset:1px;background:#fff3bf}
 .twgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .twc{position:relative;background:#fffbf0;color:#1f1d1a;border:3px solid var(--ink);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
 .twc .wic{width:46px;height:46px;border-radius:50%;background:var(--wc);color:#fff;display:grid;place-items:center;font-family:var(--kyo);font-size:1.6rem;font-weight:900;border:3px solid var(--ink);text-shadow:0 1px 0 rgba(0,0,0,.5)}
@@ -4886,48 +4887,17 @@ function tpsPhys(c, dt) {
   collide(c, c.isMech ? 1.3 : .5);
   const gh = tpsGroundH(c.x, c.z, c.y + STEP);
   if (c.onG !== false && c.vy <= 0 && c.y - gh <= STEP + .05) { c.y = gh; c.vy = 0; c.onG = true; }
-  else { c.vy -= 30 * dt; c.y += c.vy * dt; if (c.y <= gh) { c.y = gh; c.vy = 0; c.onG = true; } else c.onG = false; }
+  else { c.vy -= (TPS.grav || 30) * dt; c.y += c.vy * dt; if (c.y <= gh) { c.y = gh; c.vy = 0; c.onG = true; } else c.onG = false; }
 }
 function tpsInit() {
   if (TPS.scene) return;
   const sc = TPS.scene = new THREE.Scene(); sc.background = new THREE.Color(0x9fd8ff); sc.fog = new THREE.Fog(0x9fd8ff, 45, 110);
   TPS.cam = new THREE.PerspectiveCamera(70, 1, .1, 200);
-  sc.add(new THREE.HemisphereLight(0xffffff, 0x556677, .9)); const d = new THREE.DirectionalLight(0xffffff, .75); d.position.set(12, 30, 10); sc.add(d);
-  // じめん
-  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
-  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { x.fillStyle = (i + j) % 2 ? '#7ccf7a' : '#73c471'; x.fillRect(i * 64, j * 64, 64, 64); x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 2; x.strokeRect(i * 64 + 1, j * 64 + 1, 62, 62); }
-  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(20, 20); tex.magFilter = THREE.NearestFilter;
-  const gm = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshLambertMaterial({ map: tex })); gm.rotation.x = -Math.PI / 2; sc.add(gm);
-  // じんち
-  [[0, 30], [1, -30]].forEach(([t, z]) => { const m = new THREE.Mesh(G(16, .06, 8), new THREE.MeshLambertMaterial({ color: TCOL[t], transparent: true, opacity: .35, depthWrite: false })); m.position.set(0, .03, z); sc.add(m); });
-  // かべ と しょうがいぶつ
-  const O = TPS.obst = [];
-  const BX = [], addO = (x, z, w, d, h, col, wall) => { O.push({ x0: x - w / 2, x1: x + w / 2, z0: z - d / 2, z1: z + d / 2, h, wall }); BX.push({ w, h, d, x, y: h / 2, z, c: col }); if (h > 1.4) BX.push({ w: w + .1, h: .15, d: d + .1, x, y: h + .07, z, c: 0x495057 }); };
-  // たかい ところ：よこは つち・いし、うえは くさ
-  const TST = [[0x9c6b43, [0x5fb45a, 0x4fa34b, 0xd8bd85]], [0x868e96, [0xced4da]], [0xb5835a, [0xe9c46a]], [0x6c757d, [0xadb5bd]]];
-  tpsTerrain((xa, xb, za, zb, h, s) => {
-    const x0 = Math.min(xa, xb), x1 = Math.max(xa, xb), z0 = Math.min(za, zb), z1 = Math.max(za, zb), w = x1 - x0, d = z1 - z0, x = (x0 + x1) / 2, z = (z0 + z1) / 2, [side, tops] = TST[s];
-    O.push({ x0, x1, z0, z1, h, ter: s + 1 }); BX.push({ w, h: h - .12, d, x, y: (h - .12) / 2, z, c: side }); BX.push({ w: w + .02, h: .12, d: d + .02, x, y: h - .06, z, c: tops[Math.min(tops.length - 1, Math.max(0, Math.round(h * 2) - 1))] });
-  });
-  const gAt = (x, z) => { let h = 0; for (const o of O) if (o.ter && x >= o.x0 && x <= o.x1 && z >= o.z0 && z <= o.z1) h = Math.max(h, o.h); return h; };
-  const cols = [0xb07a3c, 0x9da3ad, 0xc9894a, 0x868e96];
-  OBST_HALF.forEach(([x, z, w, d, h], i) => { addO(x, z, w, d, h + gAt(x, z), cols[i % 4]); addO(x, -z, w, d, h + gAt(x, -z), cols[(i + 1) % 4]); });
-  [[0, MAPH, 2 * MAPH + 2, 1], [0, -MAPH, 2 * MAPH + 2, 1], [MAPH, 0, 1, 2 * MAPH], [-MAPH, 0, 1, 2 * MAPH]].forEach(([x, z, w, d]) => addO(x, z, w, d, 4.5, 0x5c6670, 1));
-  sc.add(new THREE.Mesh(mergeBoxes(BX), new THREE.MeshLambertMaterial({ vertexColors: true })));
-  // きょてん
-  TPS.pts = PT_POS.map(([x, z]) => {
-    const gy = tpsGroundH(x, z, 99);
-    const ring = new THREE.Mesh(new THREE.RingGeometry(3.7, 4.2, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .9, side: THREE.DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.set(x, gy + .05, z); sc.add(ring);
-    const disc = new THREE.Mesh(new THREE.CircleGeometry(3.7, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .18, depthWrite: false })); disc.rotation.x = -Math.PI / 2; disc.position.set(x, gy + .04, z); sc.add(disc);
-    const pole = new THREE.Mesh(G(.2, 5, .2), M(0xdee2e6)); pole.position.set(x, gy + 2.5, z); sc.add(pole);
-    const cv = document.createElement('canvas'); cv.width = cv.height = 128; const st = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false })); st.scale.set(3.4, 3.4, 1); st.position.set(x, gy + 6.6, z); st.renderOrder = 5; sc.add(st);
-    return { x, z, r: 4, prog: 0, owner: 0, ring, disc, cv, st, k: '', yomi: '' };
-  });
+  TPS.hemi = new THREE.HemisphereLight(0xffffff, 0x556677, .9); sc.add(TPS.hemi); const d = TPS.sunL = new THREE.DirectionalLight(0xffffff, .75); d.position.set(12, 30, 10); sc.add(d);
   // こうか
   TPS.trM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 60); sc.add(TPS.trM); TPS.tr = [];
   TPS.spM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 300); sc.add(TPS.spM); TPS.sp = [];
   TPS.metM = []; for (let i = 0; i < 8; i++) { const m = new THREE.Mesh(G(1.4, 1.4, 1.4), MB(0xff922b)); m.visible = false; sc.add(m); TPS.metM.push(m); }
-  navBuild();
   TPS.shM = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: 0x99e9f2, transparent: true, opacity: .25, depthWrite: false })); TPS.shM.visible = false; sc.add(TPS.shM);
 }
 function ptLabel(p) {
@@ -4964,6 +4934,7 @@ function tpsLobby() {
     <p>${rb(TEAMN[0])} と ${rb(TEAMN[1])} の たたかい。3つの きょてん を とりあって、さきに ${TPS.goal}てんで かち！<br>きょてんの なまえは <b>漢字</b>。たいちょうの「ひらがな」の めいれいを よんで、その 漢字の きょてんへ いそごう！</p></div>
     <div class="panel"><h3>てきの つよさ（CPU レベル）</h3><div class="seg" id="tlLv">${Array.from({ length: 10 }, (_, i) => i + 1).map(i => `<button data-v="${i}" aria-pressed="${i === lv}" ${i > T.max ? 'disabled' : ''}>${i > T.max ? '🔒' : 'Lv' + i}</button>`).join('')}</div>
       <p class="hint">かつと つぎの レベルが あそべるよ。${T.max >= 10 ? 'さいこう レベル かいほう ずみ！' : ''}</p></div>
+    ${tmPanelHTML()}
     ${twPanelHTML()}
     <div class="panel"><h3>漢字スキル（ゲージが たまったら 漢字を 1こ 書いて はつどう）</h3><div class="seg" id="tlSk">
       <button data-v="mech" aria-pressed="${sk === 'mech'}">メカ しょうかん</button><button data-v="meteor" aria-pressed="${sk === 'meteor'}">${rb('{流星|りゅうせい}')}</button><button data-v="shield" aria-pressed="${sk === 'shield'}">${rb('{結界|けっかい}')}</button></div>
@@ -4975,7 +4946,7 @@ function tpsLobby() {
   const sel = (id, f) => $(id).querySelectorAll('[data-v]').forEach(b => b.onclick = () => { if (b.disabled) return; $(id).querySelectorAll('[data-v]').forEach(x => x.setAttribute('aria-pressed', x === b)); f(b.dataset.v); });
   sel('#tlLv', v => TPS.lvl = +v); sel('#tlSk', v => { TPS.skill = v; $('#tlSkD').textContent = desc[v]; }); TPS.lvl = lv; TPS.skill = sk; $('#tlSkD').textContent = desc[sk];
   $('#tlAuto').onchange = e => TPS.auto = e.target.checked;
-  $('#tlBack').onclick = () => goHome(); $('#tlGo').onclick = () => { sfx('evo'); tpsStart(); }; twPanelBind();
+  $('#tlBack').onclick = () => goHome(); $('#tlGo').onclick = () => { sfx('evo'); tpsStart(); }; twPanelBind(); tmPanelBind();
 }
 function tpsPickKanji() {
   const L = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0), base = L.length >= 3 ? L : KG[1];
@@ -4984,7 +4955,7 @@ function tpsPickKanji() {
   return out;
 }
 function tpsStart() {
-  tpsInit(); tpsWInit(); TPS.slot = 0; hideAll(); endRun();
+  tpsInit(); tpsLoadMap(tmPick()); tpsWInit(); TPS.slot = 0; hideAll(); endRun();
   for (const c of TPS.chars) TPS.scene.remove(c.pm.g); TPS.chars = [];
   for (const d of TPS.deb || []) TPS.scene.remove(d.m); TPS.deb = []; for (const b of TPS.beams || []) TPS.scene.remove(b.m); TPS.beams = [];
   if (TPS.mech) { TPS.scene.remove(TPS.mech.g); TPS.mech = null; }
@@ -4994,7 +4965,7 @@ function tpsStart() {
   tpsPickKanji().forEach((d, i) => { const p = TPS.pts[i]; p.k = d.k; p.yomi = d.yomi; p.prog = 0; p.owner = 0; ptLabel(p); });
   Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireLook: null, fireHeld: false, endT: 0, intel: [new Map(), new Map()], noise: [], planT: [0, 0], proj: [], spin: 0, wslow: 1, boostT: 0, box: null, boxT: 35, boxCool: 0, shake: 0 });
   TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, Math.round(TPS.lvl * .65)));
-  $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${TEAMN[0]} しゅつげき！`, 'gold');
+  $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`「${TPS.map.n}」 ${TEAMN[0]} しゅつげき！`, 'gold');
 }
 function tpsEnd() { TPS.on = false; TPS.paused = false; ['#tpsHud', '#tpsLobby', '#tpsResult', '#tpsPause'].forEach(s => $(s).hidden = true); if (document.pointerLockElement) document.exitPointerLock(); }
 function tpsResume() { hideAll(); $('#tpsHud').hidden = false; TPS.paused = false; TPS.stick = TPS.look = TPS.fireLook = null; TPS.fireHeld = false; const f = $('#tpsFire'); if (f) f.classList.remove('on'); }
@@ -5141,7 +5112,7 @@ function tpsUpdate(dt) {
   let dist = 8.5; { const o3 = V3t.set(hx, hy, hz), d3 = V3u.set(-fx, -fy, -fz); for (const o of TPS.obst) { const t = rayBox(o3, d3, { x0: o.x0 - .25, x1: o.x1 + .25, z0: o.z0 - .25, z1: o.z1 + .25, h: o.h + .3 }); if (t != null && t > 0 && t < dist) dist = Math.max(1.2, t - .15); } }
   cam.position.set(hx - fx * dist, hy - fy * dist, hz - fz * dist); TPS.camNear = dist < 2.4; if (TPS.shake > 0) { TPS.shake -= dt; const k = TPS.shake * .6; cam.position.x += (Math.random() - .5) * k; cam.position.y += (Math.random() - .5) * k; } cam.lookAt(hx + fx * 12, hy + fy * 12, hz + fz * 12);
   // こうか
-  tpsDebris(dt); tpsBeams(dt); tpsProjUpdate(dt); if (!TPS.endT) tpsBoxUpdate(dt);
+  tpsDebris(dt); tpsBeams(dt); tpsMapUpdate(dt); tpsProjUpdate(dt); if (!TPS.endT) tpsBoxUpdate(dt);
   let n = 0; for (let i = TPS.tr.length - 1; i >= 0; i--) { const t = TPS.tr[i]; t.life -= dt; if (t.life <= 0) { TPS.tr.splice(i, 1); continue; } if (n >= 60) continue; const dx = t.x2 - t.x1, dy = t.y2 - t.y1, dz = t.z2 - t.z1, L = Math.hypot(dx, dy, dz); const q = new THREE.Matrix4().lookAt(new THREE.Vector3(t.x1, t.y1, t.z1), new THREE.Vector3(t.x2, t.y2, t.z2), new THREE.Vector3(0, 1, 0)); q.scale(new THREE.Vector3(t.w || .05, t.w || .05, L)); q.setPosition((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2, (t.z1 + t.z2) / 2); TPS.trM.setMatrixAt(n, q); C1.setHex(t.col); setCol(TPS.trM, n, C1.r, C1.g, C1.b); n++; }
   flush(TPS.trM, n);
   n = 0; for (let i = TPS.sp.length - 1; i >= 0; i--) { const s = TPS.sp[i]; s.life -= dt; if (s.life <= 0) { TPS.sp.splice(i, 1); continue; } if (!s.ng) s.vy -= 14 * dt; s.x += s.vx * dt; s.y = Math.max(.05, s.y + s.vy * dt); s.z += s.vz * dt; const k = s.s ? s.s * Math.min(1, s.life * 3) : s.life * .5; setRY(TPS.spM, n, s.x, s.y, s.z, s.life * 8, k, k, k); C1.setHex(s.col); setCol(TPS.spM, n, C1.r, C1.g, C1.b); n++; }
@@ -5185,7 +5156,7 @@ function tpsHud() {
   for (const p of TPS.pts) { g.fillStyle = p.owner ? TCSS[p.owner - 1] : '#fff'; g.font = '900 28px "Klee One",serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = .9; g.beginPath(); g.arc(X(p.x), X(p.z), 18, 0, 7); g.fill(); g.fillStyle = '#151733'; g.fillText(p.k, X(p.x), X(p.z) + 2); g.globalAlpha = 1; }
   for (const o of TPS.chars) { if (!o.alive || o.isMe) continue; if (o.team === 1 && !(TPS.chars.some(a => a.team === 0 && a.alive && Math.hypot(a.x - o.x, a.z - o.z) < 22 && canSee(a, o)))) continue; g.fillStyle = TCSS[o.team]; g.beginPath(); g.arc(X(o.x), X(o.z), 6, 0, 7); g.fill(); }
   if (TPS.mech) { g.fillStyle = '#ffd43b'; g.fillRect(X(TPS.mech.x) - 7, X(TPS.mech.z) - 7, 14, 14); }
-  tpsBoxMap(g, X);
+  tpsMapMini(g, X); tpsBoxMap(g, X);
   g.save(); g.translate(X(me.x), X(me.z)); g.rotate(-TPS.yaw + Math.PI); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(0, -12); g.lineTo(8, 9); g.lineTo(-8, 9); g.closePath(); g.fill(); g.restore();
 }
 function tpsPause() { if (TPS.paused) return; TPS.paused = true; if (document.pointerLockElement) document.exitPointerLock(); const el = $('#tpsPause'); el.hidden = false; el.innerHTML = `<div class="mbox"><h2>ポーズ</h2><p>${rb(TEAMN[0])} ${Math.floor(TPS.score[0])} － ${Math.floor(TPS.score[1])} ${rb(TEAMN[1])}</p><div class="col"><button class="btn big y" id="tpR">つづける</button><button class="btn" id="tpQ">やめて きちへ</button></div></div>`; $('#tpR').onclick = () => { el.hidden = true; TPS.paused = false; }; $('#tpQ').onclick = () => { tpsEnd(); goHome(); }; }
@@ -5335,6 +5306,7 @@ function navBuild() {
     let ok = ter;
     if (ok) for (const o of TPS.obst) { if (o.h <= h + STEP) continue; const nx = Math.max(o.x0, Math.min(x, o.x1)), nz = Math.max(o.z0, Math.min(z, o.z1)); if ((x - nx) * (x - nx) + (z - nz) * (z - nz) < .36) { ok = 0; break; } }
     if (Math.abs(x) > MAPH - 1.2 || Math.abs(z) > MAPH - 1.2) ok = 0;
+    if (h === 0 && TPS.haz && TPS.haz.some(o => x > o.x0 - .5 && x < o.x1 + .5 && z > o.z0 - .5 && z < o.z1 + .5)) ok = 0;
     NAV.h[id] = h; NAV.ok[id] = ok; NAV.ter[id] = h > 0 ? 1 : 0;
   }
   for (let id = 0; id < n; id++) {
@@ -5703,6 +5675,226 @@ function twPanelBind() {
 function twUpgradeDone() {
   const id = TPS.wupId; if (!id) { tpsLobby(); return; } S.tw = S.tw || {}; S.tw[id] = Math.min(TWMAX, twLv(id) + 1); save();
   tpsLobby(); banner(`「${TWI[id].n}」が レベル${S.tw[id]}に なった！`, 'gold'); sfx('evo');
+}
+/* ============ 漢字バトル：ステージ（マップ） いろいろ ============ */
+// sym: 'm' = z で はんてん（あお⇔あか）、'r' = 180ど かいてん
+const TMAPS = [
+  { id: 'meadow', n: 'くさはらの とりで', ic: '草', sky: 0x9fd8ff, fog: [0x9fd8ff, 45, 110], hemi: [0xffffff, 0x556677, .9], sun: [0xffffff, .75], gnd: ['#7ccf7a', '#73c471'], wall: 0x5c6670,
+    tst: [[0x9c6b43, [0x5fb45a, 0x4fa34b, 0xd8bd85]], [0x868e96, [0xced4da]], [0xb5835a, [0xe9c46a]], [0x6c757d, [0xadb5bd]]], cols: [0xb07a3c, 0x9da3ad, 0xc9894a, 0x868e96],
+    pts: [[-22, 0], [0, 0], [22, 0]], sym: 'm', wx: null, d: 'まんなかの おかを とりあう きほんの ステージ',
+    build(B) { tpsTerrain(B.addT); B.half(OBST_HALF); B.scenery('trees'); } },
+  { id: 'desert', n: 'さばくの いせき', ic: '砂', sky: 0xffd8a8, fog: [0xf3d3a0, 30, 95], hemi: [0xfff4e0, 0x8a6a3a, .95], sun: [0xffe8b0, .85], gnd: ['#ecd496', '#e5ca86'], wall: 0xb08657,
+    tst: [[0xc49a5c, [0xe9d29c, 0xe2c78a, 0xd8b878]], [0xa47148, [0xd4a373]], [0xb5835a, [0xe9c46a]], [0x8d6e47, [0xc9a66b]]], cols: [0xd4a373, 0xc08552, 0xe0b97f, 0xa47148],
+    pts: [[-20, -5], [0, 0], [20, 5]], sym: 'r', wx: 'sand', d: 'いせきの かべの うえを はしれ！ よこの さいだんは たかい',
+    build(B) {
+      B.both((X, Z, S) => {
+        // さいだん（よこの きょてん）
+        B.addT(X(-26.5), X(-13.5), Z(-11.5), Z(1.5), .5, 0); B.addT(X(-25), X(-15), Z(-10), Z(0), 1, 0);
+        // しろの かべ（うえを あるける）と かいだん
+        B.addT(X(-30), X(-9), Z(13), Z(15.6), 3, 1); B.stairs(X(-9), X(-5.8), Z(13), Z(15.6), 3, S('+x'), 1);
+        B.addT(X(9), X(30), Z(13), Z(15.6), 3, 1); B.stairs(X(5.8), X(9), Z(13), Z(15.6), 3, S('-x'), 1);
+        B.addT(X(-30), X(-27.4), Z(15.6), Z(19), 3, 1); B.stairs(X(-30), X(-27.4), Z(19), Z(22.2), 3, S('+z'), 1);
+        // はしら・くずれた かべ
+        for (const [x, z] of [[-7, -6], [-3, -9], [7, 9.5], [-11, 5], [-16, 7], [-30, -4]]) B.addO(X(x), Z(z), 1.2, 1.2, 4.2, 0xd4a373);
+        B.addO(X(-9), Z(-2), 4, 1, 1.4, 0xc08552); B.addO(X(4), Z(-4), 1, 4, 1.4, 0xe0b97f); B.addO(X(-22), Z(9), 5, 1, 1.6, 0xc08552); B.addO(X(-12), Z(21), 3, 3, 2, 0xd4a373); B.addO(X(14), Z(22), 4, 1, 1.4, 0xc08552);
+      });
+      B.scenery('dunes');
+    } },
+  { id: 'snow', n: 'ゆきやまの きち', ic: '雪', sky: 0xcfe8ff, fog: [0xe3f0fc, 32, 100], hemi: [0xffffff, 0x8aa0b8, 1], sun: [0xffffff, .65], gnd: ['#f4f8fc', '#e8eff7'], wall: 0x7d8fa3,
+    tst: [[0xb8c7d6, [0xffffff, 0xf8fbff, 0xeef5fc]], [0x8fa3b8, [0xffffff]], [0x9bb1c8, [0xe7f5ff]], [0x6d7f94, [0xd0dbe6]]], cols: [0xa5d8ff, 0x74c0fc, 0xd0ebff, 0x8d6e47],
+    pts: [[-14, -8], [0, 0], [14, 8]], sym: 'r', wx: 'snow', d: 'ゆきの だいちと こおりの ブロック。りょうがわの たかだいが カギ',
+    build(B) {
+      B.both((X, Z, S) => {
+        // ながい ゆきの たかだい
+        B.addT(X(-35), X(-23), Z(-22), Z(14), 2, 0); B.addT(X(-35), X(-27), Z(-16), Z(8), 3, 0);
+        B.stairs(X(-23), X(-20.6), Z(-6), Z(-1), 2, S('+x'), 0); B.stairs(X(-35), X(-23), Z(14), Z(16.4), 2, S('+z'), 0);
+        B.stairs(X(-27), X(-25), Z(-14), Z(-10), 3, S('+x'), 0);
+        // こおりの ブロック・ゆきだるま・きの はこ
+        for (const [x, z, w, d, h] of [[-8, -3, 2, 2, 1.6], [-4, 6, 3, 1, 1.2], [-14, 4, 1, 3, 1.8], [-10, 15, 4, 1.2, 1.6], [-18, -14, 2, 2, 2.2], [6, 15, 2, 2, 1.6], [-3, -14, 4, 1, 1.4], [-19, 20, 3, 3, 2.4], [10, -4, 1.2, 3, 1.6]]) B.addO(X(x), Z(z), w, d, h, w > 2.5 ? 0x74c0fc : 0xa5d8ff);
+        B.addO(X(4), Z(-10), 1.4, 1.4, 1.6, 0x8d6e47); B.deco(X(-6), Z(10), 'snowman'); B.deco(X(16), Z(-20), 'snowman');
+      });
+      B.scenery('mountains');
+    } },
+  { id: 'city', n: 'よるの ネオンシティ', ic: '街', sky: 0x14162e, fog: [0x1b1d3a, 30, 95], hemi: [0x9fa8ff, 0x2b2140, .75], sun: [0xc5b8ff, .35], gnd: ['#3a3f47', '#343940'], lines: '#ffd43b', wall: 0x2b3035,
+    tst: [[0x495057, [0x5c636a, 0x6c757d, 0x868e96]], [0x343a40, [0x495057]], [0x5f3dc4, [0x7048e8]], [0x212529, [0x343a40]]], cols: [0xe03131, 0x1c7ed6, 0xf59f00, 0x2f9e44],
+    pts: [[-22, 0], [0, 0], [22, 0]], sym: 'm', wx: 'rain', d: 'よるの まち。ビルの おくじょうの きょてんを とれ！',
+    build(B) {
+      B.both((X, Z, S) => {
+        // ビル（たかい・のぼれない）
+        for (const [x, z, w, d, h, c] of [[-10, 11, 6, 5, 7, 0x495057], [10, 11, 6, 5, 6, 0x343a40], [-28, 18, 8, 6, 8, 0x343a40], [28, 18, 8, 6, 9, 0x495057], [0, 18, 5, 3, 5, 0x5c636a]]) { B.addO(X(x), Z(z), w, d, h, c); B.glow(X(x), Z(z), w + .1, d + .1, h, [0xff6bd6, 0x4dd4ff, 0xffd43b][Math.abs(x) % 3]); }
+        // くるま
+        for (const [x, z, c, r] of [[-5, 6, 0xe03131, 0], [6, 5, 0x1c7ed6, 1], [-16, 13, 0xf59f00, 1], [15, -6, 0x2f9e44, 0]]) B.addO(X(x), Z(z), r ? 4 : 2, r ? 2 : 4, 1.5, c);
+        B.addO(X(-5), Z(-3), 3, 1, 1.1, 0x868e96); B.addO(X(-30), Z(5), 2, 2, 2, 0x495057);
+      });
+      // おくじょうの きょてん（よこ）：ビルと かいだん
+      for (const s of [-1, 1]) { B.addT(s * 27, s * 17, -5, 5, 3, 0); B.stairs(s * 17, s * 14, -2.5, 2.5, 3, s > 0 ? '-x' : '+x', 0); B.stairs(s * 25, s * 21, 5, 7.8, 3, '+z', 0); B.stairs(s * 25, s * 21, -7.8, -5, 3, '-z', 0); B.glow(s * 22, 0, 10.1, 10.1, 3, 0x4dd4ff); }
+      B.scenery('city');
+    } },
+  { id: 'volcano', n: 'かざんの しま', ic: '火', sky: 0x7a2e1f, fog: [0x5a2a20, 28, 92], hemi: [0xffc9a8, 0x3a1a12, .8], sun: [0xffa36b, .7], gnd: ['#4a4442', '#423c3a'], cracks: '#ff6b1a', wall: 0x2b2522,
+    tst: [[0x3b3330, [0x5c514c, 0x544944, 0x4a403b, 0x6b5f59]], [0x2b2522, [0x5c514c]], [0x6b4a3a, [0x8a6a55]], [0x2b2522, [0x3b3330]]], cols: [0x5c514c, 0x3b3330, 0x6b4a3a, 0x7a6a60],
+    pts: [[-18, -8], [0, 0], [18, 8]], sym: 'r', wx: 'ember', d: 'ようがんに おちると あつい！ はしを わたって かざんの てっぺんへ',
+    build(B) {
+      B.addT(-11, 11, -11, 11, .5, 0); B.addT(-9, 9, -9, 9, 1, 0); B.addT(-7, 7, -7, 7, 1.5, 0); B.addT(-5, 5, -5, 5, 2, 0);
+      B.both((X, Z, S) => {
+        // ようがんの いけ と はし
+        B.lava(X(-34), X(-12), Z(13), Z(18)); B.addT(X(-24), X(-21), Z(12.5), Z(18.5), .4, 2); B.addT(X(-16), X(-13.5), Z(12.5), Z(18.5), .4, 2);
+        B.lava(X(-30), X(-24), Z(-6), Z(0));
+        for (const [x, z, w, d, h] of [[-14, -2, 2, 2, 2], [-24, -14, 3, 2, 2.4], [-8, 16, 2, 2, 1.6], [-28, 4, 2, 4, 3], [-11, 24, 4, 1, 1.4], [-18, -18, 2, 2, 2]]) B.addO(X(x), Z(z), w, d, h, 0x3b3330);
+        B.deco(X(-30), Z(-26), 'crystal'); B.deco(X(-4), Z(24), 'crystal');
+      });
+      B.scenery('volcano');
+    } },
+  { id: 'space', n: 'うちゅう ステーション', ic: '宙', sky: 0x05060f, fog: [0x0b0d24, 50, 140], hemi: [0xbac8ff, 0x1a1d3a, .85], sun: [0xffffff, .6], gnd: ['#3d4466', '#363c5c'], grid: '#7f8cff', wall: 0x5c6699, grav: 16,
+    tst: [[0x5c6699, [0x8c96c8, 0x9aa4d6, 0xa8b2e4, 0xb6c0f2]], [0x4c5580, [0xc5ccef]], [0x7048e8, [0x9775fa]], [0x3b4266, [0x7f8cff]]], cols: [0x8c96c8, 0x5c6699, 0xb197fc, 0x748ffc],
+    pts: [[-20, 0], [0, 0], [20, 0]], sym: 'r', wx: 'stars', d: 'ふわふわ ジャンプ！ ジャンプだいで とびあがれ',
+    build(B) {
+      B.addT(-7, 7, -7, 7, 2.5, 0); B.stairs(-2, 2, 7, 10.2, 2.5, '+z', 0); B.stairs(-2, 2, -10.2, -7, 2.5, '-z', 0);
+      B.both((X, Z, S) => {
+        B.addT(X(-30), X(-24), Z(-8), Z(8), 3.5, 1); B.stairs(X(-24), X(-20.4), Z(5), Z(8), 3.5, S('+x'), 1);
+        B.addT(X(-14), X(-9), Z(14), Z(19), 4, 1);
+        B.jpad(X(-9), Z(0), 15); B.jpad(X(-11.5), Z(11.5), 16); B.jpad(X(-20), Z(10), 16);
+        for (const [x, z, w, d, h] of [[-15, -4, 2, 2, 1.6], [-4, 13, 3, 1, 1.4], [-24, 15, 2, 2, 2], [-8, 22, 4, 1, 1.4], [-30, 20, 2, 2, 2.4]]) { B.addO(X(x), Z(z), w, d, h, 0x8c96c8); B.glow(X(x), Z(z), w + .05, d + .05, h, 0x7f8cff); }
+      });
+      B.scenery('space');
+    } },
+];
+const TMI = Object.fromEntries(TMAPS.map(m => [m.id, m]));
+/* ---- マップを つくる ---- */
+function tpsLoadMap(id) {
+  const map = TMI[id] || TMAPS[0], sc = TPS.scene;
+  if (TPS.mapId === map.id && TPS.mapG) return map;
+  if (TPS.mapG) { sc.remove(TPS.mapG); TPS.mapG.traverse(o => { if (o.userData.own) { o.geometry && o.geometry.dispose(); if (o.material && o.material.map) o.material.map.dispose(); } }); }
+  const g = TPS.mapG = new THREE.Group(); sc.add(g); TPS.mapId = map.id; TPS.map = map;
+  sc.background = new THREE.Color(map.sky); sc.fog = new THREE.Fog(map.fog[0], map.fog[1], map.fog[2]);
+  TPS.hemi.color.setHex(map.hemi[0]); TPS.hemi.groundColor.setHex(map.hemi[1]); TPS.hemi.intensity = map.hemi[2]; TPS.sunL.color.setHex(map.sun[0]); TPS.sunL.intensity = map.sun[1];
+  TPS.grav = map.grav || 30;
+  const own = m => { m.userData.own = 1; g.add(m); return m; };
+  // じめん
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { x.fillStyle = (i + j) % 2 ? map.gnd[0] : map.gnd[1]; x.fillRect(i * 64, j * 64, 64, 64); x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 2; x.strokeRect(i * 64 + 1, j * 64 + 1, 62, 62); }
+  if (map.lines) { x.fillStyle = map.lines; for (let i = 0; i < 4; i++) x.fillRect(126, i * 64 + 10, 4, 34); }
+  if (map.cracks) { x.strokeStyle = map.cracks; x.globalAlpha = .55; x.lineWidth = 2; for (let k = 0; k < 9; k++) { let px = Math.random() * 256, py = Math.random() * 256; x.beginPath(); x.moveTo(px, py); for (let s = 0; s < 4; s++) { px += (Math.random() - .5) * 50; py += (Math.random() - .5) * 50; x.lineTo(px, py); } x.stroke(); } x.globalAlpha = 1; }
+  if (map.grid) { x.strokeStyle = map.grid; x.globalAlpha = .35; x.lineWidth = 2; for (let i = 0; i <= 4; i++) { x.beginPath(); x.moveTo(i * 64, 0); x.lineTo(i * 64, 256); x.moveTo(0, i * 64); x.lineTo(256, i * 64); x.stroke(); } x.globalAlpha = 1; }
+  const tex = new THREE.CanvasTexture(c); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(20, 20); tex.magFilter = THREE.NearestFilter;
+  const gm = own(new THREE.Mesh(new THREE.PlaneGeometry(220, 220), new THREE.MeshLambertMaterial({ map: tex }))); gm.rotation.x = -Math.PI / 2;
+  [[0, 30], [1, -30]].forEach(([t, z]) => { const m = own(new THREE.Mesh(G(16, .06, 8), new THREE.MeshLambertMaterial({ color: TCOL[t], transparent: true, opacity: .35, depthWrite: false }))); m.position.set(0, .03, z); });
+  // かべ・たかい ところ・しょうがいぶつ
+  const O = TPS.obst = [], BX = [], GX = []; TPS.haz = []; TPS.jpads = []; TPS.lavaM = [];
+  const gAt = (px, pz) => { let h = 0; for (const o of O) if (o.ter && px >= o.x0 && px <= o.x1 && pz >= o.z0 && pz <= o.z1) h = Math.max(h, o.h); return h; };
+  const B = {
+    addO(px, pz, w, d, h, col, wall) { const base = wall ? 0 : gAt(px, pz); h += base; O.push({ x0: px - w / 2, x1: px + w / 2, z0: pz - d / 2, z1: pz + d / 2, h, wall }); BX.push({ w, h, d, x: px, y: h / 2, z: pz, c: col }); if (h - base > 1.4 && !wall) BX.push({ w: w + .1, h: .15, d: d + .1, x: px, y: h + .07, z: pz, c: 0x343a40 }); },
+    addT(xa, xb, za, zb, h, s) {
+      const x0 = Math.min(xa, xb), x1 = Math.max(xa, xb), z0 = Math.min(za, zb), z1 = Math.max(za, zb), w = x1 - x0, d = z1 - z0, px = (x0 + x1) / 2, pz = (z0 + z1) / 2, [side, tops] = map.tst[s];
+      O.push({ x0, x1, z0, z1, h, ter: s + 1 }); BX.push({ w, h: h - .12, d, x: px, y: (h - .12) / 2, z: pz, c: side }); BX.push({ w: w + .02, h: .12, d: d + .02, x: px, y: h - .06, z: pz, c: tops[Math.min(tops.length - 1, Math.max(0, Math.round(h * 2) - 1))] });
+    },
+    // かいだん：dir は おりて いく むき
+    stairs(xa, xb, za, zb, H, dir, s) {
+      const x0 = Math.min(xa, xb), x1 = Math.max(xa, xb), z0 = Math.min(za, zb), z1 = Math.max(za, zb), n = Math.max(1, Math.round(H / .5) - 1), ax = dir[1] === 'x', sg = dir[0] === '+' ? 1 : -1, L = ax ? x1 - x0 : z1 - z0, st = L / n;
+      for (let i = 0; i < n; i++) { const a = sg > 0 ? (ax ? x0 : z0) + i * st : (ax ? x1 : z1) - (i + 1) * st, b = a + st, h = H - .5 * (i + 1); if (ax) B.addT(a, b, z0, z1, h, s); else B.addT(x0, x1, a, b, h, s); }
+    },
+    glow(px, pz, w, d, h, col) { GX.push({ w, h: .14, d, x: px, y: h + .02, z: pz, c: col }); },
+    lava(xa, xb, za, zb) { const x0 = Math.min(xa, xb), x1 = Math.max(xa, xb), z0 = Math.min(za, zb), z1 = Math.max(za, zb); TPS.haz.push({ x0, x1, z0, z1 }); const m = own(new THREE.Mesh(G(x1 - x0, .05, z1 - z0), new THREE.MeshBasicMaterial({ color: 0xff6b1a }))); m.position.set((x0 + x1) / 2, .04, (z0 + z1) / 2); TPS.lavaM = (TPS.lavaM || []).concat(m); },
+    jpad(px, pz, vy) { TPS.jpads.push({ x: px, z: pz, vy }); const m = own(new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.2, .2, 20), new THREE.MeshBasicMaterial({ color: 0x66d9e8 }))); m.position.set(px, .1, pz); const r = own(new THREE.Mesh(new THREE.RingGeometry(.5, .8, 20), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }))); r.rotation.x = -Math.PI / 2; r.position.set(px, .22, pz); TPS.jpads[TPS.jpads.length - 1].m = r; },
+    deco(px, pz, kind) {
+      const y = gAt(px, pz);
+      if (kind === 'snowman') { BX.push({ w: 1.3, h: 1.1, d: 1.3, x: px, y: y + .55, z: pz, c: 0xffffff }, { w: .9, h: .8, d: .9, x: px, y: y + 1.5, z: pz, c: 0xffffff }, { w: .2, h: .2, d: .5, x: px, y: y + 1.55, z: pz + .55, c: 0xf08c00 }, { w: 1, h: .2, d: 1, x: px, y: y + 1.95, z: pz, c: 0x212529 }); O.push({ x0: px - .6, x1: px + .6, z0: pz - .6, z1: pz + .6, h: y + 1.9 }); }
+      if (kind === 'crystal') { for (let k = 0; k < 3; k++) GX.push({ w: .5, h: 1.6 + k * .5, d: .5, x: px + (k - 1) * .6, y: y + .8 + k * .25, z: pz + (k % 2) * .4, c: 0xff922b, rz: (k - 1) * .3 }); O.push({ x0: px - 1, x1: px + 1, z0: pz - .6, z1: pz + .8, h: y + 2.4 }); }
+    },
+    // そとの けしき（あたりは なし）
+    scenery(kind) {
+      const R = (a, b) => a + Math.random() * (b - a), ring = (n, r0, r1, f) => { for (let k = 0; k < n; k++) { const a = k / n * Math.PI * 2 + R(-.05, .05), r = R(r0, r1) / Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a))); f(Math.cos(a) * r, Math.sin(a) * r, k); } };
+      if (kind === 'trees') ring(46, 42, 60, (px, pz) => { const h = R(3, 6); BX.push({ w: .7, h, d: .7, x: px, y: h / 2, z: pz, c: 0x8d5524 }, { w: R(2.5, 4), h: R(2.5, 4), d: R(2.5, 4), x: px, y: h + 1, z: pz, c: [0x2f9e44, 0x37b24d, 0x2b8a3e][Math.floor(R(0, 3))] }); });
+      if (kind === 'dunes') { ring(30, 48, 70, (px, pz) => BX.push({ w: R(10, 18), h: R(2, 6), d: R(10, 18), x: px, y: 0, z: pz, c: 0xe2c78a, ry: R(0, 3) })); ring(16, 40, 46, (px, pz) => { const h = R(5, 8); BX.push({ w: .6, h, d: .6, x: px, y: h / 2, z: pz, c: 0x8d6e47, rz: R(-.15, .15) }, { w: 3.5, h: .5, d: 1, x: px, y: h, z: pz, c: 0x2f9e44, ry: R(0, 3) }, { w: 1, h: .5, d: 3.5, x: px, y: h, z: pz, c: 0x37b24d }); }); }
+      if (kind === 'mountains') { ring(18, 62, 80, (px, pz) => { for (let k = 0; k < 4; k++) { const s = 22 - k * 5; BX.push({ w: s, h: 6, d: s, x: px, y: 3 + k * 6, z: pz, c: k > 1 ? 0xffffff : 0x8fa3b8, ry: .4 }); } }); ring(40, 41, 56, (px, pz) => { for (let k = 0; k < 3; k++) BX.push({ w: 3 - k * .8, h: 1.6, d: 3 - k * .8, x: px, y: 1 + k * 1.3, z: pz, c: 0x2b8a3e }); BX.push({ w: 3.2, h: .4, d: 3.2, x: px, y: 1.9, z: pz, c: 0xffffff }); }); }
+      if (kind === 'volcano') { ring(12, 64, 80, (px, pz) => { for (let k = 0; k < 5; k++) { const s = 26 - k * 5; BX.push({ w: s, h: 5, d: s, x: px, y: 2.5 + k * 5, z: pz, c: 0x3b3330, ry: .3 }); } GX.push({ w: 4, h: .8, d: 4, x: px, y: 25.5, z: pz, c: 0xff6b1a }); }); }
+      if (kind === 'city') {
+        const fc = document.createElement('canvas'); fc.width = 64; fc.height = 128; const f = fc.getContext('2d'); f.fillStyle = '#1b1e2b'; f.fillRect(0, 0, 64, 128);
+        for (let yy = 4; yy < 124; yy += 10) for (let xx = 4; xx < 60; xx += 10) { f.fillStyle = Math.random() < .55 ? ['#ffd43b', '#74c0fc', '#ff8cc6', '#fff3bf'][Math.floor(Math.random() * 4)] : '#2b3045'; f.fillRect(xx, yy, 6, 6); }
+        const ft = new THREE.CanvasTexture(fc); ft.wrapS = ft.wrapT = THREE.RepeatWrapping; ft.magFilter = THREE.NearestFilter;
+        ring(34, 44, 66, (px, pz) => { const h = R(14, 40), w = R(6, 12); const t2 = ft.clone(); t2.needsUpdate = true; t2.repeat.set(Math.round(w / 6), Math.round(h / 12)); const m = own(new THREE.Mesh(new THREE.BoxGeometry(w, h, w), new THREE.MeshBasicMaterial({ map: t2, fog: true }))); m.position.set(px, h / 2, pz); m.rotation.y = Math.atan2(px, pz); GX.push({ w: w + .2, h: .5, d: w + .2, x: px, y: h, z: pz, c: [0xff6bd6, 0x4dd4ff, 0xffd43b][Math.floor(R(0, 3))], ry: Math.atan2(px, pz) }); });
+      }
+      if (kind === 'space') {
+        const pl = own(new THREE.Mesh(new THREE.SphereGeometry(30, 24, 18), new THREE.MeshLambertMaterial({ color: 0x748ffc }))); pl.position.set(-90, 45, -120);
+        const rg = own(new THREE.Mesh(new THREE.RingGeometry(38, 48, 40), new THREE.MeshBasicMaterial({ color: 0xb197fc, side: THREE.DoubleSide, transparent: true, opacity: .55, fog: false }))); rg.position.copy(pl.position); rg.rotation.set(1.2, .3, 0);
+        const mo = own(new THREE.Mesh(new THREE.SphereGeometry(8, 16, 12), new THREE.MeshLambertMaterial({ color: 0xdee2e6 }))); mo.position.set(80, 35, 90);
+        ring(20, 42, 50, (px, pz) => { const h = R(4, 10); BX.push({ w: .6, h, d: .6, x: px, y: h / 2, z: pz, c: 0x5c6699 }); GX.push({ w: 1, h: 1, d: 1, x: px, y: h + .5, z: pz, c: 0x66d9e8 }); });
+      }
+    },
+    // はんぶん リスト（[x,z,w,d,h]）を たいしょうに おく
+    half(list) { list.forEach(([px, pz, w, d, h], i) => { B.addO(px, pz, w, d, h, map.cols[i % 4]); if (map.sym === 'r') B.addO(-px, -pz, w, d, h, map.cols[(i + 1) % 4]); else B.addO(px, -pz, w, d, h, map.cols[(i + 1) % 4]); }); },
+    // たいしょうに 2かい よぶ（X, Z で ざひょう、S で かいだんの むきを へんかん）
+    both(fn) {
+      const id2 = v => v, flip = d => (d[0] === '+' ? '-' : '+') + d[1];
+      fn(id2, id2, id2);
+      if (map.sym === 'r') fn(v => -v, v => -v, flip); else fn(id2, v => -v, d => d[1] === 'z' ? flip(d) : d);
+    },
+  };
+  map.build(B);
+  [[0, MAPH, 2 * MAPH + 2, 1], [0, -MAPH, 2 * MAPH + 2, 1], [MAPH, 0, 1, 2 * MAPH], [-MAPH, 0, 1, 2 * MAPH]].forEach(([px, pz, w, d]) => B.addO(px, pz, w, d, 4.5, map.wall, 1));
+  own(new THREE.Mesh(mergeBoxes(BX), new THREE.MeshLambertMaterial({ vertexColors: true })));
+  if (GX.length) own(new THREE.Mesh(mergeBoxes(GX), new THREE.MeshBasicMaterial({ vertexColors: true })));
+  // きょてん
+  TPS.pts = map.pts.map(([px, pz]) => {
+    const gy = tpsGroundH(px, pz, 99);
+    const ring = own(new THREE.Mesh(new THREE.RingGeometry(3.7, 4.2, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .9, side: THREE.DoubleSide }))); ring.rotation.x = -Math.PI / 2; ring.position.set(px, gy + .05, pz);
+    const disc = own(new THREE.Mesh(new THREE.CircleGeometry(3.7, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .18, depthWrite: false }))); disc.rotation.x = -Math.PI / 2; disc.position.set(px, gy + .04, pz);
+    const pole = new THREE.Mesh(G(.2, 5, .2), M(0xdee2e6)); pole.position.set(px, gy + 2.5, pz); g.add(pole);
+    const cv = document.createElement('canvas'); cv.width = cv.height = 128; const st = own(new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false }))); st.scale.set(3.4, 3.4, 1); st.position.set(px, gy + 6.6, pz); st.renderOrder = 5;
+    return { x: px, z: pz, r: 4, prog: 0, owner: 0, ring, disc, cv, st, k: '', yomi: '' };
+  });
+  // てんき
+  TPS.wx = null;
+  if (map.wx) {
+    const N = map.wx === 'stars' ? 700 : 500, pos = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) { if (map.wx === 'stars') { const u = Math.random() * 2 - 1, a = Math.random() * 6.283, r = 160, s = Math.sqrt(1 - u * u); pos[i * 3] = Math.cos(a) * s * r; pos[i * 3 + 1] = Math.abs(u) * r * .9 + 5; pos[i * 3 + 2] = Math.sin(a) * s * r; } else { pos[i * 3] = (Math.random() - .5) * 60; pos[i * 3 + 1] = Math.random() * 25; pos[i * 3 + 2] = (Math.random() - .5) * 60; } }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const col = { snow: 0xffffff, sand: 0xd9b26f, ember: 0xff8a3d, rain: 0x9fc8ff, stars: 0xffffff }[map.wx], size = { snow: .28, sand: .18, ember: .22, rain: .12, stars: 1.2 }[map.wx];
+    const p = own(new THREE.Points(geo, new THREE.PointsMaterial({ color: col, size, transparent: true, opacity: map.wx === 'sand' ? .55 : .9, depthWrite: false, fog: map.wx !== 'stars', sizeAttenuation: map.wx !== 'stars' })));
+    if (map.wx === 'stars') p.material.size = 2;
+    TPS.wx = { p, kind: map.wx };
+  }
+  navBuild();
+  return map;
+}
+/* ---- まいフレーム：てんき・ようがん・ジャンプだい ---- */
+function tpsMapUpdate(dt) {
+  const W2 = TPS.wx;
+  if (W2 && W2.kind !== 'stars') {
+    const a = W2.p.geometry.attributes.position, A = a.array, cx = TPS.cam.position.x, cz = TPS.cam.position.z, k = W2.kind;
+    const vy = k === 'snow' ? -2.2 : k === 'rain' ? -24 : k === 'ember' ? 2.2 : -.6, vx = k === 'sand' ? 14 : k === 'snow' ? Math.sin(TPS.t * .7) * .8 : 0;
+    for (let i = 0; i < A.length; i += 3) {
+      A[i] += vx * dt + (k === 'snow' ? Math.sin(TPS.t * 2 + i) * .3 * dt : 0); A[i + 1] += vy * dt; A[i + 2] += (k === 'sand' ? 3 : 0) * dt;
+      if (A[i + 1] < 0) A[i + 1] += 25; if (A[i + 1] > 25) A[i + 1] -= 25;
+      if (A[i] - cx > 30) A[i] -= 60; if (A[i] - cx < -30) A[i] += 60; if (A[i + 2] - cz > 30) A[i + 2] -= 60; if (A[i + 2] - cz < -30) A[i + 2] += 60;
+    }
+    a.needsUpdate = true;
+  }
+  if (TPS.lavaM) { const k = .75 + Math.sin(TPS.t * 3) * .25; for (const m of TPS.lavaM) if (m.parent) m.material.color.setRGB(1, .35 * k + .1, .05); }
+  for (const c of TPS.chars) {
+    if (!c.alive) continue;
+    // ようがん
+    if (TPS.haz.length && c.onG && c.y < .3 && TPS.haz.some(h => c.x > h.x0 && c.x < h.x1 && c.z > h.z0 && c.z < h.z1)) { c.lavaT = (c.lavaT || 0) - dt; if (c.lavaT <= 0) { c.lavaT = .45; if (c.inv <= 0) { tpsHurt(c, 12, null); tpsSpark(c.x, .4, c.z, 6, 0xff6b1a); if (c.isMe) banner('あちちっ！ ようがんから でよう', 'red'); } } }
+    // ジャンプだい
+    for (const p of TPS.jpads) if (c.onG && Math.hypot(c.x - p.x, c.z - p.z) < 1.1 && c.y < .5) { c.vy = p.vy; c.onG = false; tpsSpark(p.x, .4, p.z, 8, 0x66d9e8); if (c.isMe) sfx('dash'); }
+  }
+  for (const p of TPS.jpads) if (p.m) p.m.scale.setScalar(1 + Math.sin(TPS.t * 6) * .15);
+}
+function tpsMapMini(g, X) {
+  g.fillStyle = 'rgba(255,107,26,.75)'; for (const h of TPS.haz || []) g.fillRect(X(h.x0), X(h.z0), X(h.x1) - X(h.x0), X(h.z1) - X(h.z0));
+  g.fillStyle = '#66d9e8'; for (const p of TPS.jpads || []) { g.beginPath(); g.arc(X(p.x), X(p.z), 5, 0, 7); g.fill(); }
+}
+/* ---- ロビー：ステージ えらび ---- */
+function tmPanelHTML() {
+  const sel = TPS.mapSel || 'auto', T = S.tps || {}, nxt = TMAPS[(T.mapI || 0) % TMAPS.length];
+  return `<div class="panel"><h3>ステージ</h3><div class="tmgrid">
+    <button class="tmc ${sel === 'auto' ? 'on' : ''}" data-m="auto"><span class="wic" style="--wc:#ffd43b;color:#151733">？</span><b>おまかせ</b><small>まいかい ちがう ステージ（つぎは「${nxt.n}」）</small></button>
+    ${TMAPS.map(m => `<button class="tmc ${sel === m.id ? 'on' : ''}" data-m="${m.id}" style="--wc:#${m.sky.toString(16).padStart(6, '0')}"><span class="wic">${m.ic}</span><b>${m.n}</b><small>${m.d}</small></button>`).join('')}</div></div>`;
+}
+function tmPanelBind() { document.querySelectorAll('.tmc[data-m]').forEach(b => b.onclick = () => { TPS.mapSel = b.dataset.m; sfx('ok'); tpsLobby(); }); }
+function tmPick() {
+  const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 });
+  if (TPS.mapSel && TPS.mapSel !== 'auto' && TMI[TPS.mapSel]) return TPS.mapSel;
+  const m = TMAPS[(T.mapI || 0) % TMAPS.length]; T.mapI = ((T.mapI || 0) + 1) % TMAPS.length; save(); return m.id;
 }
 /* ============ 漢字バトル：キャラクターの うごき ============ */
 const HIPY = .95;
