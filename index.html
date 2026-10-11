@@ -166,6 +166,22 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 .mtitle h2{margin:0;font-family:var(--display);font-weight:400;font-size:1.55rem;text-wrap:balance}
 .mtitle p{margin:0;font-weight:700;line-height:1.6}
 .mcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+#mission{overscroll-behavior:contain}
+.mpg{display:flex;flex-direction:column;gap:10px}
+.mside{display:flex;flex-direction:column;gap:10px}
+#mission.paged .mtitle{padding:8px 14px}#mission.paged .mtitle h2{font-size:1.2rem;margin:0}#mission.paged .mtitle p,#mission.paged .mtitle .eyebrow{display:none}
+#mission.paged .mcards{display:block}#mission.paged .mcards>.mcard{display:none}#mission.paged .mcards>.mcard.cur{display:flex}
+#mission.paged .mcard{gap:6px;padding:10px 12px;touch-action:none}
+#mission.paged .padbox{width:clamp(250px,min(88vw,calc(100dvh - 590px),580px),580px)}
+#mission.paged .mres{min-height:0}#mission.paged .mres:empty{display:none}
+@media (orientation:portrait){.mside{display:contents}.mpg>.mside>.mtop{order:1}.mpg>.mside>.mtitle{order:2}.mpg>.mside>.mtabs{order:3}.mpg>.mside>.mnav{order:4}.mpg>.mmain{order:5}.mpg>.mside>.mact{order:6}.mpg>.mside>.mstatus{order:7}}
+#mission.paged .mact{margin:0}
+.mtabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.mtabs button{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);background:#fff;color:var(--ink);font-weight:900;font-size:1.15rem;box-shadow:0 3px 0 var(--ink);touch-action:manipulation}
+.mtabs button.w{background:#d0ebff}.mtabs button.ok{background:#b2f2bb;color:#2b8a3e}.mtabs button.on{background:#ffd43b;transform:translateY(-2px) scale(1.1)}
+.mnav{display:flex;align-items:center;justify-content:center;gap:12px;font-weight:900}.mnav .btn{min-width:110px}
+@media (orientation:landscape){.mpg{flex-direction:row;align-items:flex-start}.mside{width:min(330px,34vw);flex:0 0 auto}.mmain{flex:1;min-width:0}
+  #mission.paged .padbox{width:clamp(240px,min(calc(100dvh - 235px),calc(62vw - 60px),600px),600px)}#mission.paged .mtitle p{display:none}}
 .mcard .padbox{width:min(100%,260px)}
 .padbox canvas.guide{z-index:1;pointer-events:none}
 .padbox canvas.ink{z-index:2}
@@ -3158,20 +3174,34 @@ function renderMission() {
   const left = todo();
   const title = MS.kind === 'exam' ? `${KYU[MS.g]} もぎしけん` : MS.kind === 'wup' ? `「${TWI[TPS.wupId] ? TWI[TPS.wupId].n : 'ぶき'}」を きょうか！` : MS.kind === 'tbox' ? 'ぶきボックスを あけろ！' : MS.kind === 'tskill' ? '漢字スキル はつどう！' : MS.kind === 'trespawn' ? '漢字で ふっかつ！' : MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'bonus' ? '漢字チャンス！' : MS.kind === 'shield' ? rb('{結界|けっかい}を やぶれ！') : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
   const sub = MS.kind === 'exam' ? `${MS.g}年生の 漢字 10もん。ヒントは ないよ。1かいだけ はんていして、8もん いじょうで ごうかく！` : MS.kind === 'wup' ? `ぜんぶ 書けたら レベル${twLv(TPS.wupId) + 1}に なるよ。` : MS.kind === 'tbox' ? '1こ 書けたら ぶきが 25びょう パワーアップ！ バトルは とまっているよ。' : MS.kind === 'tskill' ? '1こ 書けたら スキル はつどう！ バトルは とまっているよ。' : MS.kind === 'trespawn' ? '1こ 書けたら すぐに ふっかつ！ バトルは とまっているよ。' : MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'bonus' ? '1こ 書けたら レベルアップで 2つ えらべる！ ゲームは とまっているよ。' : MS.kind === 'shield' ? '1こ 書けたら ボスの けっかいが われて 大ダメージ！ ゲームは とまっているよ。' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら かぎ ＋ トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
-  const pad = MS.stage === 'pad';
-  W2.innerHTML = `
-    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : MS.kind === 'wup' ? 'ぶきえらびに もどる' : MS.kind === 'exam' ? 'やめる' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
-    <div class="mtitle"><span class="eyebrow">漢字ミッション</span><h2>${title}</h2><p>${sub}</p></div>
-    ${left.length && pad ? `<div class="mguide">□の 上の ひらがなが よみかただよ。マスの なかに 大きく 1こずつ 書いてね。${S.check === 'auto' && S.order ? '<br><small style="font-weight:700">かきじゅんも みているよ。わからない ときは「かきじゅん」ボタン。</small>' : ''}</div>` : ''}
-    <div class="mcards">${MS.items.map((it, i) => cardHTML(it, i)).join('')}</div>
-    ${left.length && pad ? `<div class="mact"><button class="btn big g" id="mCheck">これで チェック！</button></div>
-      ${MS.kind === 'exam' ? '' : '<div class="mact"><button class="btn sm w" id="mPhoto">紙に 書いて しゃしんを とる（おうちの人が チェック）</button></div>'}` : ''}
+  const pad = MS.stage === 'pad', paged = pad && left.length > 0;
+  if (paged && (MS.cur == null || !MS.items[MS.cur] || MS.items[MS.cur].ok)) MS.cur = MS.items.indexOf(left[0]);
+  const P = { top: `<div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : MS.kind === 'wup' ? 'ぶきえらびに もどる' : MS.kind === 'exam' ? 'やめる' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>`, title: `<div class="mtitle"><span class="eyebrow">漢字ミッション</span><h2>${title}</h2><p>${sub}</p></div>`, guide: `${left.length && pad ? `<div class="mguide">□の 上の ひらがなが よみかただよ。マスの なかに 大きく 1こずつ 書いてね。${S.check === 'auto' && S.order ? '<br><small style="font-weight:700">かきじゅんも みているよ。わからない ときは「かきじゅん」ボタン。</small>' : ''}</div>` : ''}`, cards: `<div class="mcards">${MS.items.map((it, i) => cardHTML(it, i)).join('')}</div>`, act: `${left.length && pad ? `<div class="mact"><button class="btn big g" id="mCheck">これで チェック！</button></div>
+      ${MS.kind === 'exam' ? '' : '<div class="mact"><button class="btn sm w" id="mPhoto">紙に 書いて しゃしんを とる（おうちの人が チェック）</button></div>'}` : ''}` };
+  if (paged) {
+    // iPad：1もんずつ 大きく。スクロール しないで 書ける
+    const tabs = MS.items.length > 1 ? `<div class="mtabs" id="mTabs">${MS.items.map((it, i) => `<button data-i="${i}" class="${i === MS.cur ? 'on' : ''} ${it.ok ? 'ok' : it.strokes.length ? 'w' : ''}" aria-label="${i + 1}もんめ">${it.ok ? '✓' : i + 1}</button>`).join('')}</div>
+      <div class="mnav"><button class="btn w" id="mPrevQ">← まえ</button><span id="mPos">${MS.cur + 1} / ${MS.items.length}</span><button class="btn y" id="mNextQ">つぎ →</button></div>` : '';
+    W2.innerHTML = `<div class="mpg"><div class="mside">${P.top}${P.title}${tabs}${P.act}<div class="mstatus ${MS.statusCls}" id="mStatus">${MS.status}</div></div><div class="mmain">${P.cards}</div></div>`;
+    $('#mission').classList.add('paged');
+    const go = i => { MS.cur = (i + MS.items.length) % MS.items.length; W2.querySelectorAll('.mcards > .mcard').forEach((c, j) => c.classList.toggle('cur', j === MS.cur)); W2.querySelectorAll('#mTabs [data-i]').forEach(b => b.classList.toggle('on', +b.dataset.i === MS.cur)); const ps = $('#mPos'); if (ps) ps.textContent = `${MS.cur + 1} / ${MS.items.length}`; };
+    W2.querySelectorAll('#mTabs [data-i]').forEach(b => b.onclick = () => go(+b.dataset.i));
+    if ($('#mPrevQ')) { $('#mPrevQ').onclick = () => go(MS.cur - 1); $('#mNextQ').onclick = () => go(MS.cur + 1); }
+    go(MS.cur);
+  } else {
+    $('#mission').classList.remove('paged');
+    W2.innerHTML = `${P.top}
+    ${P.title}
+    ${P.guide}
+    ${P.cards}
+    ${P.act}
     ${MS.stage === 'photo' ? `<div class="mguide">紙に ${left.map(numOf).join(' ')} の じゅんばんで、ばんごうも いっしょに 大きく 書いてね。</div>
       <div class="mact"><label class="btn big y" for="mCam" tabindex="0">しゃしんを とる</label><input type="file" id="mCam" accept="image/*" capture="environment">
       <label class="btn w" for="mFile" tabindex="0">アルバムから えらぶ</label><input type="file" id="mFile" accept="image/*"><button class="btn s" id="mBackPad">がめんに 書く</button></div>` : ''}
     <div id="mPrev" class="mpreview" ${MS.stage !== 'parent' || !MS.url ? 'hidden' : ''}>${MS.url ? `<img src="${MS.url}" alt="おくる しゃしん">` : ''}</div>
     <div id="mParent" class="parent" ${MS.stage !== 'parent' ? 'hidden' : ''}></div>
     <div class="mstatus ${MS.statusCls}" id="mStatus">${MS.status}</div>`;
+  }
   $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'tskill' || k === 'trespawn' || k === 'tbox') { if (k === 'tbox') TPS.boxCool = 4; tpsResume(); return; } if (k === 'wup') { tpsLobby(); return; } if (k === 'box' || k === 'shield') { resumeRun(); return; } if (k === 'bonus') { resumeRun(true); if (W.pendLv) setTimeout(showLevelUp, 300); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
   if (pad) { MS.items.forEach((it, i) => { if (!it.ok) bindPad(it, i); }); if ($('#mCheck')) { $('#mCheck').onclick = checkAll; if ($('#mPhoto')) $('#mPhoto').onclick = () => { MS.stage = 'photo'; MS.status = ''; renderMission(); }; } }
   if (MS.stage === 'photo') {
@@ -3194,7 +3224,11 @@ function cardHTML(it, i) {
     ${msg}
     <div class="padrow"><button class="btn sm w" data-undo="${i}">1かく もどす</button><button class="btn sm w" data-clear="${i}">けす</button>${MS.kind === 'exam' ? '' : it.cat === 'pre' || it.reveal ? `<button class="btn sm s" data-anim="${i}">かきじゅん</button>` : `<button class="btn sm s" data-hint="${i}">${it.hint ? 'かきじゅん' : 'ヒント'}</button>`}</div></div>`;
 }
-let penSeen = false;
+let penSeen = false, PADDRAW = false, padTouch = false;
+// iPad：かいている あいだ・マスの カードを さわった ゆびや てのひらで ページが うごかないように
+document.addEventListener('touchstart', e => { padTouch = !!(e.target.closest && e.target.closest('#mission .padbox, #mission.paged .mcard')); if (e.target.closest && e.target.closest('#mission .padbox')) e.preventDefault(); }, { passive: false });
+document.addEventListener('touchmove', e => { if ($('#mission').hidden) return; if (PADDRAW || padTouch) e.preventDefault(); else if (penSeen && [...e.touches].some(t => (t.radiusX || 0) > 22 || t.touchType === 'stylus')) e.preventDefault(); }, { passive: false });
+document.addEventListener('touchend', e => { if (!e.touches.length) padTouch = false; });
 function bindPad(it, i) {
   const box = $('#pb' + i); if (!box) return;
   const gc = box.querySelector('.guide'), c = box.querySelector('.ink'), g = gc.getContext('2d'), ctx = c.getContext('2d');
@@ -3212,9 +3246,9 @@ function bindPad(it, i) {
   if (showGuide) drawGuide(g, it.d.k, it.animOnce ? 0 : 1, false, () => stepUI()); else stepUI(); it.animOnce = true;
   let cur = null, drawId = null; const lw = e => e.pointerType === 'pen' ? 9 + (e.pressure || .5) * 12 : 15;
   const pos = e => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 320, (e.clientY - r.top) / r.height * 320]; };
-  c.addEventListener('pointerdown', e => { e.preventDefault(); if (e.pointerType === 'pen') penSeen = true; if (penSeen && e.pointerType === 'touch') return; if (drawId !== null) return; drawId = e.pointerId; try { c.setPointerCapture(e.pointerId); } catch (_) {} cur = { w: lw(e), pts: [pos(e)] }; it.strokes.push(cur); redraw(); if (stepOn()) drawGuideStep(g, it.d.k, it.strokes.length - 1); });
+  c.addEventListener('pointerdown', e => { e.preventDefault(); if (e.pointerType === 'pen') penSeen = true; if (penSeen && e.pointerType === 'touch') return; if (drawId !== null) return; drawId = e.pointerId; PADDRAW = true; const tb = document.querySelector(`#mTabs [data-i="${i}"]`); if (tb) tb.classList.add('w'); try { c.setPointerCapture(e.pointerId); } catch (_) {} cur = { w: lw(e), pts: [pos(e)] }; it.strokes.push(cur); redraw(); if (stepOn()) drawGuideStep(g, it.d.k, it.strokes.length - 1); });
   c.addEventListener('pointermove', e => { if (!cur || e.pointerId !== drawId) return; const evs = (e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e]; for (const ev of evs) { const p = pos(ev), q = cur.pts[cur.pts.length - 1]; if (Math.hypot(p[0] - q[0], p[1] - q[1]) > 1.5) cur.pts.push(p); } redraw(); });
-  const end = e => { if (e.pointerId === drawId) { const s = cur; cur = null; drawId = null; if (stepOn() && s) stepUI(strokeCheck(it.d.k, it.strokes.length - 1, s.pts)); } }; c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
+  const end = e => { if (e.pointerId === drawId) { const s = cur; cur = null; drawId = null; PADDRAW = false; if (stepOn() && s) stepUI(strokeCheck(it.d.k, it.strokes.length - 1, s.pts)); } }; c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
   const card = box.closest('.mcard');
   card.querySelector('[data-undo]').onclick = () => { it.strokes.pop(); redraw(); stepUI(); };
   card.querySelector('[data-clear]').onclick = () => { it.strokes = []; redraw(); stepUI(); };
@@ -3349,7 +3383,7 @@ function checkAll() {
   if (MS.kind === 'exam') { examCheck(); return; }
   const items = todo();
   const empty = items.filter(it => !it.strokes.length);
-  if (empty.length) { setStatus(`${empty.map(numOf).join(' ')} が まだ 書いてないよ`, 'err'); sfx('ng'); return; }
+  if (empty.length) { setStatus(`${empty.map(numOf).join(' ')} が まだ 書いてないよ`, 'err'); sfx('ng'); const t = document.querySelector(`#mTabs [data-i="${MS.items.indexOf(empty[0])}"]`); if (t) t.click(); return; }
   if (S.check === 'parent') { padImage(items, b => { setPhoto(b); MS.stage = 'parent'; renderMission(); $('#mParent').scrollIntoView({ behavior: 'smooth', block: 'center' }); }); return; }
   items.forEach(it => { const r = HW.grade(it.d.k, it.strokes.map(s => s.pts), { order: S.order, level: S.level }); applyResult(it, r.ok, r.msg); if (!r.ok) it.strokes = []; });
   afterGrade();
@@ -5237,7 +5271,7 @@ function openExam(g) {
 }
 function examCheck() {
   const empty = MS.items.filter(it => !it.strokes.length);
-  if (empty.length) { setStatus(`${empty.map(numOf).join(' ')} が まだ 書いてないよ`, 'err'); sfx('ng'); return; }
+  if (empty.length) { setStatus(`${empty.map(numOf).join(' ')} が まだ 書いてないよ`, 'err'); sfx('ng'); const t = document.querySelector(`#mTabs [data-i="${MS.items.indexOf(empty[0])}"]`); if (t) t.click(); return; }
   let sc = 0; for (const it of MS.items) { const r = HW.grade(it.d.k, it.strokes.map(s => s.pts), { order: S.order, level: S.level === 'easy' ? 'normal' : S.level }); it.ok = true; it.first = r.ok; it.examOK = r.ok; it.comment = r.ok ? '○' : '×'; if (r.ok) sc++; }
   const g = MS.g, pass = sc >= 8; S.exams = S.exams || {}; const ex = S.exams[g] || (S.exams[g] = {}); ex.last = todayStr(); ex.best = Math.max(ex.best || 0, sc); if (pass) { ex.pass = true; ex.at = Date.now(); }
   S.kp = (S.kp || 0) + sc; logDay(d => { d.pt = (d.pt || 0) + sc; d.ex = (d.ex || 0) + 1; }); save();
