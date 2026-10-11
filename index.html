@@ -3427,7 +3427,7 @@ function renderParent() {
   };
 }
 function finishMission() {
-  let gained = 0; const mastered = []; const beforeStars = S.stars; const beforeN = stats().n;
+  let gained = 0; const mastered = []; const beforeStars = S.stars; const beforeN = stats().n, tw0 = twCount();
   for (const it of MS.items) {
     const k = it.d.k; const r = S.kanji[k] || (S.kanji[k] = { b: 0, c: 0, w: 0, last: 0 });
     gained += 1;
@@ -3440,7 +3440,7 @@ function finishMission() {
   if (S.day !== todayStr()) { S.streak = S.day === todayStr(-1) ? S.streak + 1 : 1; S.day = todayStr(); gained += 2; daily = true; }
   S.stars += gained; S.missions++; const KA = kpAward(MS.items, daily);
   S.log.push({ t: Date.now(), kind: MS.kind, it: MS.items.map(it => [it.d.k, it.cat === 'pre' ? 'pre' : it.first && !it.hint ? 'ok' : it.first ? 'hint' : 'ng']) }); if (S.log.length > 80) S.log.splice(0, S.log.length - 80);
-  let okN = 0, ngN = 0; MS.items.forEach(it => { if (it.cat === 'pre') return; if (it.first && !it.hint) okN++; else ngN++; }); S.tot.ok += okN; S.tot.ng += ngN;
+  let okN = 0, ngN = 0; MS.items.forEach(it => { if (it.cat === 'pre') return; if (it.first && !it.hint) okN++; else ngN++; }); S.tot.ok += okN; S.tot.ng += ngN; S.twPre = (S.twPre || 0) + MS.items.filter(it => it.cat === 'pre').length;
   logDay(d => { d.m++; d.ok += okN; d.ng += ngN; d.k += MS.items.reduce((a, it) => a + (it.tries || 1), 0); });
   if (MS.kind === 'stage') S.pending = false;
   const afterN = stats().n; const newCerts = certCheck(beforeN, afterN); const newTitle = titleOf(afterN) !== titleOf(beforeN) ? titleOf(afterN) : null; const newSkins = SKINS.map((s, i) => i).filter(i => SKINS[i].need > beforeN && SKINS[i].need <= afterN);
@@ -3462,6 +3462,7 @@ function finishMission() {
       ${newTitle ? `<div class="newskin">${rb('{称号|しょうごう}')}「${rb(newTitle)}」を てにいれた！</div>` : ''}
       <p>漢字パワー：こうげき +${Math.round(kanjiPower() * 100)}%</p>
       ${newSkins.length ? `<div class="newskin">あたらしい すがた「${esc(SKINS[newSkins[newSkins.length - 1]].n)}」に へんしん！</div>` : nextSkin ? `<p>あと ${nextSkin.need - afterN}こ おぼえると「${esc(nextSkin.n)}」に なれる！</p>` : ''}
+      ${(() => { const nw = TWL.filter(w => w.need > tw0 && w.need <= twCount()), nx = TWL.find(w => w.need > twCount()); return nw.length ? `<div class="newskin">漢字バトルの ぶき「${nw.map(w => w.n).join('・')}」が つかえるように なった！</div>` : nx ? `<p>あと ${nx.need - twCount()}こ 書くと 漢字バトルの ぶき「${nx.n}」が つかえる！</p>` : ''; })()}
       ${newW.length ? `<p style="color:#c0392b">あたらしい ぶき「${esc(newW.map(w => w.n).join('・'))}」が かいほう できるよ！</p>` : ''}
       <div class="mact" style="width:100%">
         <button class="btn big y" id="dGo">${MS.kind === 'wup' ? 'きょうか する！' : MS.kind === 'tbox' ? 'パワーアップ！' : MS.kind === 'tskill' ? 'スキル はつどう！' : MS.kind === 'trespawn' ? 'ふっかつ！' : MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'bonus' ? 'レベルアップへ（2つ えらべる）' : MS.kind === 'shield' ? 'けっかいを やぶる！' : MS.kind === 'box' ? 'かぎと トリプル たからばこ！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
@@ -5524,20 +5525,22 @@ function tpsUpdateAI(c, dt) {
 const TWL = [
   { id: 'blaster', n: 'ブラスター', ic: '銃', need: 0, col: 0x4dabf7, tr: 0xfff3bf, cd: .11, dmg: 13, mode: 'hit', d: 'バランスの いい きほんの じゅう' },
   { id: 'shotgun', n: 'ショットガン', ic: '散', need: 5, col: 0xc9894a, tr: 0xffe066, cd: .62, dmg: 10, pel: 7, mode: 'pellet', d: 'ちかくの てきに すごく つよい さんだん' },
-  { id: 'minigun', n: 'ミニガン', ic: '連', need: 12, col: 0x868e96, tr: 0xffd43b, cd: .045, dmg: 7, mode: 'hit', spin: 1, d: 'まわりだしたら とまらない れんしゃ（おもくて すこし おそく なる）' },
-  { id: 'cannon', n: 'たいほう', ic: '砲', need: 20, col: 0x495057, tr: 0xff922b, cd: 1.3, dmg: 75, rad: 4, mode: 'shell', d: 'ドカン！ やまなりに とんで まわりごと ふっとばす' },
-  { id: 'missile', n: 'ミサイル', ic: '追', need: 30, col: 0x5c940d, tr: 0xff6b6b, cd: 1.7, dmg: 34, rad: 2.6, cnt: 3, mode: 'missile', d: 'ねらった てきを おいかける ミサイル 3はつ' },
-  { id: 'laser', n: 'レーザー', ic: '光', need: 45, col: 0xe9ecef, tr: 0x66d9e8, cd: .06, dmg: 6, mode: 'beam', d: 'まっすぐ つらぬく ひかり。ならんだ てきにも あたる' },
-  { id: 'rail', n: 'レールガン', ic: '雷', need: 60, col: 0x7048e8, tr: 0xb197fc, cd: 1.15, dmg: 88, mode: 'rail', d: 'いちげき ひっさつ。てきを まとめて つらぬく' },
+  { id: 'minigun', n: 'ミニガン', ic: '連', need: 15, col: 0x868e96, tr: 0xffd43b, cd: .045, dmg: 7, mode: 'hit', spin: 1, d: 'まわりだしたら とまらない れんしゃ（おもくて すこし おそく なる）' },
+  { id: 'cannon', n: 'たいほう', ic: '砲', need: 30, col: 0x495057, tr: 0xff922b, cd: 1.3, dmg: 75, rad: 4, mode: 'shell', d: 'ドカン！ やまなりに とんで まわりごと ふっとばす' },
+  { id: 'missile', n: 'ミサイル', ic: '追', need: 50, col: 0x5c940d, tr: 0xff6b6b, cd: 1.7, dmg: 34, rad: 2.6, cnt: 3, mode: 'missile', d: 'ねらった てきを おいかける ミサイル 3はつ' },
+  { id: 'laser', n: 'レーザー', ic: '光', need: 75, col: 0xe9ecef, tr: 0x66d9e8, cd: .06, dmg: 6, mode: 'beam', d: 'まっすぐ つらぬく ひかり。ならんだ てきにも あたる' },
+  { id: 'rail', n: 'レールガン', ic: '雷', need: 100, col: 0x7048e8, tr: 0xb197fc, cd: 1.15, dmg: 88, mode: 'rail', d: 'いちげき ひっさつ。てきを まとめて つらぬく' },
 ];
 const TWI = Object.fromEntries(TWL.map(w => [w.id, w])), TWMAX = 5, twCost = lv => [0, 3, 4, 5, 6][lv] || 6;
 const twLv = id => (S.tw && S.tw[id]) || 1;
-const twOpen = id => stats().n >= TWI[id].need;
+// かいた 漢字の かず（ふくしゅう・なおし・よしゅうも ぜんぶ）で ぶきが ふえる
+const twCount = () => ((S.tot && (S.tot.ok + S.tot.ng)) || 0) + (S.twPre || 0);
+const twOpen = id => twCount() >= TWI[id].need;
 function twStat(id, lv) {
   const w = TWI[id], k = lv - 1;
   return Object.assign({}, w, { lv, dmg: w.dmg * (1 + .16 * k), cd: w.cd * (1 - .07 * k), pel: (w.pel || 0) + k, cnt: (w.cnt || 0) + (lv >= 3 ? 1 : 0) + (lv >= 5 ? 1 : 0), rad: (w.rad || 0) * (1 + .08 * k) });
 }
-function twLoad() { const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 }); if (!T.load) T.load = ['blaster', twOpen('shotgun') ? 'shotgun' : 'blaster']; T.load = T.load.map(id => TWI[id] && twOpen(id) ? id : 'blaster'); return T.load; }
+function twLoad() { const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 }); if (!T.load) T.load = ['blaster', twOpen('shotgun') ? 'shotgun' : 'blaster']; T.load = T.load.map(id => TWI[id] && twOpen(id) ? id : 'blaster'); if (T.load[0] === T.load[1]) { const op = TWL.filter(w => twOpen(w.id) && w.id !== T.load[0]); if (op.length) T.load[1] = op[op.length - 1].id; } return T.load; }
 const twCur = () => twLoad()[TPS.slot || 0];
 /* ---- みための ぶき（みぎてに もつ） ---- */
 function tpsWepModel(pm, id, lv) {
@@ -5679,13 +5682,13 @@ function tpsWepHud(force) {
 function tpsBoxMap(g, X) { if (!TPS.box) return; const b = TPS.box; g.fillStyle = '#ffd43b'; g.font = '900 30px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('★', X(b.x), X(b.z)); }
 /* ---- ロビー：ぶきを えらぶ・きょうか ---- */
 function twPanelHTML() {
-  const L = twLoad(), n = stats().n, sl = TPS.wslot || 0;
+  const L = twLoad(), n = twCount(), sl = TPS.wslot || 0;
   return `<div class="panel"><h3>ぶき（2つ もっていける。バトル中は「ぶき」ボタンで もちかえ）</h3>
     <div class="seg" id="twSlot">${[0, 1].map(i => `<button data-v="${i}" aria-pressed="${i === sl}">${i + 1}ばん：${TWI[L[i]].n}</button>`).join('')}</div>
-    <p class="hint">えらんだ ばんごうに いれる ぶきを タップ。漢字を おぼえると あたらしい ぶきが ふえるよ（いま ${n}字）。</p>
+    <p class="hint">えらんだ ばんごうに いれる ぶきを タップ。漢字を 書くほど あたらしい ぶきが ふえるよ（いままで ${n}こ 書いた）。</p>
     <div class="twgrid">${TWL.map(w => { const op = n >= w.need, lv = twLv(w.id), eq = L.indexOf(w.id); return `<div class="twc ${op ? '' : 'lock'} ${eq >= 0 ? 'eq' : ''}" data-w="${w.id}" style="--wc:#${w.col.toString(16).padStart(6, '0')}">
       <span class="wic">${op ? w.ic : '？'}</span><b>${op ? w.n : '？？？'}</b>${eq >= 0 ? `<i class="weq">${eq + 1}ばん</i>` : ''}
-      <span class="wst">${op ? '★'.repeat(lv) + '☆'.repeat(TWMAX - lv) : ''}</span><small>${op ? w.d : `漢字を ${w.need}字 おぼえると かいほう（あと ${w.need - n}字）`}</small>
+      <span class="wst">${op ? '★'.repeat(lv) + '☆'.repeat(TWMAX - lv) : ''}</span><small>${op ? w.d : `漢字を ${w.need}こ 書くと かいほう（あと ${w.need - n}こ）`}</small>
       ${op ? lv < TWMAX ? `<button class="btn sm y" data-up="${w.id}">きょうか（漢字 ${twCost(lv)}こ）</button>` : '<em>さいきょう！</em>' : ''}</div>`; }).join('')}</div></div>`;
 }
 function twPanelBind() {
