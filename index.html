@@ -252,6 +252,7 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 #tpsDmg{position:absolute;left:calc(50% + 18px);top:calc(50% - 30px);font-family:var(--display);color:#fff3bf;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;opacity:0}#tpsDmg.on{animation:tdmg .5s ease-out}@keyframes tdmg{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
 #tpsFire,#tpsJump,#tpsSk{position:absolute;pointer-events:auto;border:4px solid var(--ink);border-radius:50%;font-family:var(--display);color:var(--ink);box-shadow:0 5px 0 var(--ink);touch-action:none;-webkit-user-select:none;user-select:none}
 #tpsFire{right:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:112px;height:112px;background:#ff6b6b;font-size:1.2rem}
+#tpsFire.on{transform:scale(1.12);background:#ff8787;box-shadow:0 0 0 6px rgba(255,255,255,.35),0 5px 0 var(--ink)}
 #tpsJump{right:146px;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);width:72px;height:72px;background:var(--sky);font-size:.72rem}
 #tpsSk{right:40px;bottom:calc(env(safe-area-inset-bottom,0px) + 152px);width:84px;height:84px;background:#3b2a6b;color:#fff;overflow:hidden;font-size:.78rem;line-height:1.1}
 #tpsSk i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#ffe066,#ff922b)}#tpsSk span{position:relative;text-shadow:0 2px 0 var(--ink)}#tpsSk.ready{animation:canpulse .8s ease-in-out infinite}
@@ -4829,7 +4830,7 @@ function tpsLobby() {
     <div class="panel"><h3>漢字スキル（ゲージが たまったら 漢字を 1こ 書いて はつどう）</h3><div class="seg" id="tlSk">
       <button data-v="mech" aria-pressed="${sk === 'mech'}">メカ しょうかん</button><button data-v="meteor" aria-pressed="${sk === 'meteor'}">${rb('{流星|りゅうせい}')}</button><button data-v="shield" aria-pressed="${sk === 'shield'}">${rb('{結界|けっかい}')}</button></div>
       <p class="hint" id="tlSkD"></p></div>
-    <div class="panel"><h3>そうさ</h3><p class="hint">iPad：ひだりで あるく、みぎを なぞって ねらう、うつ ボタン（ねらうと じどうでも うつ）。<br>パソコン：W A S D と マウス、クリックで うつ、E で スキル、スペースで ジャンプ。</p>
+    <div class="panel"><h3>そうさ</h3><p class="hint">iPad：ひだりで あるく、みぎを なぞって ねらう。「うつ」ボタンは おしたまま ゆびを うごかすと、うちながら ねらえるよ（ねらうと じどうでも うつ）。<br>パソコン：W A S D と マウス、クリックで うつ、E で スキル、スペースで ジャンプ。</p>
       <label class="hint"><input type="checkbox" id="tlAuto" ${TPS.auto ? 'checked' : ''}> ねらったら じどうで うつ</label></div>
     <div class="mact"><button class="btn big y" id="tlGo">しゅつげき！</button></div></div>`;
   const desc = { mech: `マイメカ「${esc(mechCfg().name || 'マイメカ')}」が 20びょう いっしょに たたかう`, meteor: 'ねらった ばしょに いんせきが ふりそそぐ', shield: '10びょう なかま ぜんいんの ダメージが へって HP かいふく' };
@@ -4853,12 +4854,12 @@ function tpsStart() {
   for (let i = 1; i <= 3; i++) TPS.chars.push(tpsChar(0, false, i));
   for (let i = 0; i < 4; i++) TPS.chars.push(tpsChar(1, false, i));
   tpsPickKanji().forEach((d, i) => { const p = TPS.pts[i]; p.k = d.k; p.yomi = d.yomi; p.prog = 0; p.owner = 0; ptLabel(p); });
-  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireHeld: false, endT: 0 });
+  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireLook: null, fireHeld: false, endT: 0 });
   TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, Math.round(TPS.lvl * .65)));
   $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${rb(TEAMN[0])} しゅつげき！`, 'gold');
 }
 function tpsEnd() { TPS.on = false; TPS.paused = false; ['#tpsHud', '#tpsLobby', '#tpsResult', '#tpsPause'].forEach(s => $(s).hidden = true); if (document.pointerLockElement) document.exitPointerLock(); }
-function tpsResume() { hideAll(); $('#tpsHud').hidden = false; TPS.paused = false; TPS.stick = TPS.look = null; TPS.fireHeld = false; }
+function tpsResume() { hideAll(); $('#tpsHud').hidden = false; TPS.paused = false; TPS.stick = TPS.look = TPS.fireLook = null; TPS.fireHeld = false; const f = $('#tpsFire'); if (f) f.classList.remove('on'); }
 /* ---- あたりはんてい ---- */
 function segHit(x1, z1, x2, z2, minH = 1.4) {
   for (const o of TPS.obst) {
@@ -5069,7 +5070,9 @@ function tpsHudBuild() {
     <button class="btn sm w" id="tpsPauseB" aria-label="ポーズ">II</button>
     <div id="tpsDead" hidden><b>やられた！</b><span><b id="tpsDeadT">5</b>びょうで ふっかつ</span><button class="btn y" id="tpsRevive">漢字を 1こ 書いて すぐ ふっかつ</button></div>`;
   const hold = (id, on, off) => { const b = $(id); b.onpointerdown = e => { e.preventDefault(); e.stopPropagation(); on(); }; b.onpointerup = b.onpointercancel = b.onpointerleave = e => { if (off) off(); }; };
-  hold('#tpsFire', () => TPS.fireHeld = true, () => TPS.fireHeld = false);
+  // うつ ボタン：おしたまま ゆびを うごかすと そのまま ねらえる（かたてで ねらい＋うつ）
+  { const b = $('#tpsFire'); b.onpointerdown = e => { e.preventDefault(); e.stopPropagation(); if (TPS.paused) return; TPS.fireHeld = true; TPS.fireLook = { id: e.pointerId, x: e.clientX, y: e.clientY }; b.classList.add('on'); try { b.setPointerCapture(e.pointerId); } catch (er) {} };
+    b.onpointerup = b.onpointercancel = e => { if (TPS.fireLook && e.pointerId !== TPS.fireLook.id) return; TPS.fireHeld = false; TPS.fireLook = null; b.classList.remove('on'); }; }
   hold('#tpsJump', () => TPS.jumpReq = true);
   hold('#tpsSk', () => tpsSkillUse());
   $('#tpsPauseB').onclick = () => tpsPause();
@@ -5117,7 +5120,7 @@ function tpsPDown(e) {
 }
 function tpsPMove(e) {
   if (TPS.stick && e.pointerId === TPS.stick.id) { let dx = e.clientX - TPS.stick.ox, dy = e.clientY - TPS.stick.oy; const d = Math.hypot(dx, dy), m = joyR(); if (d > m) { dx = dx / d * m; dy = dy / d * m; } TPS.stick.x = dx / m; TPS.stick.y = dy / m; $('#joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
-  else if (TPS.look && e.pointerId === TPS.look.id) { const k = 4.2 / innerWidth; TPS.yaw -= (e.clientX - TPS.look.x) * k * 1.4; TPS.pitch = Math.max(-.95, Math.min(.4, TPS.pitch - (e.clientY - TPS.look.y) * k)); TPS.look.x = e.clientX; TPS.look.y = e.clientY; }
+  else for (const L of [TPS.look, TPS.fireLook]) if (L && e.pointerId === L.id) { const k = 4.2 / innerWidth; TPS.yaw -= (e.clientX - L.x) * k * 1.4; TPS.pitch = Math.max(-.95, Math.min(.4, TPS.pitch - (e.clientY - L.y) * k)); L.x = e.clientX; L.y = e.clientY; }
 }
 function tpsPUp(e) {
   if (e.pointerType === 'mouse' && e.button === 0) keys.Mouse0 = false;
