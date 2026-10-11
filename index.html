@@ -257,9 +257,18 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 #tpsHit.kill{background:linear-gradient(45deg,transparent 42%,#ff4d5b 42% 58%,transparent 58%),linear-gradient(-45deg,transparent 42%,#ff4d5b 42% 58%,transparent 58%);width:44px;height:44px;margin:-22px 0 0 -22px}
 #tpsHit.on{animation:thit .25s ease-out}@keyframes thit{0%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(1)}}
 #tpsDmg{position:absolute;left:calc(50% + 18px);top:calc(50% - 30px);font-family:var(--display);color:#fff3bf;-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;opacity:0}#tpsDmg.on{animation:tdmg .5s ease-out}@keyframes tdmg{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
-#tpsFire,#tpsJump,#tpsSk{position:absolute;pointer-events:auto;border:4px solid var(--ink);border-radius:50%;font-family:var(--display);color:var(--ink);box-shadow:0 5px 0 var(--ink);touch-action:none;-webkit-user-select:none;user-select:none}
+#tpsFire,#tpsJump,#tpsSk,#tpsWep{position:absolute;pointer-events:auto;border:4px solid var(--ink);border-radius:50%;font-family:var(--display);color:var(--ink);box-shadow:0 5px 0 var(--ink);touch-action:none;-webkit-user-select:none;user-select:none}
 #tpsFire{right:22px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:112px;height:112px;background:#ff6b6b;font-size:1.2rem}
 #tpsFire.on{transform:scale(1.12);background:#ff8787;box-shadow:0 0 0 6px rgba(255,255,255,.35),0 5px 0 var(--ink)}
+#tpsWep{right:150px;bottom:calc(env(safe-area-inset-bottom,0px) + 104px);width:86px;height:86px;background:var(--wc,#4dabf7);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;line-height:1.05;font-size:.62rem;padding:0;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+#tpsWep .wic{font-family:var(--kyo);font-size:1.5rem;font-weight:900}#tpsWep b{font-size:.62rem}#tpsWep small{font-size:.6rem}
+#tpsWep.boost{background:#ffd43b;color:#151733;text-shadow:none;animation:wpb .5s infinite alternate}@keyframes wpb{to{box-shadow:0 0 0 7px rgba(255,212,59,.45),0 5px 0 var(--ink)}}
+.twgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.twc{position:relative;background:#fffbf0;color:#1f1d1a;border:3px solid var(--ink);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;cursor:pointer;box-shadow:0 4px 0 var(--ink)}
+.twc .wic{width:46px;height:46px;border-radius:50%;background:var(--wc);color:#fff;display:grid;place-items:center;font-family:var(--kyo);font-size:1.6rem;font-weight:900;border:3px solid var(--ink);text-shadow:0 1px 0 rgba(0,0,0,.5)}
+.twc b{font-size:.95rem}.twc small{font-size:.72rem;color:#555;line-height:1.3}.twc .wst{color:#f08c00;letter-spacing:1px}.twc em{font-style:normal;font-weight:900;color:#c92a2a}
+.twc.eq{outline:4px solid #ffd43b;outline-offset:1px}.twc .weq{position:absolute;top:6px;right:6px;background:#ffd43b;color:#151733;border-radius:8px;padding:1px 6px;font-style:normal;font-weight:900;font-size:.72rem}
+.twc.lock{background:#dee2e6;cursor:default}.twc.lock .wic{background:#868e96}
 #tpsJump{right:146px;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);width:72px;height:72px;background:var(--sky);font-size:.72rem}
 #tpsSk{right:40px;bottom:calc(env(safe-area-inset-bottom,0px) + 152px);width:84px;height:84px;background:#3b2a6b;color:#fff;overflow:hidden;font-size:.78rem;line-height:1.1}
 #tpsSk i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#ffe066,#ff922b)}#tpsSk span{position:relative;text-shadow:0 2px 0 var(--ink)}#tpsSk.ready{animation:canpulse .8s ease-in-out infinite}
@@ -3134,9 +3143,9 @@ function renderSlots() {
 let MS = null;
 const SPEC = { stage: ['new', 'new', 'rev', 'rev', 'rev', 'pre'], revive: ['rev'], box: ['rev'] };
 function openMission(kind, evoI) {
-  if (['revive', 'box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn'].includes(kind)) { W.susp = true; } else endRun();
+  if (['revive', 'box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox'].includes(kind)) { W.susp = true; } else endRun();
   hideAll();
-  const spec = ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn'].includes(kind) ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
+  const spec = ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox'].includes(kind) ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
   MS = { kind, evoI, items: pickKanji(spec).map(({ d, cat }) => ({ d, cat, hint: false, first: null, ok: false, comment: '', reveal: false, strokes: [], before: S.kanji[d.k] ? { ...S.kanji[d.k] } : null })), blob: null, url: null, stage: 'pad', status: '', statusCls: '' };
   $('#mission').hidden = false; $('#mission').scrollTop = 0; renderMission();
 }
@@ -3147,11 +3156,11 @@ function renderMission() {
   const W2 = $('#mWrap');
   if (MS.stage === 'done') { W2.innerHTML = MS.doneHTML; bindDone(); return; }
   const left = todo();
-  const title = MS.kind === 'exam' ? `${KYU[MS.g]} もぎしけん` : MS.kind === 'tskill' ? '漢字スキル はつどう！' : MS.kind === 'trespawn' ? '漢字で ふっかつ！' : MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'bonus' ? '漢字チャンス！' : MS.kind === 'shield' ? rb('{結界|けっかい}を やぶれ！') : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
-  const sub = MS.kind === 'exam' ? `${MS.g}年生の 漢字 10もん。ヒントは ないよ。1かいだけ はんていして、8もん いじょうで ごうかく！` : MS.kind === 'tskill' ? '1こ 書けたら スキル はつどう！ バトルは とまっているよ。' : MS.kind === 'trespawn' ? '1こ 書けたら すぐに ふっかつ！ バトルは とまっているよ。' : MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'bonus' ? '1こ 書けたら レベルアップで 2つ えらべる！ ゲームは とまっているよ。' : MS.kind === 'shield' ? '1こ 書けたら ボスの けっかいが われて 大ダメージ！ ゲームは とまっているよ。' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら かぎ ＋ トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
+  const title = MS.kind === 'exam' ? `${KYU[MS.g]} もぎしけん` : MS.kind === 'wup' ? `「${TWI[TPS.wupId] ? TWI[TPS.wupId].n : 'ぶき'}」を きょうか！` : MS.kind === 'tbox' ? 'ぶきボックスを あけろ！' : MS.kind === 'tskill' ? '漢字スキル はつどう！' : MS.kind === 'trespawn' ? '漢字で ふっかつ！' : MS.kind === 'revive' ? '漢字で ふっかつ！' : MS.kind === 'bonus' ? '漢字チャンス！' : MS.kind === 'shield' ? rb('{結界|けっかい}を やぶれ！') : MS.kind === 'box' ? '漢字ボックス！' : MS.kind === 'evo' ? 'しんかの 漢字！' : `ステージ ${S.stage} へ すすもう`;
+  const sub = MS.kind === 'exam' ? `${MS.g}年生の 漢字 10もん。ヒントは ないよ。1かいだけ はんていして、8もん いじょうで ごうかく！` : MS.kind === 'wup' ? `ぜんぶ 書けたら レベル${twLv(TPS.wupId) + 1}に なるよ。` : MS.kind === 'tbox' ? '1こ 書けたら ぶきが 25びょう パワーアップ！ バトルは とまっているよ。' : MS.kind === 'tskill' ? '1こ 書けたら スキル はつどう！ バトルは とまっているよ。' : MS.kind === 'trespawn' ? '1こ 書けたら すぐに ふっかつ！ バトルは とまっているよ。' : MS.kind === 'revive' ? '1こ 書けたら、その ばしょから HPまんたんで ふっかつ！' : MS.kind === 'bonus' ? '1こ 書けたら レベルアップで 2つ えらべる！ ゲームは とまっているよ。' : MS.kind === 'shield' ? '1こ 書けたら ボスの けっかいが われて 大ダメージ！ ゲームは とまっているよ。' : MS.kind === 'evo' ? `1こ 書けたら「${WEAPONS[MS.evoI].n}」が「${rb(WEAPONS[MS.evoI].evo)}」に しんか！ ゲームは とまっているよ。` : MS.kind === 'box' ? '1こ 書けたら かぎ ＋ トリプル たからばこ！ ゲームは とまっているよ。' : 'あたらしい 字・ふくしゅう・よしゅう。ぜんぶ 書けたら ★が もらえて、つぎの ステージへ。';
   const pad = MS.stage === 'pad';
   W2.innerHTML = `
-    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : MS.kind === 'exam' ? 'やめる' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
+    <div class="mtop"><button class="btn sm" id="mBack">${MS.kind === 'revive' ? 'あきらめて きちへ' : ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox'].includes(MS.kind) ? 'あとで（ゲームに もどる）' : MS.kind === 'wup' ? 'ぶきえらびに もどる' : MS.kind === 'exam' ? 'やめる' : 'きちへ もどる'}</button><span style="font-weight:900">はんてい：${checkName()}</span></div>
     <div class="mtitle"><span class="eyebrow">漢字ミッション</span><h2>${title}</h2><p>${sub}</p></div>
     ${left.length && pad ? `<div class="mguide">□の 上の ひらがなが よみかただよ。マスの なかに 大きく 1こずつ 書いてね。${S.check === 'auto' && S.order ? '<br><small style="font-weight:700">かきじゅんも みているよ。わからない ときは「かきじゅん」ボタン。</small>' : ''}</div>` : ''}
     <div class="mcards">${MS.items.map((it, i) => cardHTML(it, i)).join('')}</div>
@@ -3163,7 +3172,7 @@ function renderMission() {
     <div id="mPrev" class="mpreview" ${MS.stage !== 'parent' || !MS.url ? 'hidden' : ''}>${MS.url ? `<img src="${MS.url}" alt="おくる しゃしん">` : ''}</div>
     <div id="mParent" class="parent" ${MS.stage !== 'parent' ? 'hidden' : ''}></div>
     <div class="mstatus ${MS.statusCls}" id="mStatus">${MS.status}</div>`;
-  $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'tskill' || k === 'trespawn') { tpsResume(); return; } if (k === 'box' || k === 'shield') { resumeRun(); return; } if (k === 'bonus') { resumeRun(true); if (W.pendLv) setTimeout(showLevelUp, 300); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
+  $('#mBack').onclick = () => { if (MS.url) URL.revokeObjectURL(MS.url); const k = MS.kind; MS = null; if (k === 'tskill' || k === 'trespawn' || k === 'tbox') { if (k === 'tbox') TPS.boxCool = 4; tpsResume(); return; } if (k === 'wup') { tpsLobby(); return; } if (k === 'box' || k === 'shield') { resumeRun(); return; } if (k === 'bonus') { resumeRun(true); if (W.pendLv) setTimeout(showLevelUp, 300); return; } if (k === 'evo') { W.pendLv++; resumeRun(); return; } if (k === 'revive') { S.deaths++; save(); endRun(); } goHome(); };
   if (pad) { MS.items.forEach((it, i) => { if (!it.ok) bindPad(it, i); }); if ($('#mCheck')) { $('#mCheck').onclick = checkAll; if ($('#mPhoto')) $('#mPhoto').onclick = () => { MS.stage = 'photo'; MS.status = ''; renderMission(); }; } }
   if (MS.stage === 'photo') {
     const onFile = async ev => { const f = ev.target.files && ev.target.files[0]; if (!f) return; try { const blob = await downscale(f); setPhoto(blob); MS.stage = 'parent'; renderMission(); } catch (e) { setStatus('しゃしんが よみこめなかったよ。べつの しゃしんで ためしてね。', 'err'); } };
@@ -3421,13 +3430,13 @@ function finishMission() {
       ${newSkins.length ? `<div class="newskin">あたらしい すがた「${esc(SKINS[newSkins[newSkins.length - 1]].n)}」に へんしん！</div>` : nextSkin ? `<p>あと ${nextSkin.need - afterN}こ おぼえると「${esc(nextSkin.n)}」に なれる！</p>` : ''}
       ${newW.length ? `<p style="color:#c0392b">あたらしい ぶき「${esc(newW.map(w => w.n).join('・'))}」が かいほう できるよ！</p>` : ''}
       <div class="mact" style="width:100%">
-        <button class="btn big y" id="dGo">${MS.kind === 'tskill' ? 'スキル はつどう！' : MS.kind === 'trespawn' ? 'ふっかつ！' : MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'bonus' ? 'レベルアップへ（2つ えらべる）' : MS.kind === 'shield' ? 'けっかいを やぶる！' : MS.kind === 'box' ? 'かぎと トリプル たからばこ！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
+        <button class="btn big y" id="dGo">${MS.kind === 'wup' ? 'きょうか する！' : MS.kind === 'tbox' ? 'パワーアップ！' : MS.kind === 'tskill' ? 'スキル はつどう！' : MS.kind === 'trespawn' ? 'ふっかつ！' : MS.kind === 'revive' ? 'ふっかつ！' : MS.kind === 'bonus' ? 'レベルアップへ（2つ えらべる）' : MS.kind === 'shield' ? 'けっかいを やぶる！' : MS.kind === 'box' ? 'かぎと トリプル たからばこ！' : MS.kind === 'evo' ? 'しんか させる！' : `ステージ ${S.stage} へ しゅつげき！`}</button>
         ${MS.kind === 'stage' ? '<button class="btn w" id="dHome">きちへ もどる</button>' : ''}
       </div></div>`;
   renderMission(); $('#mission').scrollTop = 0;
 }
 function bindDone() {
-  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'exam') { goHome(); return; } if (k === 'tskill') { tpsResume(); tpsSkill(); return; } if (k === 'trespawn') { tpsResume(); tpsRespawnNow(); return; } if (k === 'revive') revive(); else if (k === 'bonus') { resumeRun(true); W.pendLv++; setTimeout(showLevelUp, 300); } else if (k === 'shield') { resumeRun(true); breakBarrier(); } else if (k === 'box') { resumeRun(true); W.keys = (W.keys || 0) + 1; updBuffs(true); toast('かぎを 1こ ゲット！ かぎつきの たからばこが あけられる'); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
+  $('#dGo').onclick = () => { const k = MS.kind, ei = MS.evoI; MS = null; if (k === 'exam') { goHome(); return; } if (k === 'wup') { twUpgradeDone(); return; } if (k === 'tbox') { tpsResume(); tpsBoxOpen(); return; } if (k === 'tskill') { tpsResume(); tpsSkill(); return; } if (k === 'trespawn') { tpsResume(); tpsRespawnNow(); return; } if (k === 'revive') revive(); else if (k === 'bonus') { resumeRun(true); W.pendLv++; setTimeout(showLevelUp, 300); } else if (k === 'shield') { resumeRun(true); breakBarrier(); } else if (k === 'box') { resumeRun(true); W.keys = (W.keys || 0) + 1; updBuffs(true); toast('かぎを 1こ ゲット！ かぎつきの たからばこが あけられる'); openChest(3, true); } else if (k === 'evo') { resumeRun(true); const w = W.weps.find(x => x.i === ei); if (w) { w.lv = WMAX; evolveFx(ei); renderSlots(); } if (W.pendLv) setTimeout(showLevelUp, 1200); } else openFate(); };
   const h = $('#dHome'); if (h) h.onclick = () => { MS = null; goHome(); };
   const dc = $('#dCert'); if (dc) dc.onclick = () => showCert(curProf().name, +dc.dataset.n, S);
 }
@@ -4897,6 +4906,7 @@ function tpsChar(team, isMe, idx) {
   const si = isMe ? (skinUnlocked(S.skin) ? S.skin : 0) : (team ? [2, 1, 4, 6][idx % 4] : [0, 3, 5, 1][idx % 4]) % SKINS.length;
   const pm = buildPlayer(si, 0);
   if (isMe && S.build && S.build.weps) buildGear(pm, S.build.weps, S.build.pas || {}, S.build.lv || 1);
+  if (isMe) tpsWepModel(pm, twCur(), twLv(twCur()));
   const band = new THREE.Mesh(G(1.08, .2, .6), MB(TCOL[team])); band.position.y = 1.62; pm.inner.add(band);
   const mk = new THREE.Mesh(new THREE.OctahedronGeometry(.28), MB(TCOL[team])); mk.position.y = 3.35; pm.g.add(mk);
   TPS.scene.add(pm.g);
@@ -4919,6 +4929,7 @@ function tpsLobby() {
     <p>${rb(TEAMN[0])} と ${rb(TEAMN[1])} の たたかい。3つの きょてん を とりあって、さきに ${TPS.goal}てんで かち！<br>きょてんの なまえは <b>漢字</b>。たいちょうの「ひらがな」の めいれいを よんで、その 漢字の きょてんへ いそごう！</p></div>
     <div class="panel"><h3>てきの つよさ（CPU レベル）</h3><div class="seg" id="tlLv">${Array.from({ length: 10 }, (_, i) => i + 1).map(i => `<button data-v="${i}" aria-pressed="${i === lv}" ${i > T.max ? 'disabled' : ''}>${i > T.max ? '🔒' : 'Lv' + i}</button>`).join('')}</div>
       <p class="hint">かつと つぎの レベルが あそべるよ。${T.max >= 10 ? 'さいこう レベル かいほう ずみ！' : ''}</p></div>
+    ${twPanelHTML()}
     <div class="panel"><h3>漢字スキル（ゲージが たまったら 漢字を 1こ 書いて はつどう）</h3><div class="seg" id="tlSk">
       <button data-v="mech" aria-pressed="${sk === 'mech'}">メカ しょうかん</button><button data-v="meteor" aria-pressed="${sk === 'meteor'}">${rb('{流星|りゅうせい}')}</button><button data-v="shield" aria-pressed="${sk === 'shield'}">${rb('{結界|けっかい}')}</button></div>
       <p class="hint" id="tlSkD"></p></div>
@@ -4929,7 +4940,7 @@ function tpsLobby() {
   const sel = (id, f) => $(id).querySelectorAll('[data-v]').forEach(b => b.onclick = () => { if (b.disabled) return; $(id).querySelectorAll('[data-v]').forEach(x => x.setAttribute('aria-pressed', x === b)); f(b.dataset.v); });
   sel('#tlLv', v => TPS.lvl = +v); sel('#tlSk', v => { TPS.skill = v; $('#tlSkD').textContent = desc[v]; }); TPS.lvl = lv; TPS.skill = sk; $('#tlSkD').textContent = desc[sk];
   $('#tlAuto').onchange = e => TPS.auto = e.target.checked;
-  $('#tlBack').onclick = () => goHome(); $('#tlGo').onclick = () => { sfx('evo'); tpsStart(); };
+  $('#tlBack').onclick = () => goHome(); $('#tlGo').onclick = () => { sfx('evo'); tpsStart(); }; twPanelBind();
 }
 function tpsPickKanji() {
   const L = KALL.filter(d => S.kanji[d.k] && S.kanji[d.k].c > 0), base = L.length >= 3 ? L : KG[1];
@@ -4938,7 +4949,7 @@ function tpsPickKanji() {
   return out;
 }
 function tpsStart() {
-  tpsInit(); hideAll(); endRun();
+  tpsInit(); tpsWInit(); TPS.slot = 0; hideAll(); endRun();
   for (const c of TPS.chars) TPS.scene.remove(c.pm.g); TPS.chars = [];
   for (const d of TPS.deb || []) TPS.scene.remove(d.m); TPS.deb = []; for (const b of TPS.beams || []) TPS.scene.remove(b.m); TPS.beams = [];
   if (TPS.mech) { TPS.scene.remove(TPS.mech.g); TPS.mech = null; }
@@ -4946,9 +4957,9 @@ function tpsStart() {
   for (let i = 1; i <= 3; i++) TPS.chars.push(tpsChar(0, false, i));
   for (let i = 0; i < 4; i++) TPS.chars.push(tpsChar(1, false, i));
   tpsPickKanji().forEach((d, i) => { const p = TPS.pts[i]; p.k = d.k; p.yomi = d.yomi; p.prog = 0; p.owner = 0; ptLabel(p); });
-  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireLook: null, fireHeld: false, endT: 0, intel: [new Map(), new Map()], noise: [], planT: [0, 0] });
+  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireLook: null, fireHeld: false, endT: 0, intel: [new Map(), new Map()], noise: [], planT: [0, 0], proj: [], spin: 0, wslow: 1, boostT: 0, box: null, boxT: 35, boxCool: 0, shake: 0 });
   TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, Math.round(TPS.lvl * .65)));
-  $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${rb(TEAMN[0])} しゅつげき！`, 'gold');
+  $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${TEAMN[0]} しゅつげき！`, 'gold');
 }
 function tpsEnd() { TPS.on = false; TPS.paused = false; ['#tpsHud', '#tpsLobby', '#tpsResult', '#tpsPause'].forEach(s => $(s).hidden = true); if (document.pointerLockElement) document.exitPointerLock(); }
 function tpsResume() { hideAll(); $('#tpsHud').hidden = false; TPS.paused = false; TPS.stick = TPS.look = TPS.fireLook = null; TPS.fireHeld = false; const f = $('#tpsFire'); if (f) f.classList.remove('on'); }
@@ -5009,7 +5020,7 @@ function tpsUpdateMe(dt) {
   let mx = 0, mz = 0; if (TPS.stick) { mx = TPS.stick.x; mz = TPS.stick.y; }
   if (keys.KeyW || keys.ArrowUp) mz -= 1; if (keys.KeyS || keys.ArrowDown) mz += 1; if (keys.KeyA || keys.ArrowLeft) mx -= 1; if (keys.KeyD || keys.ArrowRight) mx += 1;
   const l = Math.hypot(mx, mz); if (l > 1) { mx /= l; mz /= l; }
-  const fy = TPS.yaw, fx = Math.sin(fy), fz = Math.cos(fy), sp = 8.6;
+  const fy = TPS.yaw, fx = Math.sin(fy), fz = Math.cos(fy), sp = 8.6 * (TPS.wslow || 1);
   // まえ = (sin yaw, cos yaw)、みぎ = (-cos yaw, sin yaw)
   const rx = -fz, rz = fx; me.x += (fx * -mz + rx * mx) * sp * dt; me.z += (fz * -mz + rz * mx) * sp * dt; me.moving = l > .1;
   if ((keys.Space || TPS.jumpReq) && me.onG) { me.vy = 9.5; me.onG = false; TPS.jumpReq = false; }
@@ -5017,12 +5028,7 @@ function tpsUpdateMe(dt) {
   // うつ
   me.fireT -= dt; const aim = tpsAim(); TPS.aimC = aim.c;
   const wantFire = TPS.fireHeld || keys.Mouse0 || (TPS.auto && aim.c && Math.hypot(aim.c.x - me.x, aim.c.z - me.z) < 32);
-  if (wantFire && me.fireT <= 0) {
-    me.fireT = .11; const tip = me.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(me.x, 1.6, me.z);
-    const dmg = 13 * (1 + kanjiPower() * .5) * (.85 + Math.random() * .3);
-    if (aim.c && Math.random() < (aim.assist ? .8 : .97)) { tpsHurt(aim.c, dmg, me); tpsHit(false, dmg); }
-    tpsShoot(me, V3t.x, V3t.y, V3t.z, aim.x + (Math.random() - .5) * .2, aim.y + (Math.random() - .5) * .2, aim.z, 0xfff3bf); sfx('shoot'); tpsOnShot(me);
-  }
+  tpsFire(me, aim, wantFire, dt);
 }
 function tpsHit(kill, dmg) { const h = $('#tpsHit'); h.className = kill ? 'kill' : 'hit'; void h.offsetWidth; h.classList.add('on'); if (dmg) { const n = $('#tpsDmg'); n.textContent = Math.round(dmg); n.classList.remove('on'); void n.offsetWidth; n.classList.add('on'); } }
 /* ---- 漢字スキル ---- */
@@ -5098,10 +5104,10 @@ function tpsUpdate(dt) {
   const me = TPS.me, yaw = TPS.yaw, pit = TPS.pitch, fx = Math.sin(yaw) * Math.cos(pit), fy = Math.sin(pit), fz = Math.cos(yaw) * Math.cos(pit), rx = -Math.cos(yaw), rz = Math.sin(yaw);
   const hx = me.x + rx * .55, hy = (me.ry ?? me.y) + 2.9, hz = me.z + rz * .55;
   let dist = 8.5; { const o3 = V3t.set(hx, hy, hz), d3 = V3u.set(-fx, -fy, -fz); for (const o of TPS.obst) { const t = rayBox(o3, d3, { x0: o.x0 - .25, x1: o.x1 + .25, z0: o.z0 - .25, z1: o.z1 + .25, h: o.h + .3 }); if (t != null && t > 0 && t < dist) dist = Math.max(1.2, t - .15); } }
-  cam.position.set(hx - fx * dist, hy - fy * dist, hz - fz * dist); TPS.camNear = dist < 2.4; cam.lookAt(hx + fx * 12, hy + fy * 12, hz + fz * 12);
+  cam.position.set(hx - fx * dist, hy - fy * dist, hz - fz * dist); TPS.camNear = dist < 2.4; if (TPS.shake > 0) { TPS.shake -= dt; const k = TPS.shake * .6; cam.position.x += (Math.random() - .5) * k; cam.position.y += (Math.random() - .5) * k; } cam.lookAt(hx + fx * 12, hy + fy * 12, hz + fz * 12);
   // こうか
-  tpsDebris(dt); tpsBeams(dt);
-  let n = 0; for (let i = TPS.tr.length - 1; i >= 0; i--) { const t = TPS.tr[i]; t.life -= dt; if (t.life <= 0) { TPS.tr.splice(i, 1); continue; } if (n >= 60) continue; const dx = t.x2 - t.x1, dy = t.y2 - t.y1, dz = t.z2 - t.z1, L = Math.hypot(dx, dy, dz); const q = new THREE.Matrix4().lookAt(new THREE.Vector3(t.x1, t.y1, t.z1), new THREE.Vector3(t.x2, t.y2, t.z2), new THREE.Vector3(0, 1, 0)); q.scale(new THREE.Vector3(.05, .05, L)); q.setPosition((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2, (t.z1 + t.z2) / 2); TPS.trM.setMatrixAt(n, q); C1.setHex(t.col); setCol(TPS.trM, n, C1.r, C1.g, C1.b); n++; }
+  tpsDebris(dt); tpsBeams(dt); tpsProjUpdate(dt); if (!TPS.endT) tpsBoxUpdate(dt);
+  let n = 0; for (let i = TPS.tr.length - 1; i >= 0; i--) { const t = TPS.tr[i]; t.life -= dt; if (t.life <= 0) { TPS.tr.splice(i, 1); continue; } if (n >= 60) continue; const dx = t.x2 - t.x1, dy = t.y2 - t.y1, dz = t.z2 - t.z1, L = Math.hypot(dx, dy, dz); const q = new THREE.Matrix4().lookAt(new THREE.Vector3(t.x1, t.y1, t.z1), new THREE.Vector3(t.x2, t.y2, t.z2), new THREE.Vector3(0, 1, 0)); q.scale(new THREE.Vector3(t.w || .05, t.w || .05, L)); q.setPosition((t.x1 + t.x2) / 2, (t.y1 + t.y2) / 2, (t.z1 + t.z2) / 2); TPS.trM.setMatrixAt(n, q); C1.setHex(t.col); setCol(TPS.trM, n, C1.r, C1.g, C1.b); n++; }
   flush(TPS.trM, n);
   n = 0; for (let i = TPS.sp.length - 1; i >= 0; i--) { const s = TPS.sp[i]; s.life -= dt; if (s.life <= 0) { TPS.sp.splice(i, 1); continue; } if (!s.ng) s.vy -= 14 * dt; s.x += s.vx * dt; s.y = Math.max(.05, s.y + s.vy * dt); s.z += s.vz * dt; const k = s.s ? s.s * Math.min(1, s.life * 3) : s.life * .5; setRY(TPS.spM, n, s.x, s.y, s.z, s.life * 8, k, k, k); C1.setHex(s.col); setCol(TPS.spM, n, C1.r, C1.g, C1.b); n++; }
   flush(TPS.spM, n);
@@ -5116,7 +5122,7 @@ function tpsHudBuild() {
     <div id="tpsCall"></div><canvas id="tpsMap" width="240" height="240"></canvas><div id="tpsFeed"></div>
     <div class="thp"><div class="hp"><i id="tpsHpF"></i><span id="tpsHpT"></span></div></div>
     <div id="tpsCross"><i></i><i></i><i></i><i></i></div><div id="tpsHit"></div><div id="tpsDmg"></div>
-    <button id="tpsFire" aria-label="うつ">うつ</button><button id="tpsJump" aria-label="ジャンプ">ジャンプ</button><button id="tpsSk" aria-label="漢字スキル"><i id="tpsSkF"></i><span>漢字<br>スキル</span></button>
+    <button id="tpsFire" aria-label="うつ">うつ</button><button id="tpsJump" aria-label="ジャンプ">ジャンプ</button><button id="tpsWep" aria-label="ぶき もちかえ"></button><button id="tpsSk" aria-label="漢字スキル"><i id="tpsSkF"></i><span>漢字<br>スキル</span></button>
     <button class="btn sm w" id="tpsPauseB" aria-label="ポーズ">II</button>
     <div id="tpsDead" hidden><b>やられた！</b><span><b id="tpsDeadT">5</b>びょうで ふっかつ</span><button class="btn y" id="tpsRevive">漢字を 1こ 書いて すぐ ふっかつ</button></div>`;
   const hold = (id, on, off) => { const b = $(id); b.onpointerdown = e => { e.preventDefault(); e.stopPropagation(); on(); }; b.onpointerup = b.onpointercancel = b.onpointerleave = e => { if (off) off(); }; };
@@ -5124,6 +5130,7 @@ function tpsHudBuild() {
   { const b = $('#tpsFire'); b.onpointerdown = e => { e.preventDefault(); e.stopPropagation(); if (TPS.paused) return; TPS.fireHeld = true; TPS.fireLook = { id: e.pointerId, x: e.clientX, y: e.clientY }; b.classList.add('on'); try { b.setPointerCapture(e.pointerId); } catch (er) {} };
     b.onpointerup = b.onpointercancel = e => { if (TPS.fireLook && e.pointerId !== TPS.fireLook.id) return; TPS.fireHeld = false; TPS.fireLook = null; b.classList.remove('on'); }; }
   hold('#tpsJump', () => TPS.jumpReq = true);
+  hold('#tpsWep', () => tpsSwap()); tpsWepHud(true);
   hold('#tpsSk', () => tpsSkillUse());
   $('#tpsPauseB').onclick = () => tpsPause();
   $('#tpsRevive').onclick = () => { if (TPS.me.alive) return; TPS.paused = true; openMission('trespawn'); };
@@ -5135,7 +5142,7 @@ function tpsHud() {
   $('#tsP').innerHTML = TPS.pts.map(p => `<span style="border-color:${p.owner ? TCSS[p.owner - 1] : '#fff'};color:${p.owner ? TCSS[p.owner - 1] : '#fff'}"><i style="width:${Math.abs(p.prog)}%;background:${p.prog > 0 ? TCSS[0] : TCSS[1]}"></i><b>${esc(p.k)}</b></span>`).join('');
   const me = TPS.me; $('#tpsHpF').style.width = (me.hp / me.max * 100) + '%'; $('#tpsHpT').textContent = `HP ${Math.ceil(me.hp)}`;
   $('#tpsSkF').style.height = TPS.sk + '%'; $('#tpsSk').classList.toggle('ready', TPS.sk >= 100);
-  $('#tpsCross').classList.toggle('on', !!TPS.aimC);
+  $('#tpsCross').classList.toggle('on', !!TPS.aimC); tpsWepHud();
   $('#tpsFeed').innerHTML = TPS.feed.map(f => `<div style="border-color:${TCSS[f.team]}">${f.t}</div>`).join('');
   // ミニマップ
   const c = $('#tpsMap'), g = c.getContext('2d'), S2 = c.width, X = v => (v + MAPH) / (2 * MAPH) * S2;
@@ -5143,6 +5150,7 @@ function tpsHud() {
   for (const p of TPS.pts) { g.fillStyle = p.owner ? TCSS[p.owner - 1] : '#fff'; g.font = '900 28px "Klee One",serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.globalAlpha = .9; g.beginPath(); g.arc(X(p.x), X(p.z), 18, 0, 7); g.fill(); g.fillStyle = '#151733'; g.fillText(p.k, X(p.x), X(p.z) + 2); g.globalAlpha = 1; }
   for (const o of TPS.chars) { if (!o.alive || o.isMe) continue; if (o.team === 1 && !(TPS.chars.some(a => a.team === 0 && a.alive && Math.hypot(a.x - o.x, a.z - o.z) < 22 && canSee(a, o)))) continue; g.fillStyle = TCSS[o.team]; g.beginPath(); g.arc(X(o.x), X(o.z), 6, 0, 7); g.fill(); }
   if (TPS.mech) { g.fillStyle = '#ffd43b'; g.fillRect(X(TPS.mech.x) - 7, X(TPS.mech.z) - 7, 14, 14); }
+  tpsBoxMap(g, X);
   g.save(); g.translate(X(me.x), X(me.z)); g.rotate(-TPS.yaw + Math.PI); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(0, -12); g.lineTo(8, 9); g.lineTo(-8, 9); g.closePath(); g.fill(); g.restore();
 }
 function tpsPause() { if (TPS.paused) return; TPS.paused = true; if (document.pointerLockElement) document.exitPointerLock(); const el = $('#tpsPause'); el.hidden = false; el.innerHTML = `<div class="mbox"><h2>ポーズ</h2><p>${rb(TEAMN[0])} ${Math.floor(TPS.score[0])} － ${Math.floor(TPS.score[1])} ${rb(TEAMN[1])}</p><div class="col"><button class="btn big y" id="tpR">つづける</button><button class="btn" id="tpQ">やめて きちへ</button></div></div>`; $('#tpR').onclick = () => { el.hidden = true; TPS.paused = false; }; $('#tpQ').onclick = () => { tpsEnd(); goHome(); }; }
@@ -5178,7 +5186,7 @@ function tpsPUp(e) {
   if (TPS.look && e.pointerId === TPS.look.id) TPS.look = null;
 }
 addEventListener('mousemove', e => { if (!TPS.on || TPS.paused || document.pointerLockElement !== $('#gl')) return; TPS.yaw -= e.movementX * .0028; TPS.pitch = Math.max(-.95, Math.min(.4, TPS.pitch - e.movementY * .0024)); });
-addEventListener('keydown', e => { if (!TPS.on || TPS.paused || (e.target && e.target.tagName === 'INPUT')) return; if (e.code === 'KeyE' || e.code === 'KeyQ') tpsSkillUse(); if (e.code === 'Escape' || e.code === 'KeyP') tpsPause(); if (e.code === 'Space') e.preventDefault(); });
+addEventListener('keydown', e => { if (!TPS.on || TPS.paused || (e.target && e.target.tagName === 'INPUT')) return; if (e.code === 'KeyE' || e.code === 'KeyQ') tpsSkillUse(); if (e.code === 'KeyR' || e.code === 'Digit1' || e.code === 'Digit2') tpsSwap(); if (e.code === 'Escape' || e.code === 'KeyP') tpsPause(); if (e.code === 'Space') e.preventDefault(); });
 document.addEventListener('pointerlockchange', () => { if (TPS.on && !TPS.paused && !document.pointerLockElement && TPS.mouse) tpsPause(); });
 function tpsRespawnNow() { const me = TPS.me; TPS.wrote++; tpsSpawn(me); me.inv = 3; $('#tpsDead').hidden = true; banner('漢字の ちからで ふっかつ！', 'gold'); sfx('evo'); }
 
@@ -5305,14 +5313,15 @@ function navStep(a, b) {
   if (d > STEP + .01 && !(NAV.ter[a] && NAV.ter[b] && d <= 1.05) && !(NAV.h[a] === 0 && NAV.ter[b] && d <= STEP + .01)) return false;
   return d >= -3.6;
 }
-function navNear(id) {
-  if (id >= 0 && NAV.ok[id]) return id; const N = NAV.N, i0 = id >= 0 ? id % N : 0, j0 = id >= 0 ? (id / N) | 0 : 0;
-  for (let r = 1; r <= 5; r++) for (let a = -r; a <= r; a++) for (const [i, j] of [[i0 + a, j0 - r], [i0 + a, j0 + r], [i0 - r, j0 + a], [i0 + r, j0 + a]]) { if (i < 0 || j < 0 || i >= N || j >= N) continue; const k = j * N + i; if (NAV.ok[k]) return k; }
-  return -1;
+function navNear(id, y) {
+  const okH = k => NAV.ok[k] && (y == null || Math.abs(NAV.h[k] - y) <= STEP + .15);
+  if (id >= 0 && okH(id)) return id; const N = NAV.N, i0 = id >= 0 ? id % N : 0, j0 = id >= 0 ? (id / N) | 0 : 0;
+  for (let r = 1; r <= 5; r++) for (let a = -r; a <= r; a++) for (const [i, j] of [[i0 + a, j0 - r], [i0 + a, j0 + r], [i0 - r, j0 + a], [i0 + r, j0 + a]]) { if (i < 0 || j < 0 || i >= N || j >= N) continue; const k = j * N + i; if (okH(k)) return k; }
+  return y != null ? navNear(id) : -1;
 }
 // A* で みちを さがす
-function navPath(sx, sz, tx, tz) {
-  const N = NAV.N, s = navNear(navIdx(sx, sz)), t = navNear(navIdx(tx, tz)); if (s < 0 || t < 0) return null; if (s === t) return [t];
+function navPath(sx, sz, tx, tz, sy) {
+  const N = NAV.N, s = navNear(navIdx(sx, sz), sy), t = navNear(navIdx(tx, tz)); if (s < 0 || t < 0) return null; if (s === t) return [t];
   const st = ++NAV.stamp, G = NAV.g, came = NAV.came, seen = NAV.st, cl = NAV.cl, heap = [], hf = [];
   const ti = t % N, tj = (t / N) | 0, H = id => { const dx = Math.abs(id % N - ti), dz = Math.abs(((id / N) | 0) - tj); return Math.max(dx, dz) + .414 * Math.min(dx, dz); };
   const push = (id, f) => { heap.push(id); hf.push(f); let k = heap.length - 1; while (k) { const p = (k - 1) >> 1; if (hf[p] <= hf[k]) break; [heap[p], heap[k]] = [heap[k], heap[p]]; [hf[p], hf[k]] = [hf[k], hf[p]]; k = p; } };
@@ -5333,8 +5342,8 @@ function navPath(sx, sz, tx, tz) {
   const out = []; for (let k = t; k !== -1 && out.length < 400; k = came[k]) out.push(k); return out.reverse();
 }
 // まっすぐ あるいて いけるか
-function navClear(ax, az, bx, bz) {
-  const L = Math.hypot(bx - ax, bz - az), n = Math.ceil(L / .4); let prev = navNear(navIdx(ax, az)); if (prev < 0) return false;
+function navClear(ax, az, bx, bz, ay) {
+  const L = Math.hypot(bx - ax, bz - az), n = Math.ceil(L / .4); let prev = navNear(navIdx(ax, az), ay); if (prev < 0) return false;
   for (let k = 1; k <= n; k++) { const id = navIdx(ax + (bx - ax) * k / n, az + (bz - az) * k / n); if (id === prev) continue; if (!navStep(prev, id)) return false; prev = id; }
   return true;
 }
@@ -5374,7 +5383,7 @@ function tpsSpot(c, e, mode, L, ax, az, R) {
   }
   return best;
 }
-function tpsGo(c, g) { const A = c.ai; if (g && Math.abs(g.x) < 14 && (c.team ? g.z > 21 : g.z < -21)) g = { x: g.x, z: c.team ? 21 : -21 }; A.goal = g; A.path = g ? navPath(c.x, c.z, g.x, g.z) : null; A.pi = 0; if (g && !A.path) A.goal = null; }
+function tpsGo(c, g) { const A = c.ai; if (g && Math.abs(g.x) < 14 && (c.team ? g.z > 21 : g.z < -21)) g = { x: g.x, z: c.team ? 21 : -21 }; A.goal = g; A.path = g ? navPath(c.x, c.z, g.x, g.z, c.y) : null; A.pi = 0; if (g && !A.path) A.goal = null; }
 const angD = (a, b) => { let d = a - b; while (d > Math.PI) d -= 6.2832; while (d < -Math.PI) d += 6.2832; return d; };
 /* ---- まいフレーム ---- */
 function tpsUpdateAI(c, dt) {
@@ -5405,11 +5414,11 @@ function tpsUpdateAI(c, dt) {
     }
   }
   // ---- どうする？ ----
-  const e = A.en && A.en.alive !== false ? A.en : null, low = c.hp < c.max * (L >= 2 ? .38 : .18);
+  const e = A.en && A.en.alive !== false ? A.en : null, low = c.hp < c.max * (L >= 4 ? .32 : L >= 2 ? .24 : .12);
   let mode = A.mode || 'obj';
-  if (e) mode = low ? 'retreat' : (mode === 'retreat' && c.hp < c.max * .7 ? 'retreat' : 'fight');
+  if (e) mode = low ? 'retreat' : (mode === 'retreat' && c.hp < c.max * .55 ? 'retreat' : 'fight');
   else if (mode === 'fight') { if (A.lx != null && Math.hypot(A.lx - c.x, A.lz - c.z) < 20 && Math.random() < .45 + L * .05) { mode = 'hunt'; A.huntT = 3 + L * .5; tpsGo(c, { x: A.lx, z: A.lz }); } else mode = 'obj'; }
-  else if (mode === 'retreat' && (c.hp > c.max * .75 || now - (A.lt || 0) > 4)) mode = 'obj';
+  else if (mode === 'retreat' && (c.hp > c.max * .6 || now - (A.lt || 0) > 3)) mode = 'obj';
   if (!e && mode !== 'hunt' && mode !== 'retreat') {
     if (A.inv && now - A.inv.t < 5) { if (mode !== 'inv') { mode = 'inv'; tpsGo(c, { x: A.inv.x, z: A.inv.z }); } }
     else if (mode === 'inv') mode = 'obj';
@@ -5432,7 +5441,7 @@ function tpsUpdateAI(c, dt) {
   // ---- あるく（みちに そって） ----
   let mx = 0, mz = 0, sp = st.spd;
   if (A.path && A.pi < A.path.length) {
-    for (let j = Math.min(A.path.length - 1, A.pi + 5); j > A.pi; j--) if (navClear(c.x, c.z, navX(A.path[j]), navZ(A.path[j]))) { A.pi = j; break; }
+    for (let j = Math.min(A.path.length - 1, A.pi + 5); j > A.pi; j--) if (navClear(c.x, c.z, navX(A.path[j]), navZ(A.path[j]), c.y)) { A.pi = j; break; }
     const id = A.path[A.pi], wx = A.pi === A.path.length - 1 && A.goal ? A.goal.x : navX(id), wz = A.pi === A.path.length - 1 && A.goal ? A.goal.z : navZ(id), dx = wx - c.x, dz = wz - c.z, d = Math.hypot(dx, dz);
     if (d < .55) { A.pi++; if (A.pi >= A.path.length) A.path = null; } else { mx = dx / d; mz = dz / d; }
   }
@@ -5476,6 +5485,187 @@ function tpsUpdateAI(c, dt) {
     }
   }
   tpsPhys(c, dt);
+}
+/* ============ 漢字バトル：ぶき（漢字を おぼえると ふえる・書くと きょうか） ============ */
+const TWL = [
+  { id: 'blaster', n: 'ブラスター', ic: '銃', need: 0, col: 0x4dabf7, tr: 0xfff3bf, cd: .11, dmg: 13, mode: 'hit', d: 'バランスの いい きほんの じゅう' },
+  { id: 'shotgun', n: 'ショットガン', ic: '散', need: 5, col: 0xc9894a, tr: 0xffe066, cd: .62, dmg: 10, pel: 7, mode: 'pellet', d: 'ちかくの てきに すごく つよい さんだん' },
+  { id: 'minigun', n: 'ミニガン', ic: '連', need: 12, col: 0x868e96, tr: 0xffd43b, cd: .045, dmg: 7, mode: 'hit', spin: 1, d: 'まわりだしたら とまらない れんしゃ（おもくて すこし おそく なる）' },
+  { id: 'cannon', n: 'たいほう', ic: '砲', need: 20, col: 0x495057, tr: 0xff922b, cd: 1.3, dmg: 75, rad: 4, mode: 'shell', d: 'ドカン！ やまなりに とんで まわりごと ふっとばす' },
+  { id: 'missile', n: 'ミサイル', ic: '追', need: 30, col: 0x5c940d, tr: 0xff6b6b, cd: 1.7, dmg: 34, rad: 2.6, cnt: 3, mode: 'missile', d: 'ねらった てきを おいかける ミサイル 3はつ' },
+  { id: 'laser', n: 'レーザー', ic: '光', need: 45, col: 0xe9ecef, tr: 0x66d9e8, cd: .06, dmg: 6, mode: 'beam', d: 'まっすぐ つらぬく ひかり。ならんだ てきにも あたる' },
+  { id: 'rail', n: 'レールガン', ic: '雷', need: 60, col: 0x7048e8, tr: 0xb197fc, cd: 1.15, dmg: 88, mode: 'rail', d: 'いちげき ひっさつ。てきを まとめて つらぬく' },
+];
+const TWI = Object.fromEntries(TWL.map(w => [w.id, w])), TWMAX = 5, twCost = lv => [0, 3, 4, 5, 6][lv] || 6;
+const twLv = id => (S.tw && S.tw[id]) || 1;
+const twOpen = id => stats().n >= TWI[id].need;
+function twStat(id, lv) {
+  const w = TWI[id], k = lv - 1;
+  return Object.assign({}, w, { lv, dmg: w.dmg * (1 + .16 * k), cd: w.cd * (1 - .07 * k), pel: (w.pel || 0) + k, cnt: (w.cnt || 0) + (lv >= 3 ? 1 : 0) + (lv >= 5 ? 1 : 0), rad: (w.rad || 0) * (1 + .08 * k) });
+}
+function twLoad() { const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 }); if (!T.load) T.load = ['blaster', twOpen('shotgun') ? 'shotgun' : 'blaster']; T.load = T.load.map(id => TWI[id] && twOpen(id) ? id : 'blaster'); return T.load; }
+const twCur = () => twLoad()[TPS.slot || 0];
+/* ---- みための ぶき（みぎてに もつ） ---- */
+function tpsWepModel(pm, id, lv) {
+  if (pm.gear) for (const o of pm.gear.slice()) if (o.parent === pm.aR) { pm.aR.remove(o); pm.gear.splice(pm.gear.indexOf(o), 1); }
+  if (pm.twg) pm.aR.remove(pm.twg);
+  const g = new THREE.Group(); g.position.set(0, -1.02, .12); g.rotation.x = Math.PI / 2; pm.aR.add(g); pm.twg = g; pm.twSpin = null;
+  const gold = lv >= TWMAX, ac = gold ? 0xffd43b : 0x2a2a3a, w = TWI[id];
+  const B = (W, H, D, c, x, y, z, glow, par) => { const m = new THREE.Mesh(G(W, H, D), glow ? MB(c) : M(c)); m.position.set(x, y, z); (par || g).add(m); return m; };
+  let tz = .8;
+  switch (id) {
+    case 'blaster': B(.24, .28, .7, w.col, 0, 0, .15); B(.12, .12, .45, ac, 0, .02, .6); B(.16, .3, .16, 0x2a2a3a, 0, -.22, -.05); B(.08, .08, .3, 0x99e9f2, 0, .17, .1, true); tz = .85; break;
+    case 'shotgun': B(.22, .24, .45, 0x8d5524, 0, -.02, -.15); B(.24, .2, .35, 0x343a40, 0, .02, .22); for (const x of [-.06, .06]) B(.1, .1, .85, ac === 0x2a2a3a ? 0x495057 : ac, x, .06, .6); B(.2, .14, .25, 0x8d5524, 0, -.08, .55); tz = 1.05; break;
+    case 'minigun': { B(.36, .36, .5, 0x343a40, 0, 0, .05); B(.2, .3, .3, 0x5c940d, .28, -.05, 0); const s = new THREE.Group(); s.position.z = .55; g.add(s); for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; B(.07, .07, .9, gold ? 0xffd43b : 0x868e96, Math.cos(a) * .12, Math.sin(a) * .12, .3, false, s); } B(.3, .3, .06, 0x212529, 0, 0, .7, false, s); pm.twSpin = s; tz = 1.5; break; }
+    case 'cannon': { const m = new THREE.Mesh(new THREE.CylinderGeometry(.2, .24, 1.15, 12), M(0x343a40)); m.rotation.x = Math.PI / 2; m.position.z = .45; g.add(m); for (const z of [.05, .5, .95]) { const r = new THREE.Mesh(new THREE.CylinderGeometry(.27, .27, .09, 12), M(gold ? 0xffd43b : 0xc9894a)); r.rotation.x = Math.PI / 2; r.position.z = z; g.add(r); } B(.3, .2, .3, 0x8d5524, 0, -.22, -.05); tz = 1.1; break; }
+    case 'missile': { B(.42, .42, .95, 0x5c940d, 0, .05, .3); for (const [x, y] of [[-.1, -.06], [.1, -.06], [-.1, .16], [.1, .16]]) B(.12, .12, .1, 0xff6b6b, x, y, .8, true); B(.14, .3, .14, 0x2a2a3a, 0, -.25, .1); if (gold) B(.46, .08, .9, 0xffd43b, 0, .29, .3); tz = .9; break; }
+    case 'laser': B(.2, .26, .8, 0xf1f3f5, 0, 0, .25); B(.22, .06, .7, 0x66d9e8, 0, .15, .25, true); B(.14, .14, .14, 0x66d9e8, 0, 0, .7, true); B(.14, .28, .14, 0x495057, 0, -.22, 0); if (gold) B(.24, .05, .6, 0xffd43b, 0, -.14, .3, true); tz = .8; break;
+    case 'rail': B(.18, .22, 1.35, 0x343a40, 0, 0, .45); for (const z of [.3, .6, .9]) B(.34, .34, .07, gold ? 0xffd43b : 0xb197fc, 0, 0, z, true); B(.14, .3, .14, 0x212529, 0, -.24, -.05); tz = 1.2; break;
+  }
+  const tip = new THREE.Object3D(); tip.position.set(0, .03, tz); g.add(tip); pm.tip = tip;
+}
+function tpsEquip(c, id) { tpsWepModel(c.pm, id, twLv(id)); if (c.mf) c.pm.tip.add(c.mf); TPS.spin = 0; TPS.wslow = 1; }
+function tpsSwap() {
+  if (!TPS.on || TPS.paused || !TPS.me) return; const L = twLoad(); if (L[0] === L[1]) { sfx('ng'); return; }
+  TPS.slot = 1 - (TPS.slot || 0); tpsEquip(TPS.me, twCur()); TPS.me.fireT = .25; sfx('chest'); tpsWepHud(true);
+}
+/* ---- うつ ---- */
+const TR_O = new THREE.Vector3(), TR_D = new THREE.Vector3();
+function tpsRay(o, d, maxT, pierce) {
+  let wall = maxT; for (const b of TPS.obst) { const t = rayBox(o, d, b); if (t != null && t > 0 && t < wall) wall = t; }
+  const hits = []; for (const c of TPS.chars) { if (!c.alive || c.team === 0) continue; const t = rayChar(o, d, c); if (t != null && t < wall) hits.push({ c, t }); }
+  hits.sort((a, b) => a.t - b.t); return { wall, hits: pierce ? hits : hits.slice(0, 1) };
+}
+function tpsFire(me, aim, wantFire, dt) {
+  const id = twCur(), w = twStat(id, twLv(id)), boost = TPS.boostT > 0, pw = (1 + kanjiPower() * .5) * (boost ? 1.5 : 1), cdm = boost ? .7 : 1;
+  // ミニガンは まわして から
+  if (w.spin) { TPS.spin = Math.max(0, Math.min(1, TPS.spin + (wantFire ? dt * (1.6 + w.lv * .25) : -dt * 1.2))); TPS.wslow = wantFire ? .72 : 1; if (me.pm.twSpin) me.pm.twSpin.rotation.z += dt * TPS.spin * 40; if (TPS.spin < .55) return; }
+  else TPS.wslow = 1;
+  if (!wantFire || me.fireT > 0) return;
+  const tip = me.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(me.x, me.y + 1.6, me.z);
+  const cam = TPS.cam, d0 = TR_D.set(0, 0, -1).applyQuaternion(cam.quaternion).normalize(), o = TR_O.copy(cam.position);
+  const fd = aim.c ? Math.hypot(aim.c.x - me.x, aim.c.z - me.z) : 99, held = TPS.fireHeld || keys.Mouse0;
+  const tcol = boost ? 0xffd43b : w.tr;
+  if (w.mode === 'pellet' && !held && fd > 16) return;
+  me.fireT = w.cd * cdm * (w.spin ? 1 / (.55 + TPS.spin * .45) : 1); TPS.nShot = (TPS.nShot || 0) + 1;
+  let total = 0, kill = false;
+  const dmgTo = (c, dm) => { const was = c.alive; tpsHurt(c, dm, me); total += dm; if (was && !c.alive) kill = true; };
+  if (w.mode === 'hit') {
+    const acc = w.spin ? (aim.assist ? .62 : .85) : (aim.assist ? .8 : .97), sp = w.spin ? .45 : .2;
+    if (aim.c && Math.random() < acc) dmgTo(aim.c, w.dmg * pw * (.85 + Math.random() * .3));
+    tpsShoot(me, V3t.x, V3t.y, V3t.z, aim.x + (Math.random() - .5) * sp, aim.y + (Math.random() - .5) * sp, aim.z, tcol);
+  } else if (w.mode === 'pellet') {
+    const dirs = []; for (let i = 0; i < w.pel; i++) { const v = new THREE.Vector3((Math.random() - .5) * .1, (Math.random() - .5) * .07, 0); v.applyQuaternion(cam.quaternion).add(d0).normalize(); dirs.push(v); }
+    // ねらいほせい：ちかくの てきに むける
+    if (aim.c && aim.assist) { const t3 = new THREE.Vector3(aim.c.x - o.x, aim.c.y + 1.3 - o.y, aim.c.z - o.z).normalize(); for (const v of dirs) v.lerp(t3, .7).normalize(); }
+    for (const v of dirs) { const r = tpsRay(o, v, 40, false), h = r.hits[0], t = h ? h.t : r.wall; if (h) { const fall = Math.max(.25, 1 - Math.max(0, Math.hypot(h.c.x - me.x, h.c.z - me.z) - 7) / 12); dmgTo(h.c, w.dmg * pw * fall); } TPS.tr.push({ x1: V3t.x, y1: V3t.y, z1: V3t.z, x2: o.x + v.x * t, y2: o.y + v.y * t, z2: o.z + v.z * t, life: .06, col: tcol, w: .04 }); }
+    TPS.shake = Math.max(TPS.shake || 0, .12); sfx('boom');
+  } else if (w.mode === 'shell') {
+    const tx = aim.x, ty = aim.y, tz = aim.z, dx = tx - V3t.x, dy = ty - V3t.y, dz = tz - V3t.z, D = Math.hypot(dx, dz) || 1, spd = 34, T = Math.max(.15, Math.hypot(dx, dy, dz) / spd), gr = 14;
+    tpsProj({ k: 'shell', x: V3t.x, y: V3t.y, z: V3t.z, vx: dx / T, vy: dy / T + .5 * gr * T, vz: dz / T, g: gr, dmg: w.dmg * pw, rad: w.rad, life: 4, col: tcol });
+    TPS.shake = Math.max(TPS.shake || 0, .25); sfx('boom'); tpsSpark(V3t.x, V3t.y, V3t.z, 10, 0xdee2e6);
+  } else if (w.mode === 'missile') {
+    let tg = aim.c; if (!tg) { let bd = 1e9; for (const c of TPS.chars) { if (!c.alive || c.team === 0) continue; const vx = c.x - o.x, vz = c.z - o.z, L = Math.hypot(vx, vz); if (L > 45) continue; const a = (vx * d0.x + vz * d0.z) / (L * Math.hypot(d0.x, d0.z) || 1); if (a > .85 && L < bd && canSee(me, c)) { bd = L; tg = c; } } }
+    for (let i = 0; i < w.cnt; i++) { const s = (i - (w.cnt - 1) / 2) * 2.2; tpsProj({ k: 'missile', x: V3t.x, y: V3t.y + .2, z: V3t.z, vx: d0.x * 12 - d0.z * s, vy: 5 + i * .6, vz: d0.z * 12 + d0.x * s, tg, ax: aim.x, ay: aim.y, az: aim.z, spd: 22 + w.lv, turn: 3.6 + w.lv * .3, dmg: w.dmg * pw, rad: w.rad, life: 4.5, col: tcol, delay: i * .05 }); }
+    sfx('warn');
+  } else if (w.mode === 'beam') {
+    const r = tpsRay(o, d0, 60, true); for (const h of r.hits) dmgTo(h.c, w.dmg * pw); if (!r.hits.length && aim.c && aim.assist && Math.random() < .75) dmgTo(aim.c, w.dmg * pw);
+    const t = r.hits.length ? r.hits[r.hits.length - 1].t : r.wall; TPS.tr.push({ x1: V3t.x, y1: V3t.y, z1: V3t.z, x2: o.x + d0.x * Math.min(t, 60), y2: o.y + d0.y * Math.min(t, 60), z2: o.z + d0.z * Math.min(t, 60), life: .07, col: tcol, w: .14 + w.lv * .02 });
+    if (Math.random() < .5) tpsSpark(o.x + d0.x * t, o.y + d0.y * t, o.z + d0.z * t, 2, tcol);
+  } else if (w.mode === 'rail') {
+    const r = tpsRay(o, d0, 80, true); for (const h of r.hits) dmgTo(h.c, w.dmg * pw); if (!r.hits.length && aim.c && aim.assist) dmgTo(aim.c, w.dmg * pw * .9);
+    const t = r.wall; TPS.tr.push({ x1: V3t.x, y1: V3t.y, z1: V3t.z, x2: o.x + d0.x * t, y2: o.y + d0.y * t, z2: o.z + d0.z * t, life: .35, col: tcol, w: .22 });
+    tpsSpark(o.x + d0.x * t, o.y + d0.y * t, o.z + d0.z * t, 14, tcol); TPS.shake = Math.max(TPS.shake || 0, .3); sfx('kill');
+  }
+  if (w.mode !== 'shell' && w.mode !== 'pellet' && w.mode !== 'rail' && w.mode !== 'missile') sfx('shoot');
+  if (total > 0) tpsHit(kill, total);
+  tpsOnShot(me); if (w.mode === 'shell' || w.mode === 'rail' || w.mode === 'pellet') me.rc = 1.6;
+}
+/* ---- たま（たいほう・ミサイル） ---- */
+function tpsWInit() {
+  const sc = TPS.scene;
+  if (!TPS.pjM) { TPS.pjM = []; for (let i = 0; i < 24; i++) { const m = new THREE.Mesh(G(.34, .34, .7), MB(0xffffff)); m.visible = false; sc.add(m); TPS.pjM.push(m); } }
+  if (!TPS.fxM) { TPS.fxM = []; for (let i = 0; i < 8; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), new THREE.MeshBasicMaterial({ color: 0xffa94d, transparent: true, opacity: .7, depthWrite: false })); m.visible = false; sc.add(m); TPS.fxM.push(m); } }
+  if (!TPS.boxM) {
+    const g = new THREE.Group(); const b = new THREE.Mesh(G(1.3, 1.3, 1.3), M(0xffd43b)); b.position.y = .9; g.add(b); for (const y of [.5, 1.3]) { const s = new THREE.Mesh(G(1.36, .14, 1.36), M(0xc92a2a)); s.position.y = y; g.add(s); }
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const x = cv.getContext('2d'); x.fillStyle = '#fff'; x.beginPath(); x.arc(32, 32, 30, 0, 7); x.fill(); x.fillStyle = '#c92a2a'; x.font = '900 40px serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('武', 32, 35);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false })); sp.scale.set(1.4, 1.4, 1); sp.position.y = 2.7; sp.renderOrder = 6; g.add(sp);
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, 14, 12, 1, true), new THREE.MeshBasicMaterial({ color: 0xffd43b, transparent: true, opacity: .28, depthWrite: false, side: THREE.DoubleSide })); beam.position.y = 7; g.add(beam);
+    g.visible = false; sc.add(g); TPS.boxM = g;
+  }
+  TPS.pjM.forEach(m => m.visible = false); TPS.fxM.forEach(m => m.visible = false); TPS.boxM.visible = false;
+}
+function tpsProj(p) { if (TPS.proj.length >= 24) return; TPS.proj.push(p); }
+function tpsBoom(x, y, z, rad, dmg) {
+  let total = 0, kill = false;
+  for (const c of TPS.chars) { if (!c.alive || c.team === 0) continue; const d = Math.hypot(c.x - x, (c.y + 1) - y, c.z - z); if (d > rad + .5) continue; const was = c.alive; const dm = dmg * (1 - Math.min(1, d / (rad + .5)) * .55); tpsHurt(c, dm, TPS.me); total += dm; if (was && !c.alive) kill = true; else { const k = Math.max(.2, 1 - d / rad); c.x += (c.x - x) / (d || 1) * .9 * k; c.z += (c.z - z) / (d || 1) * .9 * k; } }
+  if (total) tpsHit(kill, total);
+  tpsSpark(x, y + .3, z, 22, 0xff922b); tpsSpark(x, y + .3, z, 10, 0xfff3bf); for (let i = 0; i < 6; i++) TPS.sp.length < 300 && TPS.sp.push({ x: x + (Math.random() - .5) * 2, y: y + .5, z: z + (Math.random() - .5) * 2, vx: (Math.random() - .5), vy: 1.5 + Math.random(), vz: (Math.random() - .5), life: .9, col: 0x868e96, s: .6, ng: 1 });
+  const f = TPS.fxM.find(m => !m.visible); if (f) { f.visible = true; f.position.set(x, y, z); f.userData.t = 0; f.userData.r = rad; }
+  sfx('boom'); const me = TPS.me; if (Math.hypot(me.x - x, me.z - z) < 18) TPS.shake = Math.max(TPS.shake || 0, .35);
+  tpsNoise({ x, z, team: 0 });
+}
+function tpsProjUpdate(dt) {
+  let n = 0;
+  for (let i = TPS.proj.length - 1; i >= 0; i--) {
+    const p = TPS.proj[i]; p.life -= dt; if (p.delay > 0) { p.delay -= dt; continue; }
+    if (p.k === 'missile') {
+      const tg = p.tg && p.tg.alive ? p.tg : null, tx = tg ? tg.x : p.ax, ty = tg ? tg.y + 1.2 : p.ay, tz = tg ? tg.z : p.az;
+      const dx = tx - p.x, dy = ty - p.y, dz = tz - p.z, L = Math.hypot(dx, dy, dz) || 1, v = Math.hypot(p.vx, p.vy, p.vz) || 1, sp = Math.min(p.spd, v + 30 * dt), k = Math.min(1, p.turn * dt);
+      p.vx = (p.vx / v * (1 - k) + dx / L * k) * sp; p.vy = (p.vy / v * (1 - k) + dy / L * k) * sp; p.vz = (p.vz / v * (1 - k) + dz / L * k) * sp;
+      if (Math.random() < .7) TPS.sp.length < 300 && TPS.sp.push({ x: p.x, y: p.y, z: p.z, vx: 0, vy: .3, vz: 0, life: .45, col: 0xdee2e6, s: .28, ng: 1 });
+    } else p.vy -= p.g * dt;
+    p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
+    let hit = p.life <= 0 || p.y <= tpsGroundH(p.x, p.z, p.y + .1) + .05 || Math.abs(p.x) > MAPH || Math.abs(p.z) > MAPH;
+    if (!hit) for (const o of TPS.obst) if (p.x > o.x0 && p.x < o.x1 && p.z > o.z0 && p.z < o.z1 && p.y < o.h) { hit = true; break; }
+    if (!hit) for (const c of TPS.chars) if (c.alive && c.team === 1 && Math.hypot(c.x - p.x, c.z - p.z) < .8 && p.y > c.y - .2 && p.y < c.y + 2.8) { hit = true; break; }
+    if (hit) { tpsBoom(p.x, Math.max(p.y, tpsGroundH(p.x, p.z, p.y + .1)), p.z, p.rad, p.dmg); TPS.proj.splice(i, 1); continue; }
+    const m = TPS.pjM[n++]; if (m) { m.visible = true; m.position.set(p.x, p.y, p.z); m.lookAt(p.x + p.vx, p.y + p.vy, p.z + p.vz); m.material.color.setHex(p.k === 'missile' ? 0xfff3bf : 0x343a40); m.scale.set(p.k === 'missile' ? .6 : 1, p.k === 'missile' ? .6 : 1, p.k === 'missile' ? 1.3 : .6); }
+  }
+  for (let j = n; j < TPS.pjM.length; j++) TPS.pjM[j].visible = false;
+  for (const f of TPS.fxM) if (f.visible) { f.userData.t += dt; const t = f.userData.t / .35; if (t >= 1) f.visible = false; else { f.scale.setScalar(.4 + f.userData.r * t); f.material.opacity = .75 * (1 - t); } }
+}
+/* ---- ぶきボックス（漢字を 1こ 書くと パワーアップ） ---- */
+function tpsBoxUpdate(dt) {
+  TPS.boostT = Math.max(0, (TPS.boostT || 0) - dt); TPS.boxCool = (TPS.boxCool || 0) - dt;
+  const B = TPS.boxM; if (!B) return;
+  if (!TPS.box) { TPS.boxT -= dt; if (TPS.boxT <= 0) { TPS.boxT = 45 + Math.random() * 15; for (let k = 0; k < 40; k++) { const x = (Math.random() - .5) * 52, z = (Math.random() - .5) * 26, id = navIdx(x, z); if (id >= 0 && NAV.ok[id]) { TPS.box = { x: navX(id), z: navZ(id), y: NAV.h[id], life: 30 }; banner('ぶきボックスが でた！ ちずの ★ へ いそげ', 'gold'); sfx('chest'); break; } } } B.visible = false; return; }
+  const b = TPS.box; b.life -= dt; if (b.life <= 0) { TPS.box = null; B.visible = false; return; }
+  B.visible = true; B.position.set(b.x, b.y + Math.sin(TPS.t * 3) * .12, b.z); B.children[0].rotation.y += dt * 1.5;
+  const me = TPS.me; if (me.alive && !TPS.paused && Math.hypot(me.x - b.x, me.z - b.z) < 1.6 && Math.abs(me.y - b.y) < 1.5 && !(TPS.boxCool > 0)) { TPS.paused = true; TPS.fireHeld = false; sfx('chest'); openMission('tbox'); }
+}
+function tpsBoxOpen() { TPS.box = null; if (TPS.boxM) TPS.boxM.visible = false; TPS.boostT = 25; TPS.wrote++; banner(`ぶき パワーアップ！ 25びょう`, 'gold'); sfx('evo'); }
+/* ---- HUD ---- */
+function tpsWepHud(force) {
+  const b = $('#tpsWep'); if (!b) return; const id = twCur(), L = twLoad(), boost = TPS.boostT > 0, key = id + twLv(id) + (boost ? Math.ceil(TPS.boostT) : '') + L.join();
+  if (!force && b.dataset.k === key) return; b.dataset.k = key;
+  b.classList.toggle('boost', boost); b.style.setProperty('--wc', '#' + TWI[id].col.toString(16).padStart(6, '0'));
+  b.innerHTML = `<span class="wic">${TWI[id].ic}</span><b>${TWI[id].n}</b><small>${boost ? 'パワー ' + Math.ceil(TPS.boostT) : 'Lv' + twLv(id)}${L[0] !== L[1] ? ' ⇄' : ''}</small>`;
+}
+function tpsBoxMap(g, X) { if (!TPS.box) return; const b = TPS.box; g.fillStyle = '#ffd43b'; g.font = '900 30px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('★', X(b.x), X(b.z)); }
+/* ---- ロビー：ぶきを えらぶ・きょうか ---- */
+function twPanelHTML() {
+  const L = twLoad(), n = stats().n, sl = TPS.wslot || 0;
+  return `<div class="panel"><h3>ぶき（2つ もっていける。バトル中は「ぶき」ボタンで もちかえ）</h3>
+    <div class="seg" id="twSlot">${[0, 1].map(i => `<button data-v="${i}" aria-pressed="${i === sl}">${i + 1}ばん：${TWI[L[i]].n}</button>`).join('')}</div>
+    <p class="hint">えらんだ ばんごうに いれる ぶきを タップ。漢字を おぼえると あたらしい ぶきが ふえるよ（いま ${n}字）。</p>
+    <div class="twgrid">${TWL.map(w => { const op = n >= w.need, lv = twLv(w.id), eq = L.indexOf(w.id); return `<div class="twc ${op ? '' : 'lock'} ${eq >= 0 ? 'eq' : ''}" data-w="${w.id}" style="--wc:#${w.col.toString(16).padStart(6, '0')}">
+      <span class="wic">${op ? w.ic : '？'}</span><b>${op ? w.n : '？？？'}</b>${eq >= 0 ? `<i class="weq">${eq + 1}ばん</i>` : ''}
+      <span class="wst">${op ? '★'.repeat(lv) + '☆'.repeat(TWMAX - lv) : ''}</span><small>${op ? w.d : `漢字を ${w.need}字 おぼえると かいほう（あと ${w.need - n}字）`}</small>
+      ${op ? lv < TWMAX ? `<button class="btn sm y" data-up="${w.id}">きょうか（漢字 ${twCost(lv)}こ）</button>` : '<em>さいきょう！</em>' : ''}</div>`; }).join('')}</div></div>`;
+}
+function twPanelBind() {
+  const L = twLoad();
+  $('#twSlot').querySelectorAll('[data-v]').forEach(b => b.onclick = () => { TPS.wslot = +b.dataset.v; tpsLobby(); });
+  document.querySelectorAll('.twc[data-w]').forEach(el => el.onclick = e => {
+    if (e.target.closest('[data-up]')) return; const id = el.dataset.w; if (!twOpen(id)) { sfx('ng'); return; }
+    const sl = TPS.wslot || 0, o = L.indexOf(id); if (o >= 0 && o !== sl) L[o] = L[sl]; L[sl] = id; save(); sfx('ok'); tpsLobby();
+  });
+  document.querySelectorAll('[data-up]').forEach(b => b.onclick = () => { const id = b.dataset.up, lv = twLv(id); if (lv >= TWMAX) return; TPS.wupId = id; SPEC.wup = Array.from({ length: twCost(lv) }, (_, i) => i === 0 ? 'new' : 'rev'); sfx('chest'); openMission('wup'); });
+}
+function twUpgradeDone() {
+  const id = TPS.wupId; if (!id) { tpsLobby(); return; } S.tw = S.tw || {}; S.tw[id] = Math.min(TWMAX, twLv(id) + 1); save();
+  tpsLobby(); banner(`「${TWI[id].n}」が レベル${S.tw[id]}に なった！`, 'gold'); sfx('evo');
 }
 /* ============ 漢字バトル：キャラクターの うごき ============ */
 const HIPY = .95;
