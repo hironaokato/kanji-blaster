@@ -4883,6 +4883,7 @@ function tpsInit() {
   TPS.trM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 60); sc.add(TPS.trM); TPS.tr = [];
   TPS.spM = instMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }), 300); sc.add(TPS.spM); TPS.sp = [];
   TPS.metM = []; for (let i = 0; i < 8; i++) { const m = new THREE.Mesh(G(1.4, 1.4, 1.4), MB(0xff922b)); m.visible = false; sc.add(m); TPS.metM.push(m); }
+  navBuild();
   TPS.shM = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshBasicMaterial({ color: 0x99e9f2, transparent: true, opacity: .25, depthWrite: false })); TPS.shM.visible = false; sc.add(TPS.shM);
 }
 function ptLabel(p) {
@@ -4908,7 +4909,7 @@ function tpsSpawn(c) {
   if (c.isMe) { TPS.yaw = c.yaw; TPS.pitch = -.28; }
   tpsOnSpawn(c);
 }
-const tpsLevelStat = L => ({ acc: .25 + .05 * L, react: Math.max(.12, .72 - .065 * L), spd: 6.6 + .16 * L, dmg: 9 + .6 * L, strafe: L >= 2, cover: L >= 5 });
+const tpsLevelStat = L => ({ L, acc: .25 + .05 * L, react: Math.max(.12, .72 - .065 * L), spd: 6.6 + .16 * L, dmg: 9 + .6 * L, strafe: L >= 2, cover: L >= 5 });
 /* ---- はじめる ---- */
 function tpsLobby() {
   hideAll(); $('#tpsLobby').hidden = false; const T = S.tps || (S.tps = { max: 1, wins: {}, best: 0 });
@@ -4945,7 +4946,7 @@ function tpsStart() {
   for (let i = 1; i <= 3; i++) TPS.chars.push(tpsChar(0, false, i));
   for (let i = 0; i < 4; i++) TPS.chars.push(tpsChar(1, false, i));
   tpsPickKanji().forEach((d, i) => { const p = TPS.pts[i]; p.k = d.k; p.yomi = d.yomi; p.prog = 0; p.owner = 0; ptLabel(p); });
-  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireLook: null, fireHeld: false, endT: 0 });
+  Object.assign(TPS, { on: true, paused: false, score: [0, 0], t: 0, sk: 30, call: null, callT: 4, feed: [], shieldT: 0, readOK: 0, wrote: 0, caps: 0, meteors: [], tr: [], sp: [], stick: null, look: null, fireLook: null, fireHeld: false, endT: 0, intel: [new Map(), new Map()], noise: [], planT: [0, 0] });
   TPS.st = tpsLevelStat(TPS.lvl); TPS.stA = tpsLevelStat(Math.max(1, Math.round(TPS.lvl * .65)));
   $('#tpsHud').hidden = false; tpsHudBuild(); keepAwake(); banner(`${rb(TEAMN[0])} しゅつげき！`, 'gold');
 }
@@ -5024,48 +5025,6 @@ function tpsUpdateMe(dt) {
   }
 }
 function tpsHit(kill, dmg) { const h = $('#tpsHit'); h.className = kill ? 'kill' : 'hit'; void h.offsetWidth; h.classList.add('on'); if (dmg) { const n = $('#tpsDmg'); n.textContent = Math.round(dmg); n.classList.remove('on'); void n.offsetWidth; n.classList.add('on'); } }
-/* ---- CPU ---- */
-function tpsUpdateAI(c, dt) {
-  const A = c.ai, st = c.team ? TPS.st : TPS.stA;
-  if (!c.alive) { c.rT -= dt; if (c.rT <= 0) tpsSpawn(c); return; }
-  // もくひょう きょてん
-  A.ptT -= dt; if (A.ptT <= 0 || !A.pt) {
-    A.ptT = 3 + Math.random() * 2; const mine = c.team + 1;
-    const need = TPS.pts.filter(p => p.owner !== mine || Math.abs(p.prog) < 100), list = need.length ? need : TPS.pts;
-    const idx = TPS.chars.filter(x => x.team === c.team && !x.isMe).indexOf(c);
-    list.sort((a, b) => Math.hypot(a.x - c.x, a.z - c.z) - Math.hypot(b.x - c.x, b.z - c.z));
-    A.pt = list[(idx % 2 === 1 && list.length > 1) ? 1 : 0]; A.wx = (Math.random() - .5) * 4; A.wz = (Math.random() - .5) * 4;
-  }
-  // てき さがし
-  A.scanT -= dt; if (A.scanT <= 0) { A.scanT = .25; let best = null, bd = 30; for (const o of TPS.chars) { if (!o.alive || o.team === c.team) continue; const d = Math.hypot(o.x - c.x, o.z - c.z); if (d < bd && canSee(c, o)) { bd = d; best = o; } } if (TPS.mech && TPS.mech.alive && c.team === 1) { const d = Math.hypot(TPS.mech.x - c.x, TPS.mech.z - c.z); if (d < bd && canSee(c, TPS.mech)) best = TPS.mech; } if (best !== A.en) A.seenT = 0; A.en = best; }
-  let tx = A.pt.x + A.wx, tz = A.pt.z + A.wz, sp = st.spd;
-  if (A.en && A.en.alive !== false) {
-    const e = A.en, d = Math.hypot(e.x - c.x, e.z - c.z); A.seenT += dt; c.yaw = Math.atan2(e.x - c.x, e.z - c.z);
-    if (st.cover && c.hp < 35) { tx = c.x - (e.x - c.x); tz = c.z - (e.z - c.z); }
-    else if (d > 20) { tx = e.x; tz = e.z; } else if (d < 7) { tx = c.x - (e.x - c.x); tz = c.z - (e.z - c.z); sp *= .7; }
-    else { sp *= .55; A.strT -= dt; if (A.strT <= 0) { A.strT = .8 + Math.random() * 1.2; A.str = Math.random() < .5 ? -1 : 1; } if (st.strafe) { const px = -(e.z - c.z) / d, pz = (e.x - c.x) / d; tx = c.x + px * A.str * 4; tz = c.z + pz * A.str * 4; } else { tx = c.x; tz = c.z; } }
-    c.fireT -= dt;
-    if (A.seenT > st.react && c.fireT <= 0 && d < 32) {
-      c.fireT = .15 + Math.random() * .1; const tip = c.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(c.x, 1.6, c.z);
-      let p = st.acc * (d < 10 ? 1.15 : d < 20 ? 1 : .7) * (e.moving ? .85 : 1); const hit = Math.random() < p;
-      const ty = (e.y || 0) + 1.3, mx = hit ? 0 : (Math.random() - .5) * 2.2, my = hit ? 0 : (Math.random() - .5) * 1.4;
-      if (hit) { if (e.isMech) tpsMechHurt(st.dmg); else tpsHurt(e, st.dmg * (c.team === 0 ? .9 : 1), c); }
-      tpsShoot(c, V3t.x, V3t.y, V3t.z, e.x + mx, ty + my, e.z + mx * .5, c.team ? 0xffa8a8 : 0xa5d8ff); tpsOnShot(c);
-    }
-  } else { const dp = Math.hypot(tx - c.x, tz - c.z); if (dp < 1.5) { A.wx = (Math.random() - .5) * 5; A.wz = (Math.random() - .5) * 5; } }
-  // いどう（よける・つまったら まわりこむ）
-  let dx = tx - c.x, dz = tz - c.z; const dl = Math.hypot(dx, dz);
-  if (dl > .4) {
-    dx /= dl; dz /= dl;
-    for (const o of TPS.obst) { if (o.h <= c.y + (o.ter && o.ter < 4 ? 1.1 : STEP + .05)) continue; const ax = c.x + dx * 1.8, az = c.z + dz * 1.8, cx = Math.max(o.x0, Math.min(ax, o.x1)), cz = Math.max(o.z0, Math.min(az, o.z1)), ex = ax - cx, ez = az - cz; if (ex * ex + ez * ez < 1.2) { const ox = (o.x0 + o.x1) / 2 - c.x, oz = (o.z0 + o.z1) / 2 - c.z, s = (dx * oz - dz * ox) > 0 ? -1 : 1; const px = -dz * s, pz = dx * s; dx += px * 1.1; dz += pz * 1.1; } }
-    for (const o of TPS.chars) { if (o === c || !o.alive) continue; const ox = c.x - o.x, oz = c.z - o.z, d2 = ox * ox + oz * oz; if (d2 < 2.5 && d2 > 1e-4) { dx += ox / d2 * .6; dz += oz / d2 * .6; } }
-    if (A.detT > 0) { A.detT -= dt; const r = A.det; const ndx = dx * Math.cos(r) - dz * Math.sin(r), ndz = dx * Math.sin(r) + dz * Math.cos(r); dx = ndx; dz = ndz; }
-    const l2 = Math.hypot(dx, dz) || 1; c.x += dx / l2 * sp * dt; c.z += dz / l2 * sp * dt; c.moving = true;
-    if (!A.en) c.yaw = Math.atan2(dx, dz);
-    A.stuckT += dt; if (A.stuckT > .8) { const mv = Math.hypot(c.x - A.last[0], c.z - A.last[1]); if (mv < .35 && A.detT <= 0) { A.detT = 1.1; A.det = (Math.random() < .5 ? 1 : -1) * (1.2 + Math.random() * .6); } A.last = [c.x, c.z]; A.stuckT = 0; }
-  } else c.moving = false;
-  tpsPhys(c, dt);
-}
 /* ---- 漢字スキル ---- */
 function tpsSkillUse() {
   if (TPS.sk < 100 || !TPS.me.alive || TPS.paused) { if (TPS.sk < 100) sfx('ng'); return; }
@@ -5318,6 +5277,206 @@ function photoThumb(file) {
 }
 
 
+/* ============ 漢字バトル：CPU の あたま（みちさがし・たてもの・たかだい・チームプレー） ============ */
+const NAV = { N: 72, o: -36, h: null, ok: null, ter: null, cov: null };
+const navIdx = (x, z) => { const i = Math.floor(x - NAV.o), j = Math.floor(z - NAV.o); return i < 0 || j < 0 || i >= NAV.N || j >= NAV.N ? -1 : j * NAV.N + i; };
+const navX = id => NAV.o + (id % NAV.N) + .5, navZ = id => NAV.o + Math.floor(id / NAV.N) + .5;
+// マップを 1m の マスに わけて「あるける・たかさ・かくれられる」を さきに けいさん（ロードの とき 1かい）
+function navBuild() {
+  const N = NAV.N, n = N * N, top = new Float32Array(n);
+  NAV.h = new Float32Array(n); NAV.ok = new Uint8Array(n); NAV.ter = new Uint8Array(n); NAV.cov = new Uint8Array(n);
+  for (let id = 0; id < n; id++) {
+    const x = navX(id), z = navZ(id); let h = 0, ter = 1, tp = 0;
+    for (const o of TPS.obst) if (x >= o.x0 && x <= o.x1 && z >= o.z0 && z <= o.z1) { if (o.h > tp) tp = o.h; if (!o.wall && o.h > h) { h = o.h; ter = o.ter && o.ter < 4 ? 1 : 0; } }
+    top[id] = tp;
+    let ok = ter;
+    if (ok) for (const o of TPS.obst) { if (o.h <= h + STEP) continue; const nx = Math.max(o.x0, Math.min(x, o.x1)), nz = Math.max(o.z0, Math.min(z, o.z1)); if ((x - nx) * (x - nx) + (z - nz) * (z - nz) < .36) { ok = 0; break; } }
+    if (Math.abs(x) > MAPH - 1.2 || Math.abs(z) > MAPH - 1.2) ok = 0;
+    NAV.h[id] = h; NAV.ok[id] = ok; NAV.ter[id] = h > 0 ? 1 : 0;
+  }
+  for (let id = 0; id < n; id++) {
+    if (!NAV.ok[id]) continue; const i = id % N, j = (id / N) | 0;
+    for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const ii = i + a, jj = j + b; if (ii < 0 || jj < 0 || ii >= N || jj >= N) continue; if (top[jj * N + ii] - NAV.h[id] >= 1.2) { NAV.cov[id] = 1; break; } }
+  }
+  NAV.g = new Float32Array(n); NAV.f = new Float32Array(n); NAV.came = new Int32Array(n); NAV.st = new Uint32Array(n); NAV.cl = new Uint32Array(n); NAV.stamp = 0;
+}
+function navStep(a, b) {
+  if (b < 0 || !NAV.ok[b]) return false; const d = NAV.h[b] - NAV.h[a];
+  if (d > STEP + .01 && !(NAV.ter[a] && NAV.ter[b] && d <= 1.05) && !(NAV.h[a] === 0 && NAV.ter[b] && d <= STEP + .01)) return false;
+  return d >= -3.6;
+}
+function navNear(id) {
+  if (id >= 0 && NAV.ok[id]) return id; const N = NAV.N, i0 = id >= 0 ? id % N : 0, j0 = id >= 0 ? (id / N) | 0 : 0;
+  for (let r = 1; r <= 5; r++) for (let a = -r; a <= r; a++) for (const [i, j] of [[i0 + a, j0 - r], [i0 + a, j0 + r], [i0 - r, j0 + a], [i0 + r, j0 + a]]) { if (i < 0 || j < 0 || i >= N || j >= N) continue; const k = j * N + i; if (NAV.ok[k]) return k; }
+  return -1;
+}
+// A* で みちを さがす
+function navPath(sx, sz, tx, tz) {
+  const N = NAV.N, s = navNear(navIdx(sx, sz)), t = navNear(navIdx(tx, tz)); if (s < 0 || t < 0) return null; if (s === t) return [t];
+  const st = ++NAV.stamp, G = NAV.g, came = NAV.came, seen = NAV.st, cl = NAV.cl, heap = [], hf = [];
+  const ti = t % N, tj = (t / N) | 0, H = id => { const dx = Math.abs(id % N - ti), dz = Math.abs(((id / N) | 0) - tj); return Math.max(dx, dz) + .414 * Math.min(dx, dz); };
+  const push = (id, f) => { heap.push(id); hf.push(f); let k = heap.length - 1; while (k) { const p = (k - 1) >> 1; if (hf[p] <= hf[k]) break; [heap[p], heap[k]] = [heap[k], heap[p]]; [hf[p], hf[k]] = [hf[k], hf[p]]; k = p; } };
+  const pop = () => { const top = heap[0], li = heap.pop(), lf = hf.pop(); if (heap.length) { heap[0] = li; hf[0] = lf; let k = 0; for (;;) { const l = 2 * k + 1, r = l + 1; let m = k; if (l < heap.length && hf[l] < hf[m]) m = l; if (r < heap.length && hf[r] < hf[m]) m = r; if (m === k) break; [heap[m], heap[k]] = [heap[k], heap[m]]; [hf[m], hf[k]] = [hf[k], hf[m]]; k = m; } } return top; };
+  G[s] = 0; seen[s] = st; came[s] = -1; push(s, H(s)); let it = 0;
+  while (heap.length && it++ < 6000) {
+    const a = pop(); if (cl[a] === st) continue; cl[a] = st; if (a === t) break;
+    const ai = a % N, aj = (a / N) | 0;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      if (!di && !dj) continue; const ii = ai + di, jj = aj + dj; if (ii < 0 || jj < 0 || ii >= N || jj >= N) continue;
+      const b = jj * N + ii; if (cl[b] === st || !navStep(a, b)) continue;
+      if (di && dj && (!navStep(a, aj * N + ii) || !navStep(a, jj * N + ai))) continue;
+      const g = G[a] + (di && dj ? 1.414 : 1) + (NAV.h[b] > NAV.h[a] ? .3 : 0);
+      if (seen[b] !== st || g < G[b]) { seen[b] = st; G[b] = g; came[b] = a; push(b, g + H(b)); }
+    }
+  }
+  if (cl[t] !== st) return null;
+  const out = []; for (let k = t; k !== -1 && out.length < 400; k = came[k]) out.push(k); return out.reverse();
+}
+// まっすぐ あるいて いけるか
+function navClear(ax, az, bx, bz) {
+  const L = Math.hypot(bx - ax, bz - az), n = Math.ceil(L / .4); let prev = navNear(navIdx(ax, az)); if (prev < 0) return false;
+  for (let k = 1; k <= n; k++) { const id = navIdx(ax + (bx - ax) * k / n, az + (bz - az) * k / n); if (id === prev) continue; if (!navStep(prev, id)) return false; prev = id; }
+  return true;
+}
+/* ---- チームの さくせん：だれが どの きょてんへ ---- */
+function tpsPlan(team) {
+  const mine = team + 1, bots = TPS.chars.filter(c => c.team === team && !c.isMe), I = TPS.intel[team], now = TPS.t;
+  const pr = TPS.pts.map(p => {
+    let v = p.owner !== mine ? 3 : 1; if (p.owner === 0) v += .5; if (p.owner === mine && Math.abs(p.prog) < 100) v += 2.5;
+    let ex = 0; for (const [, s] of I) if (now - s.t < 4 && Math.hypot(s.x - p.x, s.z - p.z) < 12) ex++;
+    v += p.owner === mine ? ex * 1.6 : ex * .4; return v;
+  });
+  const cnt = [0, 0, 0];
+  for (const c of bots) {
+    let bi = 0, bs = -1e9;
+    TPS.pts.forEach((p, i) => { const s = pr[i] * 10 - Math.hypot(p.x - c.x, p.z - c.z) * .22 - cnt[i] * 8 + (c.ai.pt === p ? 3 : 0); if (s > bs) { bs = s; bi = i; } });
+    cnt[bi]++; if (c.ai.pt !== TPS.pts[bi]) { c.ai.pt = TPS.pts[bi]; if (c.ai.mode === 'obj') c.ai.decT = 0; }
+  }
+}
+function tpsNoise(c) { const N = TPS.noise || (TPS.noise = []); N.push({ x: c.x, z: c.z, t: TPS.t, team: c.team }); if (N.length > 30) N.shift(); }
+/* ---- たちいち えらび：うてる・かくれる・たかい ばしょ ---- */
+const SPOT_E = { x: 0, y: 0, z: 0 };
+function tpsSpot(c, e, mode, L, ax, az, R) {
+  const A = c.ai; let best = null, bs = -1e9;
+  for (let k = 0; k < 38; k++) {
+    const ang = Math.random() * 6.283, r = Math.sqrt(Math.random()) * R, id = navIdx(ax + Math.cos(ang) * r, az + Math.sin(ang) * r);
+    if (id < 0 || !NAV.ok[id]) continue; const x = navX(id), z = navZ(id), h = NAV.h[id];
+    let s = -Math.hypot(x - c.x, z - c.z) * (mode === 'hold' ? .08 : .3);
+    if (e) {
+      SPOT_E.x = x; SPOT_E.y = h; SPOT_E.z = z; const de = Math.hypot(x - e.x, z - e.z), vis = canSee(SPOT_E, e);
+      if (mode === 'atk') { s += vis ? 10 : -5; s -= Math.abs(de - A.pref) * .45; if (de < 5) s -= 8; }
+      else { s += vis ? -14 : 8; s += Math.min(de, 24) * .3; }
+    }
+    s += NAV.cov[id] * (1.2 + L * .35) + h * (.5 + L * .22);
+    for (const m of TPS.chars) if (m !== c && m.team === c.team && m.ai && m.ai.goal && m.alive) { const dd = Math.hypot(m.ai.goal.x - x, m.ai.goal.z - z); if (dd < 3.5) s -= (3.5 - dd) * 2.2; }
+    s += Math.random() * Math.max(.8, 6 - L * .5);
+    if (s > bs) { bs = s; best = { x, z, h }; }
+  }
+  return best;
+}
+function tpsGo(c, g) { const A = c.ai; if (g && Math.abs(g.x) < 14 && (c.team ? g.z > 21 : g.z < -21)) g = { x: g.x, z: c.team ? 21 : -21 }; A.goal = g; A.path = g ? navPath(c.x, c.z, g.x, g.z) : null; A.pi = 0; if (g && !A.path) A.goal = null; }
+const angD = (a, b) => { let d = a - b; while (d > Math.PI) d -= 6.2832; while (d < -Math.PI) d += 6.2832; return d; };
+/* ---- まいフレーム ---- */
+function tpsUpdateAI(c, dt) {
+  const A = c.ai, st = c.team ? TPS.st : TPS.stA, L = st.L;
+  if (!c.alive) { c.rT -= dt; if (c.rT <= 0) { tpsSpawn(c); Object.assign(A, { mode: 'obj', path: null, goal: null, decT: 0, en: null, inv: null }); } return; }
+  if (A.pref == null) A.pref = 9 + Math.random() * 7;
+  const now = TPS.t, I = TPS.intel[c.team];
+  if (now >= (TPS.planT[c.team] || 0)) { TPS.planT[c.team] = now + 2; tpsPlan(c.team); }
+  // ---- みる・きく ----
+  A.scanT -= dt;
+  if (A.scanT <= 0) {
+    A.scanT = .18; const fov = Math.cos((100 + 9 * L) / 2 * Math.PI / 180), fx = Math.sin(c.yaw), fz = Math.cos(c.yaw); let best = null, bs = -1e9;
+    const cand = TPS.chars.filter(o => o.team !== c.team && o.alive); if (c.team === 1 && TPS.mech && TPS.mech.alive) cand.push(TPS.mech);
+    for (const o of cand) {
+      const dx = o.x - c.x, dz = o.z - c.z, d = Math.hypot(dx, dz); if (d > 42) continue;
+      const fresh = I.get(o), told = fresh && now - fresh.t < 1.2;
+      const inFov = (dx * fx + dz * fz) / (d || 1) > fov || d < 5 + L * .4 || (A.hitBy === o && now - A.hitT < 2.5) || (A.en === o) || (told && L >= 3);
+      if (!inFov || !canSee(c, o)) continue;
+      I.set(o, { x: o.x, z: o.z, t: now });
+      const sc = -d + (o === A.en ? 7 : 0) + (o.hp < o.max * .4 ? 4 : 0) + (o.isMech ? -4 : 0);
+      if (sc > bs) { bs = sc; best = o; }
+    }
+    if (best !== A.en) A.seenT = 0; A.en = best; if (best) { A.lx = best.x; A.lz = best.z; A.lt = now; }
+    if (!best) {
+      // うつ おとが きこえた
+      const hear = 15 + L * 2.2; for (const nz of TPS.noise) if (nz.team !== c.team && now - nz.t < .4 && Math.hypot(nz.x - c.x, nz.z - c.z) < hear) { if (!A.inv || now - A.inv.t > 1.5) { A.inv = { x: nz.x, z: nz.z, t: now }; A.look = Math.atan2(nz.x - c.x, nz.z - c.z); } }
+      if (A.hitBy && now - A.hitT < .3) { A.inv = { x: A.hitBy.x, z: A.hitBy.z, t: now }; A.look = Math.atan2(A.hitBy.x - c.x, A.hitBy.z - c.z); }
+    }
+  }
+  // ---- どうする？ ----
+  const e = A.en && A.en.alive !== false ? A.en : null, low = c.hp < c.max * (L >= 2 ? .38 : .18);
+  let mode = A.mode || 'obj';
+  if (e) mode = low ? 'retreat' : (mode === 'retreat' && c.hp < c.max * .7 ? 'retreat' : 'fight');
+  else if (mode === 'fight') { if (A.lx != null && Math.hypot(A.lx - c.x, A.lz - c.z) < 20 && Math.random() < .45 + L * .05) { mode = 'hunt'; A.huntT = 3 + L * .5; tpsGo(c, { x: A.lx, z: A.lz }); } else mode = 'obj'; }
+  else if (mode === 'retreat' && (c.hp > c.max * .75 || now - (A.lt || 0) > 4)) mode = 'obj';
+  if (!e && mode !== 'hunt' && mode !== 'retreat') {
+    if (A.inv && now - A.inv.t < 5) { if (mode !== 'inv') { mode = 'inv'; tpsGo(c, { x: A.inv.x, z: A.inv.z }); } }
+    else if (mode === 'inv') mode = 'obj';
+    // なかまが みつけた てきを かこみに いく
+    if (mode === 'obj' && L >= 2 && (A.helpT = (A.helpT || 0) - dt) <= 0) {
+      A.helpT = 2.5; let tgt = null, td = 22 + L;
+      for (const [o, s] of I) if (o.alive !== false && now - s.t < 2 && Math.hypot(s.x - c.x, s.z - c.z) < td) { td = Math.hypot(s.x - c.x, s.z - c.z); tgt = s; }
+      if (tgt && Math.random() < .35 + L * .05) { mode = 'hunt'; A.huntT = 4; const side = Math.random() < .5 ? -1 : 1, dx = tgt.x - c.x, dz = tgt.z - c.z, d = Math.hypot(dx, dz) || 1; tpsGo(c, { x: tgt.x - dx / d * 8 + -dz / d * side * 6, z: tgt.z - dz / d * 8 + dx / d * side * 6 }); }
+    }
+  }
+  if (mode === 'hunt') { A.huntT -= dt; if (A.huntT <= 0 || (!A.path && !e)) mode = 'obj'; }
+  if (mode !== A.mode) { A.mode = mode; A.decT = 0; }
+  A.decT -= dt;
+  if (A.decT <= 0) {
+    if (mode === 'fight') { A.decT = Math.max(.7, 1.7 - L * .09) + Math.random() * .8; const p = A.pt || TPS.pts[1], dp = Math.hypot(p.x - c.x, p.z - c.z), k = dp > p.r ? Math.min(.45, 6 / dp) : 0; tpsGo(c, tpsSpot(c, e, 'atk', L, c.x + (p.x - c.x) * k, c.z + (p.z - c.z) * k, 11)); }
+    else if (mode === 'retreat') { A.decT = 2.2; tpsGo(c, tpsSpot(c, e, 'hide', L, c.x, c.z, 13)); }
+    else if (mode === 'obj') { const p = A.pt || TPS.pts[1]; A.decT = 2.5 + Math.random() * 2.5; const g = tpsSpot(c, null, 'hold', L, p.x, p.z, p.r - .8); tpsGo(c, g || { x: p.x, z: p.z }); }
+    else A.decT = 1;
+  }
+  // ---- あるく（みちに そって） ----
+  let mx = 0, mz = 0, sp = st.spd;
+  if (A.path && A.pi < A.path.length) {
+    for (let j = Math.min(A.path.length - 1, A.pi + 5); j > A.pi; j--) if (navClear(c.x, c.z, navX(A.path[j]), navZ(A.path[j]))) { A.pi = j; break; }
+    const id = A.path[A.pi], wx = A.pi === A.path.length - 1 && A.goal ? A.goal.x : navX(id), wz = A.pi === A.path.length - 1 && A.goal ? A.goal.z : navZ(id), dx = wx - c.x, dz = wz - c.z, d = Math.hypot(dx, dz);
+    if (d < .55) { A.pi++; if (A.pi >= A.path.length) A.path = null; } else { mx = dx / d; mz = dz / d; }
+  }
+  if (!A.path && e && mode === 'fight') {
+    // その ばで よこに うごいて よける（ADAD）
+    A.strT = (A.strT || 0) - dt; if (A.strT <= 0) { A.strT = .25 + Math.random() * (.9 - L * .04); A.str = Math.random() < .5 ? -1 : 1; if (Math.random() < .2) A.str = 0; }
+    const dx = e.x - c.x, dz = e.z - c.z, d = Math.hypot(dx, dz) || 1; mx = -dz / d * A.str; mz = dx / d * A.str;
+    if (d < 6) { mx -= dx / d * .8; mz -= dz / d * .8; } else if (d > A.pref + 6) { mx += dx / d * .7; mz += dz / d * .7; }
+    const nid = navIdx(c.x + mx * .9, c.z + mz * .9), cid = navIdx(c.x, c.z); if (cid >= 0 && !navStep(cid, nid)) { A.str = -A.str; mx = -mx; mz = -mz; }
+    sp *= .62;
+    if (L >= 3 && c.onG && Math.random() < dt * (.08 + L * .03)) { c.vy = 8.5; c.onG = false; }
+  } else if (!A.path && mode === 'obj') {
+    // きょてんの なかで すこし うろうろ
+    A.wT = (A.wT || 0) - dt; if (A.wT <= 0) { A.wT = .6 + Math.random() * 1.2; A.wa = Math.random() * 6.283; A.wm = Math.random() < .55 ? .45 : 0; }
+    mx = Math.sin(A.wa) * A.wm; mz = Math.cos(A.wa) * A.wm; const p = A.pt || TPS.pts[1]; if (Math.hypot(c.x - p.x, c.z - p.z) > p.r - .6) { mx = (p.x - c.x) * .2; mz = (p.z - c.z) * .2; }
+  }
+  if (e && mode === 'fight' && A.path) sp *= .82;
+  // なかまと くっつかない
+  for (const o of TPS.chars) { if (o === c || !o.alive) continue; const ox = c.x - o.x, oz = c.z - o.z, d2 = ox * ox + oz * oz; if (d2 < 2.2 && d2 > 1e-4) { mx += ox / d2 * .5; mz += oz / d2 * .5; } }
+  const ml = Math.hypot(mx, mz);
+  if (ml > .05) { const k = Math.min(1, ml); c.x += mx / ml * sp * k * dt; c.z += mz / ml * sp * k * dt; c.moving = k > .3; } else c.moving = false;
+  // つまったら みちを さがしなおす・ジャンプ
+  A.stT = (A.stT || 0) + dt; if (A.stT > .9) { const mv = Math.hypot(c.x - (A.sx || 0), c.z - (A.sz || 0)); if (A.path && mv < .35) { if (c.onG && Math.random() < .5) { c.vy = 8.5; c.onG = false; } tpsGo(c, A.goal); } A.sx = c.x; A.sz = c.z; A.stT = 0; }
+  // ---- むく ----
+  let want = c.yaw;
+  if (e) want = Math.atan2(e.x - c.x, e.z - c.z);
+  else if (A.look != null && A.inv && now - A.inv.t < 1.5) want = A.look;
+  else if (c.moving && ml > .3) want = Math.atan2(mx, mz);
+  else { const p = A.pt || TPS.pts[1], ex = c.team ? 0 : 0, ez = c.team ? 30 : -30; want = Math.atan2(ex - p.x, ez - p.z) + Math.sin(now * .7 + c.x) * .9; }
+  const turn = (4 + L * .7) * dt, dd = angD(want, c.yaw); c.yaw += Math.max(-turn, Math.min(turn, dd));
+  // ---- うつ ----
+  c.fireT -= dt;
+  if (e) {
+    A.seenT += dt; const d = Math.hypot(e.x - c.x, e.z - c.z);
+    if (A.seenT > st.react && c.fireT <= 0 && d < 34 && Math.abs(angD(want, c.yaw)) < .3) {
+      c.fireT = .15 + Math.random() * .1; const tip = c.pm.tip; if (tip) tip.getWorldPosition(V3t); else V3t.set(c.x, c.y + 1.6, c.z);
+      let p = st.acc * (d < 10 ? 1.15 : d < 20 ? 1 : .7) * (e.moving ? .85 : 1) * (c.moving ? .85 : 1) * (c.y > (e.y || 0) + .8 ? 1.12 : 1) * (c.onG === false ? .7 : 1);
+      const hit = Math.random() < p, ty = (e.y || 0) + 1.3, ox = hit ? 0 : (Math.random() - .5) * 2.2, oy = hit ? 0 : (Math.random() - .5) * 1.4;
+      if (hit) { if (e.isMech) tpsMechHurt(st.dmg); else tpsHurt(e, st.dmg * (c.team === 0 ? .9 : 1), c); }
+      tpsShoot(c, V3t.x, V3t.y, V3t.z, e.x + ox, ty + oy, e.z + ox * .5, c.team ? 0xffa8a8 : 0xa5d8ff); tpsOnShot(c);
+    }
+  }
+  tpsPhys(c, dt);
+}
 /* ============ 漢字バトル：キャラクターの うごき ============ */
 const HIPY = .95;
 function tpsRig(c) {
@@ -5328,10 +5487,11 @@ function tpsRig(c) {
   Object.assign(c, { px: 0, pz: 0, spd: 0, ph: 0, stepI: 0, rc: 0, mfT: 0, fl: 0, flS: 0, aimT: 0, land: 0, air: false, spawnT: 0, dT: 0, fallA: 0, fallV: 0, fx: 1, fz: 0, kbx: 0, kbz: 0, broken: false });
 }
 function tpsOnSpawn(c) { c.spawnT = .6; c.dT = 0; c.broken = false; c.fallA = c.fallV = 0; c.px = c.x; c.pz = c.z; c.pm.g.visible = true; c.pm.g.rotation.x = c.pm.g.rotation.z = 0; c.pm.g.scale.setScalar(.2); tpsBeam(c.x, c.z, TCOL[c.team]); }
-function tpsOnShot(c) { c.rc = 1; c.mfT = .05; c.aimT = .8; if (c.pm.tip) { c.pm.tip.getWorldPosition(V3t); const rx = -Math.cos(c.yaw), rz = Math.sin(c.yaw); for (let i = 0; i < 1; i++) TPS.sp.length < 300 && TPS.sp.push({ x: V3t.x - Math.sin(c.yaw) * .5, y: V3t.y, z: V3t.z - Math.cos(c.yaw) * .5, vx: rx * (2 + Math.random() * 1.5), vy: 2.5 + Math.random() * 1.5, vz: rz * (2 + Math.random() * 1.5), life: .5, col: 0xd4a017, s: .12 }); TPS.sp.length < 300 && TPS.sp.push({ x: V3t.x, y: V3t.y, z: V3t.z, vx: 0, vy: .8, vz: 0, life: .25, col: 0xdee2e6, s: .25, ng: 1 }); } }
+function tpsOnShot(c) { tpsNoise(c); c.rc = 1; c.mfT = .05; c.aimT = .8; if (c.pm.tip) { c.pm.tip.getWorldPosition(V3t); const rx = -Math.cos(c.yaw), rz = Math.sin(c.yaw); for (let i = 0; i < 1; i++) TPS.sp.length < 300 && TPS.sp.push({ x: V3t.x - Math.sin(c.yaw) * .5, y: V3t.y, z: V3t.z - Math.cos(c.yaw) * .5, vx: rx * (2 + Math.random() * 1.5), vy: 2.5 + Math.random() * 1.5, vz: rz * (2 + Math.random() * 1.5), life: .5, col: 0xd4a017, s: .12 }); TPS.sp.length < 300 && TPS.sp.push({ x: V3t.x, y: V3t.y, z: V3t.z, vx: 0, vy: .8, vz: 0, life: .25, col: 0xdee2e6, s: .25, ng: 1 }); } }
 function tpsKbDir(c, by) { if (!by) return [Math.sin(c.yaw + Math.PI), Math.cos(c.yaw + Math.PI)]; const dx = c.x - by.x, dz = c.z - by.z, l = Math.hypot(dx, dz) || 1; return [dx / l, dz / l]; }
 function tpsOnHit(c, by) {
   const [kx, kz] = tpsKbDir(c, by), fwd = kx * Math.sin(c.yaw) + kz * Math.cos(c.yaw);
+  if (c.ai && by) { c.ai.hitBy = by; c.ai.hitT = TPS.t; }
   c.fl = 1; c.flS = fwd >= 0 ? 1 : -1; c.x += kx * .18; c.z += kz * .18;
   tpsSpark(c.x, (c.y || 0) + 1.5, c.z, 4, 0xffffff);
 }
