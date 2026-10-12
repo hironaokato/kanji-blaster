@@ -335,7 +335,12 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 @keyframes kwg{to{box-shadow:0 0 0 6px rgba(255,212,59,.5),0 4px 0 var(--ink)}}
 .kwcan{position:relative;overflow:hidden;background:#3b2a6b;color:#fff;font-size:1.05rem;line-height:1.15}.kwcan i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#ffd43b,#ff922b)}.kwcan span{position:relative;text-shadow:0 2px 0 #151733}.kwcan.ready{animation:kwg .5s infinite alternate}
 @media (max-width:700px){.kwwal,.kwcan{width:70px;height:100px;font-size:.85rem}.kwsl{height:70px}}
-#kwHub .panel{margin:10px 0}#kwHub .mtitle,#kwHub .mtitle h2,#kwHub .mtitle p{color:var(--paper-ink)}.kwxpb{font-weight:900;color:#ffd43b}
+#kwHub .panel{margin:10px 0}
+#kwHub{background:linear-gradient(180deg,#1b2a5c,#2a1f5c 60%,#1a1440)}
+#kwHub .kwgo{display:flex;align-items:center;gap:14px;margin:12px 0 2px;padding:12px 26px;font-size:28px;text-align:left;animation:kwpulse 1.6s ease-in-out infinite}
+#kwHub .kwgo b{display:block;font-size:30px;line-height:1.1}#kwHub .kwgo small{display:block;font-size:15px;opacity:.85}
+.kwgoi{font-size:34px}
+@keyframes kwpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}#kwHub .mtitle,#kwHub .mtitle h2,#kwHub .mtitle p{color:var(--paper-ink)}.kwxpb{font-weight:900;color:#ffd43b}
 .kwtabs{flex-wrap:wrap}.kwchs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .kwch{border:3px solid var(--ink);border-radius:14px;padding:10px 8px;background:linear-gradient(var(--c1),var(--c2));color:#151733;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;box-shadow:0 4px 0 var(--ink);cursor:pointer}
 .kwch b{font-size:.9rem;background:rgba(255,255,255,.85);border-radius:8px;padding:1px 6px}.kwch small{font-size:.72rem;background:rgba(255,255,255,.75);border-radius:6px;padding:1px 5px;font-weight:700}
@@ -7477,15 +7482,25 @@ function kwPDown(e) { if (!KW.on) return; KW.drag = { x: e.clientX, cam: KW.cam 
 function kwPMove(e) { if (!KW.drag) return; const dx = e.clientX - KW.drag.x; if (Math.abs(dx) > 4) { KW.cam = KW.drag.cam - dx / KW.s; KW.manualT = 4; } }
 function kwPUp() { KW.drag = null; }
 /* ---- きち（ハブ） ---- */
+// つぎに あそぶ ステージ
+function kwNext() {
+  const o = kwSt(), mode = KW.mode === 'hard' && o.hard ? 'hard' : 'normal', P = mode === 'hard' ? 'h' : '';
+  let ch = Math.min(KW.ch != null ? KW.ch : o.ch, o.ch);
+  for (let s = 0; s < 10; s++) if (!o.clr[P + ch + '-' + s]) return { ch, s, mode };
+  if (ch < o.ch) { ch = o.ch; for (let s = 0; s < 10; s++) if (!o.clr[P + ch + '-' + s]) return { ch, s, mode }; }
+  return { ch, s: 9, mode };
+}
 function kwHub(tab, focus) {
   hideAll(); if (KW.on) kwEnd(); KW.tab = tab || KW.tab || 'stage'; const o = kwSt(), el = $('#kwHub'); el.hidden = false;
   const owned = kwAll().filter(kwOwned).length;
   const tabs = [['stage', 'ステージ'], ['form', 'へんせい'], ['units', 'なかま'], ['base', 'しろ']];
   el.innerHTML = `<div class="wrap"><div class="mtop"><button class="btn sm" id="khBack">きちへ もどる</button><span class="kwxpb">けいけんち <b>${o.xp}</b>　なかま ${owned} / ${kwAll().length}</span></div>
-    <div class="mtitle"><span class="eyebrow">よこスクロール バトル</span><h2>${rb('{漢字|かんじ}だいせんそう')}</h2><p>漢字を 書くと なかまが ふえて、書けば 書くほど つよく なる！ てきの しろを こわせ！</p></div>
+    <div class="mtitle"><span class="eyebrow">よこスクロール バトル</span><h2>${rb('{漢字|かんじ}だいせんそう')}</h2><p>漢字を 書くと なかまが ふえて、書けば 書くほど つよく なる！ てきの しろを こわせ！</p>
+    <button class="btn big y kwgo" id="khGo"><span class="kwgoi">▶</span><span><b>しゅつげき！</b><small id="khGoS"></small></span></button></div>
     <div class="seg kwtabs">${tabs.map(([id, n]) => `<button data-t="${id}" aria-pressed="${KW.tab === id}">${n}</button>`).join('')}</div>
     <div id="khBody"></div></div>`;
   $('#khBack').onclick = () => goHome();
+  { const n = kwNext(); $('#khGoS').textContent = `${n.mode === 'hard' ? 'しん・' : ''}${n.ch + 1}-${n.s === 9 ? 'ボス' : n.s + 1}「${KWCH[n.ch].names[n.s]}」`; $('#khGo').onclick = () => kwPre(kwStage(n.ch, n.s, n.mode)); }
   el.querySelectorAll('.kwtabs [data-t]').forEach(b => b.onclick = () => { KW.tab = b.dataset.t; kwHub(); });
   const B = $('#khBody');
   if (KW.tab === 'stage') kwTabStage(B); else if (KW.tab === 'form') kwTabForm(B); else if (KW.tab === 'units') kwTabUnits(B, focus); else kwTabBase(B);
@@ -7497,9 +7512,9 @@ function kwTabStage(B) {
   const C = KWCH[KW.ch], bonusT = KWBONUS[KW.ch];
   const sts = Array.from({ length: 10 }, (_, s) => { const key = (mode === 'hard' ? 'h' : '') + KW.ch + '-' + s, v = o.clr[key] || 0, prevOK = s === 0 || o.clr[(mode === 'hard' ? 'h' : '') + KW.ch + '-' + (s - 1)]; const op = prevOK && (mode !== 'hard' || hardOK);
     return `<button class="kwst ${op ? '' : 'lock'} ${s === 9 ? 'boss' : ''}" data-s="${s}" ${op ? '' : 'disabled'}><span class="kwsn">${s === 9 ? 'ボス' : s + 1}</span><b>${op ? (mode === 'hard' ? 'しん・' : '') + C.names[s] : '🔒'}</b><span class="kwss">${[1, 2, 3].map(i => `<i class="${i <= v ? 'on' : ''}">★</i>`).join('')}</span></button>`; }).join('');
-  B.innerHTML = `<div class="panel"><h3>しょうを えらぶ</h3><div class="kwchs">${chHTML}</div>
+  B.innerHTML = `<div class="panel"><h3>${KW.ch + 1}しょう「${C.n}」の ステージ <small class="hint">（ばんごうを タッチ）</small></h3><p class="hint">この しょうで ★3つ とると「${KWBN[bonusT]}」が すこし アップ（いま +${Math.round((o.stars3[KW.ch] || 0) * 1.5)}%）。でてくる てき：${C.pool.map(e => KWE[e].n).join('・')}、ボス：${KWE[C.boss].n}</p><div class="kwsts">${sts}</div></div>
+    <div class="panel"><h3>しょうを えらぶ</h3><div class="kwchs">${chHTML}</div>
     ${hardOK ? `<div class="seg" id="kwMode"><button data-m="normal" aria-pressed="${mode !== 'hard'}">ふつう</button><button data-m="hard" aria-pressed="${mode === 'hard'}">しんの せかい（とても つよい）</button></div>` : ''}</div>
-    <div class="panel"><h3>${KW.ch + 1}しょう「${C.n}」</h3><p class="hint">この しょうで ★3つ とると「${KWBN[bonusT]}」が すこし アップ（いま +${Math.round((o.stars3[KW.ch] || 0) * 1.5)}%）。でてくる てき：${C.pool.map(e => KWE[e].n).join('・')}、ボス：${KWE[C.boss].n}</p><div class="kwsts">${sts}</div></div>
     <div class="panel"><h3>むげんの とう</h3><p class="hint">どこまで のぼれるかな？ 5かい ごとに ボス。いままでの さいこう：${o.tower}かい</p>${o.ch >= 1 ? `<button class="btn y" id="kwTower">${o.tower + 1}かいに ちょうせん</button>` : '<p class="hint">1しょうの ボスを たおすと あそべるよ</p>'}</div>`;
   B.querySelectorAll('.kwch[data-c]').forEach(b => b.onclick = () => { if (+b.dataset.c > o.ch) { sfx('ng'); return; } KW.ch = +b.dataset.c; kwHub('stage'); });
   B.querySelectorAll('#kwMode [data-m]').forEach(b => b.onclick = () => { KW.mode = b.dataset.m; kwHub('stage'); });
