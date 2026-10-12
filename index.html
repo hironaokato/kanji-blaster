@@ -172,8 +172,9 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 #mission.paged .mtitle{padding:8px 14px}#mission.paged .mtitle h2{font-size:1.2rem;margin:0}#mission.paged .mtitle p,#mission.paged .mtitle .eyebrow{display:none}
 #mission.paged .mcards{display:block}#mission.paged .mcards>.mcard{display:none}#mission.paged .mcards>.mcard.cur{display:flex}
 #mission.paged .mcard{gap:6px;padding:10px 12px;touch-action:none}
+#mission.paged{padding-top:calc(env(safe-area-inset-top,0px) + 8px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}#mission.paged .wrap{max-width:none}
 #mission.paged .padbox{width:clamp(250px,min(88vw,calc(100dvh - 590px),580px),580px)}
-#mission.paged .padbox{max-width:100%}#mission.paged .wrap{max-width:1100px}
+#mission.paged .padbox{max-width:100%}
 #mission.paged .mres{min-height:0}#mission.paged .mres:empty{display:none}
 @media (orientation:portrait){.mside{display:contents}.mpg>.mside>.mtop{order:1}.mpg>.mside>.mtitle{order:2}.mpg>.mside>.mtabs{order:3}.mpg>.mside>.mnav{order:4}.mpg>.mmain{order:5}.mpg>.mside>.mact{order:6}.mpg>.mside>.mstatus{order:7}}
 #mission.paged .mact{margin:0}
@@ -317,7 +318,7 @@ textarea{width:100%;box-sizing:border-box;min-height:70px;border-radius:10px;bor
 .bpc{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-weight:900}.bpc i{display:inline-block;width:16px;height:16px;border:2px solid #151733;border-radius:3px;vertical-align:middle;margin-right:3px}
 #tpsBtn{margin-top:6px}
 #kwBtn{margin-top:6px;background:linear-gradient(#ffd43b,#ff922b);color:var(--ink)}
-#kwBattle{position:fixed;inset:0;z-index:6;background:#000}#kwCv{position:absolute;inset:0;touch-action:none;display:block}
+#kwBattle{position:fixed;inset:0;z-index:6;background:#000}#kwRes{z-index:12}#kwCv{position:absolute;inset:0;touch-action:none;display:block}
 #kwHud{position:absolute;inset:0;pointer-events:none}#kwHud button{pointer-events:auto;touch-action:manipulation}
 .kwtop{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;right:10px;display:flex;gap:10px;align-items:center}
 .kwtime{color:#fff;font-weight:900;background:rgba(21,23,51,.7);padding:3px 10px;border-radius:10px;font-variant-numeric:tabular-nums}.kwtime.warn{color:#ff8787}
@@ -2449,7 +2450,7 @@ function initGL() {
   for (let i = 0; i < 16; i++) { const m = new THREE.Mesh(G(1.4, 1.4, 1.4), new THREE.MeshBasicMaterial({ color: 0xb197fc })); m.visible = false; scene.add(m); meteorPool.push({ m, active: false }); }
   const wg = new THREE.RingGeometry(.88, 1, 32); wg.rotateX(-Math.PI / 2);
   for (let i = 0; i < 16; i++) { const m = new THREE.Mesh(wg, new THREE.MeshBasicMaterial({ color: 0xff4d5b, transparent: true, opacity: .8, depthWrite: false })); m.visible = false; m.position.y = .08; scene.add(m); warnPool.push(m); }
-  resize(); addEventListener('resize', resize); addEventListener('resize', () => { if (KW.on) kwResize(); }); addEventListener('orientationchange', () => setTimeout(resize, 250)); if (window.visualViewport) visualViewport.addEventListener('resize', resize);
+  resize(); addEventListener('resize', resize); addEventListener('resize', () => { if (KW.on) kwResize(); }); addEventListener('orientationchange', () => setTimeout(resize, 250)); if (window.visualViewport) visualViewport.addEventListener('resize', resize); addEventListener('resize', () => { const pb = document.querySelector('#mission.paged .mcard.cur .padbox'); if (pb) pb.style.width = ''; fitMSoon(); }); if (window.visualViewport) visualViewport.addEventListener('resize', fitMSoon); addEventListener('orientationchange', () => setTimeout(() => { const pb = document.querySelector('#mission.paged .mcard.cur .padbox'); if (pb) pb.style.width = ''; fitMission(); }, 300)); if (window.ResizeObserver) new ResizeObserver(fitMSoon).observe($('#mWrap'));
 }
 function resize() { if (!R) return; const w = innerWidth, h = innerHeight; R.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
 
@@ -3318,7 +3319,10 @@ function renderSlots() {
 /* ============ 漢字ミッション ============ */
 let MS = null;
 const SPEC = { stage: ['new', 'new', 'rev', 'rev', 'rev', 'pre'], revive: ['rev'], box: ['rev'] };
+// ひらいた しゅんかんの タップが 中の ボタンに あたらないように
+let clickBlockUntil = 0; document.addEventListener('click', e => { if (e.isTrusted && performance.now() < clickBlockUntil && e.target.closest && e.target.closest('#mission')) { e.stopPropagation(); e.preventDefault(); } }, true);
 function openMission(kind, evoI, custom) {
+  clickBlockUntil = performance.now() + 400;
   if (['revive', 'box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox', 'kwcan'].includes(kind)) { W.susp = true; } else endRun();
   hideAll();
   const spec = kind === 'kwboost' ? ['rev', 'rev', 'new'] : ['box', 'evo', 'bonus', 'shield', 'tskill', 'trespawn', 'tbox', 'kwcan'].includes(kind) ? [pick(['rev', 'rev', 'new', 'pre'])] : SPEC[kind];
@@ -3328,6 +3332,21 @@ function openMission(kind, evoI, custom) {
 const todo = () => MS.items.filter(i => !i.ok);
 const numOf = it => CIRC[MS.items.indexOf(it)];
 const checkName = () => S.check === 'parent' ? 'おうちの人' : (S.order ? 'じどう（かきじゅんも）' : 'じどう（かたち）');
+// iPad（mini も）：書く がめんを スクロール なしで ぴったり おさめる
+function fitMission() {
+  const M = $('#mission'); if (!M || M.hidden || !M.classList.contains('paged')) return;
+  const pb = M.querySelector('.mcards > .mcard.cur .padbox'); if (!pb) return;
+  const avail = Math.min(M.clientHeight, window.visualViewport ? visualViewport.height : innerHeight);
+  let w = pb.getBoundingClientRect().width;
+  if (!pb.style.width) { w = 760; pb.style.width = w + 'px'; w = pb.getBoundingClientRect().width; }
+  for (let k = 0; k < 4; k++) {
+    const over = $('#mWrap').getBoundingClientRect().bottom + M.scrollTop + parseFloat(getComputedStyle(M).paddingBottom) - avail + 2; if (over <= 0 && over > -10) break;
+    let nw = over > 0 ? w - over - 4 : Math.min(760, w - over - 4); nw = Math.max(200, Math.round(nw));
+    if (Math.abs(nw - w) < 2) break; pb.style.width = nw + 'px'; const got = pb.getBoundingClientRect().width; if (Math.abs(got - w) < 1 && over <= 0) break; w = got;
+  }
+  M.scrollTop = 0;
+}
+let fitMQ = 0; const fitMSoon = () => { if (fitMQ) return; fitMQ = requestAnimationFrame(() => { fitMQ = 0; fitMission(); }); };
 function renderMission() {
   const W2 = $('#mWrap');
   if (MS.stage === 'done') { W2.innerHTML = MS.doneHTML; bindDone(); return; }
@@ -3344,10 +3363,10 @@ function renderMission() {
       <div class="mnav"><button class="btn w" id="mPrevQ">← まえ</button><span id="mPos">${MS.cur + 1} / ${MS.items.length}</span><button class="btn y" id="mNextQ">つぎ →</button></div>` : '';
     W2.innerHTML = `<div class="mpg"><div class="mside">${P.top}${P.title}${tabs}${P.act}<div class="mstatus ${MS.statusCls}" id="mStatus">${MS.status}</div></div><div class="mmain">${P.cards}</div></div>`;
     $('#mission').classList.add('paged');
-    const go = (i, quiet) => { MS.cur = (i + MS.items.length) % MS.items.length; if (!quiet && MS.items[MS.cur].d.kana && !MS.items[MS.cur].ok && MS.kind !== 'exam') kanaSay(MS.items[MS.cur].d); W2.querySelectorAll('.mcards > .mcard').forEach((c, j) => c.classList.toggle('cur', j === MS.cur)); W2.querySelectorAll('#mTabs [data-i]').forEach(b => b.classList.toggle('on', +b.dataset.i === MS.cur)); const ps = $('#mPos'); if (ps) ps.textContent = `${MS.cur + 1} / ${MS.items.length}`; };
+    const go = (i, quiet) => { fitMSoon(); MS.cur = (i + MS.items.length) % MS.items.length; if (!quiet && MS.items[MS.cur].d.kana && !MS.items[MS.cur].ok && MS.kind !== 'exam') kanaSay(MS.items[MS.cur].d); W2.querySelectorAll('.mcards > .mcard').forEach((c, j) => c.classList.toggle('cur', j === MS.cur)); W2.querySelectorAll('#mTabs [data-i]').forEach(b => b.classList.toggle('on', +b.dataset.i === MS.cur)); const ps = $('#mPos'); if (ps) ps.textContent = `${MS.cur + 1} / ${MS.items.length}`; };
     W2.querySelectorAll('#mTabs [data-i]').forEach(b => b.onclick = () => go(+b.dataset.i));
     if ($('#mPrevQ')) { $('#mPrevQ').onclick = () => go(MS.cur - 1); $('#mNextQ').onclick = () => go(MS.cur + 1); }
-    go(MS.cur);
+    go(MS.cur); fitMission();
   } else {
     $('#mission').classList.remove('paged');
     W2.innerHTML = `${P.top}
@@ -7241,7 +7260,7 @@ function kwStart(stg, boost) {
   KW.on = true; KW.paused = false; KW.speed = 1; KW.cam = KW.b.L; KW.manualT = 0;
   $('#kwBattle').hidden = false; kwResize(); kwHudBuild(); KW.bg = kwMakeBG(stg.ch, KW.W, KW.H, KW.gy); KW.wx = [];
   banner(`${stg.name}`, 'gold'); keepAwake(); sfx('evo');
-  if (!Object.keys(o.clr).length) setTimeout(() => toast('したの なかまボタンを おしてね！ すみ（おかね）が たまると よべるよ'), 1600);
+  if (!Object.keys(o.clr).length) setTimeout(() => { if (KW.on && !KW.paused) toast('したの なかまボタンを おしてね！ すみ（おかね）が たまると よべるよ'); }, 1600);
 }
 function kwResize() {
   const cv = KW.cv, dpr = Math.min(2, window.devicePixelRatio || 1); KW.q = dpr; KW.W = innerWidth; KW.H = innerHeight; cv.width = KW.W * dpr; cv.height = KW.H * dpr; cv.style.width = KW.W + 'px'; cv.style.height = KW.H + 'px'; KW.cx.setTransform(dpr, 0, 0, dpr, 0, 0);
